@@ -17,13 +17,11 @@
       justify-content: center;
       height: 100vh;
     }
-
     #avatar {
       width: 300px;
       height: 300px;
       margin-bottom: 20px;
     }
-
     #talkBtn {
       padding: 12px 24px;
       font-size: 18px;
@@ -33,20 +31,17 @@
       color: white;
       cursor: pointer;
     }
-
     #output {
       margin-top: 15px;
       font-size: 16px;
       text-align: center;
     }
-
     #cameraContainer {
       margin-top: 20px;
       display: none;
       flex-direction: column;
       align-items: center;
     }
-
     video, canvas, img {
       max-width: 320px;
       border: 2px solid #00bcd4;
@@ -57,15 +52,15 @@
 </head>
 <body>
 
-  <canvas id="avatar"></canvas>
-  <button id="talkBtn">🎙️ Talk to Friday</button>
-  <div id="output">Say something to Friday...</div>
+<canvas id="avatar"></canvas>
+<button id="talkBtn">🎙️ Talk to Friday</button>
+<div id="output">Say something to Friday...</div>
+<div id="cameraContainer">
+  <video id="cameraFeed" autoplay></video>
+  <canvas id="cameraCanvas" style="display:none;"></canvas>
+  <img id="capturedPhoto" />
+</div>
 
-  <div id="cameraContainer">
-    <video id="cameraFeed" autoplay></video>
-    <canvas id="cameraCanvas" style="display:none;"></canvas>
-    <img id="capturedPhoto" />
-  </div>
 <script>
   const output = document.getElementById("output");
   const talkBtn = document.getElementById("talkBtn");
@@ -91,11 +86,7 @@
       maleVoice = voices.find(v =>
         v.lang === 'en-US' &&
         !v.name.toLowerCase().includes('female') &&
-        (v.name.toLowerCase().includes('male') ||
-         v.name.toLowerCase().includes('david') ||
-         v.name.toLowerCase().includes('daniel') ||
-         v.name.toLowerCase().includes('alex') ||
-         v.name.toLowerCase().includes('google'))
+        (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('daniel') || v.name.toLowerCase().includes('alex') || v.name.toLowerCase().includes('google'))
       );
     }
     if (maleVoice) utter.voice = maleVoice;
@@ -128,7 +119,6 @@
         },
         body: JSON.stringify({ prompt, n: 1, size: "512x512" })
       });
-
       const data = await res.json();
       const imgUrl = data.data?.[0]?.url;
 
@@ -170,29 +160,15 @@
       "netflix": "https://netflix.com"
     };
 
-    if (
-      msg.includes("exit") ||
-      msg.includes("shutdown") ||
-      msg.includes("close app") ||
-      msg.includes("band ho jao")
-    ) {
+    if (msg.includes("exit") || msg.includes("shutdown") || msg.includes("close app") || msg.includes("band ho jao")) {
       response = "Exiting now.";
       speak(response);
       document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%'>👋 Friday Closed</h1>";
       return;
-    } else if (
-      msg.startsWith("ask") ||
-      msg.startsWith("what is") ||
-      msg.startsWith("who is") ||
-      msg.startsWith("question")
-    ) {
+    } else if (msg.startsWith("ask") || msg.startsWith("what is") || msg.startsWith("who is") || msg.startsWith("question")) {
       const question = msg.replace(/ask|what is|who is|question/g, "").trim();
       response = await askMagicBrain(question);
-    } else if (
-      msg.startsWith("generate image") ||
-      msg.startsWith("make image") ||
-      msg.includes("make a photo")
-    ) {
+    } else if (msg.startsWith("generate image") || msg.startsWith("make image") || msg.includes("make a photo")) {
       const prompt = msg.replace(/generate image|make image|make a photo/g, "").trim();
       response = await generateImage(prompt);
     } else if (msg.includes("open camera") || msg.includes("turn on camera")) {
@@ -201,12 +177,7 @@
     } else if ((msg.includes("close") && msg.includes("camera")) || msg.includes("turn off camera")) {
       response = "Turning off the camera.";
       closeCamera();
-    } else if (
-      msg.includes("take photo") ||
-      msg.includes("click photo") ||
-      msg.includes("capture photo") ||
-      msg.includes("take a picture")
-    ) {
+    } else if (msg.includes("take photo") || msg.includes("click photo") || msg.includes("capture photo") || msg.includes("take a picture")) {
       response = "Capturing photo.";
       takePhoto();
     } else if (msg.includes("battery")) {
@@ -219,7 +190,28 @@
     } else if (msg.includes("time")) {
       const now = new Date();
       response = `The time is ${now.toLocaleTimeString()} on ${now.toLocaleDateString()}`;
-    } else if (msg.includes("open")) {
+    }
+
+    // ✅ New commands to open mobile apps
+    else if (msg.includes("open settings")) {
+      response = "Opening phone settings.";
+      window.location.href = "intent:#Intent;action=android.settings.SETTINGS;end";
+    } else if (msg.includes("open whatsapp")) {
+      response = "Opening WhatsApp.";
+      window.location.href = "whatsapp://";
+    } else if (msg.includes("open phone") || msg.includes("dialer")) {
+      response = "Opening phone dialer.";
+      window.location.href = "tel:";
+    } else if (msg.includes("open messages") || msg.includes("sms")) {
+      response = "Opening messages.";
+      window.location.href = "sms:";
+    } else if (msg.includes("call") && msg.match(/\d{10}/)) {
+      const number = msg.match(/\d{10}/)[0];
+      response = `Calling ${number}`;
+      window.location.href = `tel:${number}`;
+    }
+
+    else if (msg.includes("open")) {
       let found = false;
       for (const key in siteMap) {
         if (msg.includes(key)) {
@@ -287,17 +279,14 @@
     cameraCanvas.height = cameraFeed.videoHeight;
     context.drawImage(cameraFeed, 0, 0);
     const imageData = cameraCanvas.toDataURL("image/png");
-
     capturedPhoto.src = imageData;
     capturedPhoto.style.display = "block";
-
     const a = document.createElement("a");
     a.href = imageData;
     a.download = "photo.png";
     a.click();
   }
 
-  // 3D Avatar
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer({ canvas: avatarCanvas, alpha: true });
@@ -311,7 +300,6 @@
   const light = new THREE.PointLight(0xffffff, 1);
   light.position.set(5, 5, 5);
   scene.add(light);
-
   camera.position.z = 3;
 
   function animate() {
@@ -321,5 +309,6 @@
   }
   animate();
 </script>
+
 </body>
 </html>
