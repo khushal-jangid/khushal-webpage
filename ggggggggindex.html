@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Friday AI Assistant</title>
+  <title>Neo - AI Assistant</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
   <style>
     body {
@@ -51,10 +51,9 @@
   </style>
 </head>
 <body>
-
 <canvas id="avatar"></canvas>
-<button id="talkBtn">🎙️ Talk to Friday</button>
-<div id="output">Say something to Friday...</div>
+<button id="talkBtn">🎙️ Talk to Neo</button>
+<div id="output">Say something to Neo...</div>
 <div id="cameraContainer">
   <video id="cameraFeed" autoplay></video>
   <canvas id="cameraCanvas" style="display:none;"></canvas>
@@ -62,252 +61,149 @@
 </div>
 
 <script>
-  const output = document.getElementById("output");
-  const talkBtn = document.getElementById("talkBtn");
-  const avatarCanvas = document.getElementById("avatar");
-  const cameraContainer = document.getElementById("cameraContainer");
-  const cameraFeed = document.getElementById("cameraFeed");
-  const cameraCanvas = document.getElementById("cameraCanvas");
-  const capturedPhoto = document.getElementById("capturedPhoto");
-  let cameraStream = null;
+const output = document.getElementById("output");
+const talkBtn = document.getElementById("talkBtn");
+const avatarCanvas = document.getElementById("avatar");
+const cameraContainer = document.getElementById("cameraContainer");
+const cameraFeed = document.getElementById("cameraFeed");
+const cameraCanvas = document.getElementById("cameraCanvas");
+const capturedPhoto = document.getElementById("capturedPhoto");
+let cameraStream = null;
 
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = 'en-US';
-  recognition.interimResults = false;
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'en-US';
+recognition.interimResults = false;
 
-  function speak(text) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    utter.rate = 1;
-    utter.pitch = 1.0;
-    const voices = window.speechSynthesis.getVoices();
-    let maleVoice = voices.find(v => v.name === 'Google US English');
-    if (!maleVoice) {
-      maleVoice = voices.find(v =>
-        v.lang === 'en-US' &&
-        !v.name.toLowerCase().includes('female') &&
-        (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('daniel') || v.name.toLowerCase().includes('alex') || v.name.toLowerCase().includes('google'))
-      );
-    }
-    if (maleVoice) utter.voice = maleVoice;
-    window.speechSynthesis.speak(utter);
+function speak(text) {
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 1;
+  utter.pitch = 1.0;
+  const voices = window.speechSynthesis.getVoices();
+  let maleVoice = voices.find(v => v.name === 'Google US English');
+  if (!maleVoice) {
+    maleVoice = voices.find(v =>
+      v.lang === 'en-US' &&
+      !v.name.toLowerCase().includes('female') &&
+      (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('david') || v.name.toLowerCase().includes('daniel') || v.name.toLowerCase().includes('alex') || v.name.toLowerCase().includes('google'))
+    );
+  }
+  if (maleVoice) utter.voice = maleVoice;
+  window.speechSynthesis.speak(utter);
+}
+
+async function replyTo(message) {
+  let response = "Sorry, I didn't get that.";
+  const msg = message.toLowerCase();
+
+  if (msg.includes("open settings")) {
+    response = "Opening phone settings.";
+    window.location.href = "intent:#Intent;action=android.settings.SETTINGS;end";
+  } else if (msg.includes("open whatsapp")) {
+    response = "Opening WhatsApp.";
+    window.location.href = "whatsapp://";
+  } else if (msg.includes("open phone") || msg.includes("dialer")) {
+    response = "Opening phone dialer.";
+    window.location.href = "tel:";
+  } else if (msg.includes("open messages") || msg.includes("sms")) {
+    response = "Opening messages.";
+    window.location.href = "sms:";
+  } else if (msg.includes("call") && msg.match(/\d{10}/)) {
+    const number = msg.match(/\d{10}/)[0];
+    response = `Calling ${number}`;
+    window.location.href = `tel:${number}`;
+  } else if (msg.includes("open camera")) {
+    openCamera();
+    response = "Camera opened.";
+  } else if (msg.includes("close camera")) {
+    closeCamera();
+    response = "Camera closed.";
+  } else if (msg.includes("take photo")) {
+    takePhoto();
+    response = "Photo captured.";
+  } else if (msg.includes("time")) {
+    const now = new Date();
+    response = `The time is ${now.toLocaleTimeString()} on ${now.toLocaleDateString()}`;
   }
 
-  async function askMagicBrain(prompt) {
-    const res = await fetch("https://api.hourfree.ai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer lomhk_live_9dPOM6YsZpWQfbBitWB6pBTax8fSvilLMwNU5weU2WExObtRNxEEMYtQinwAJ5h73ixpRzeVUuha0MVT"
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }]
-      })
-    });
-    const data = await res.json();
-    return data.choices?.[0]?.message?.content || "No response.";
+  output.textContent = `🤖 Neo: ${response}`;
+  speak(response);
+}
+
+talkBtn.onclick = () => {
+  output.textContent = "🎧 Listening...";
+  recognition.start();
+};
+
+recognition.onresult = (event) => {
+  const transcript = event.results[0][0].transcript;
+  output.textContent = `🗣️ You said: ${transcript}`;
+  replyTo(transcript);
+};
+
+function openCamera() {
+  navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+    cameraStream = stream;
+    cameraFeed.srcObject = stream;
+    cameraFeed.play();
+    cameraContainer.style.display = "flex";
+    capturedPhoto.style.display = "none";
+  }).catch(err => {
+    alert("Failed to access camera: " + err.message);
+  });
+}
+
+function closeCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+    cameraFeed.srcObject = null;
+    cameraContainer.style.display = "none";
+    capturedPhoto.style.display = "none";
+    cameraStream = null;
   }
+}
 
-  async function generateImage(prompt) {
-    try {
-      const res = await fetch("https://api.hourfree.ai/v1/images/generations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer lomhk_live_9dPOM6YsZpWQfbBitWB6pBTax8fSvilLMwNU5weU2WExObtRNxEEMYtQinwAJ5h73ixpRzeVUuha0MVT"
-        },
-        body: JSON.stringify({ prompt, n: 1, size: "512x512" })
-      });
-      const data = await res.json();
-      const imgUrl = data.data?.[0]?.url;
-
-      if (imgUrl) {
-        const img = document.createElement("img");
-        img.src = imgUrl;
-        img.style.maxWidth = "300px";
-        img.style.border = "2px solid #00bcd4";
-        img.style.marginTop = "10px";
-        document.body.appendChild(img);
-
-        const a = document.createElement("a");
-        a.href = imgUrl;
-        a.download = `photo/generated_${Date.now()}.png`;
-        a.click();
-
-        return "Image generated and downloaded.";
-      } else {
-        return "Image URL not found.";
-      }
-    } catch (e) {
-      console.error("Image generation failed:", e);
-      return "Error generating image.";
-    }
+function takePhoto() {
+  if (!cameraStream || !cameraFeed.videoWidth) {
+    alert("Camera is not active or not accessible.");
+    return;
   }
+  const context = cameraCanvas.getContext("2d");
+  cameraCanvas.width = cameraFeed.videoWidth;
+  cameraCanvas.height = cameraFeed.videoHeight;
+  context.drawImage(cameraFeed, 0, 0);
+  const imageData = cameraCanvas.toDataURL("image/png");
+  capturedPhoto.src = imageData;
+  capturedPhoto.style.display = "block";
+  const a = document.createElement("a");
+  a.href = imageData;
+  a.download = "photo.png";
+  a.click();
+}
 
-  async function replyTo(message) {
-    let response = "Sorry, I didn't get that.";
-    const msg = message.toLowerCase();
+// 3D Avatar
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: avatarCanvas, alpha: true });
+renderer.setSize(300, 300);
 
-    const siteMap = {
-      "youtube": "https://youtube.com",
-      "google": "https://google.com",
-      "github": "https://github.com",
-      "facebook": "https://facebook.com",
-      "instagram": "https://instagram.com",
-      "flipkart": "https://flipkart.com",
-      "amazon": "https://amazon.in",
-      "netflix": "https://netflix.com"
-    };
+const geometry = new THREE.SphereGeometry(1, 32, 32);
+const material = new THREE.MeshStandardMaterial({ color: 0x00bcd4, emissive: 0x004e61 });
+const avatar = new THREE.Mesh(geometry, material);
+scene.add(avatar);
 
-    if (msg.includes("exit") || msg.includes("shutdown") || msg.includes("close app") || msg.includes("band ho jao")) {
-      response = "Exiting now.";
-      speak(response);
-      document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%'>👋 Friday Closed</h1>";
-      return;
-    } else if (msg.startsWith("ask") || msg.startsWith("what is") || msg.startsWith("who is") || msg.startsWith("question")) {
-      const question = msg.replace(/ask|what is|who is|question/g, "").trim();
-      response = await askMagicBrain(question);
-    } else if (msg.startsWith("generate image") || msg.startsWith("make image") || msg.includes("make a photo")) {
-      const prompt = msg.replace(/generate image|make image|make a photo/g, "").trim();
-      response = await generateImage(prompt);
-    } else if (msg.includes("open camera") || msg.includes("turn on camera")) {
-      response = "Turning on the camera.";
-      openCamera();
-    } else if ((msg.includes("close") && msg.includes("camera")) || msg.includes("turn off camera")) {
-      response = "Turning off the camera.";
-      closeCamera();
-    } else if (msg.includes("take photo") || msg.includes("click photo") || msg.includes("capture photo") || msg.includes("take a picture")) {
-      response = "Capturing photo.";
-      takePhoto();
-    } else if (msg.includes("battery")) {
-      if ('getBattery' in navigator) {
-        const battery = await navigator.getBattery();
-        response = `Battery is at ${Math.round(battery.level * 100)} percent.`;
-      } else {
-        response = "Battery info not available.";
-      }
-    } else if (msg.includes("time")) {
-      const now = new Date();
-      response = `The time is ${now.toLocaleTimeString()} on ${now.toLocaleDateString()}`;
-    }
+const light = new THREE.PointLight(0xffffff, 1);
+light.position.set(5, 5, 5);
+scene.add(light);
 
-    // ✅ New commands to open mobile apps
-    else if (msg.includes("open settings")) {
-      response = "Opening phone settings.";
-      window.location.href = "intent:#Intent;action=android.settings.SETTINGS;end";
-    } else if (msg.includes("open whatsapp")) {
-      response = "Opening WhatsApp.";
-      window.location.href = "whatsapp://";
-    } else if (msg.includes("open phone") || msg.includes("dialer")) {
-      response = "Opening phone dialer.";
-      window.location.href = "tel:";
-    } else if (msg.includes("open messages") || msg.includes("sms")) {
-      response = "Opening messages.";
-      window.location.href = "sms:";
-    } else if (msg.includes("call") && msg.match(/\d{10}/)) {
-      const number = msg.match(/\d{10}/)[0];
-      response = `Calling ${number}`;
-      window.location.href = `tel:${number}`;
-    }
+camera.position.z = 3;
 
-    else if (msg.includes("open")) {
-      let found = false;
-      for (const key in siteMap) {
-        if (msg.includes(key)) {
-          window.open(siteMap[key], '_blank');
-          response = `Opening ${key}.`;
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        const raw = msg.replace("open", "").trim().replace(/\s+/g, "");
-        if (raw.length > 1) {
-          window.open("https://" + raw + ".com", "_blank");
-          response = `Opening ${raw}.com`;
-        } else {
-          response = "Please say the website name.";
-        }
-      }
-    }
-
-    output.textContent = `🤖 Friday: ${response}`;
-    speak(response);
-  }
-
-  talkBtn.onclick = () => {
-    output.textContent = "🎧 Listening...";
-    recognition.start();
-  };
-
-  recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript;
-    output.textContent = `🗣️ You said: ${transcript}`;
-    replyTo(transcript);
-  };
-
-  function openCamera() {
-    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-      cameraStream = stream;
-      cameraFeed.srcObject = stream;
-      cameraFeed.play();
-      cameraContainer.style.display = "flex";
-      capturedPhoto.style.display = "none";
-    }).catch(err => {
-      alert("Failed to access camera: " + err.message);
-    });
-  }
-
-  function closeCamera() {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop());
-      cameraFeed.srcObject = null;
-      cameraContainer.style.display = "none";
-      capturedPhoto.style.display = "none";
-      cameraStream = null;
-    }
-  }
-
-  function takePhoto() {
-    if (!cameraStream || !cameraFeed.videoWidth) {
-      alert("Camera is not active or not accessible.");
-      return;
-    }
-    const context = cameraCanvas.getContext("2d");
-    cameraCanvas.width = cameraFeed.videoWidth;
-    cameraCanvas.height = cameraFeed.videoHeight;
-    context.drawImage(cameraFeed, 0, 0);
-    const imageData = cameraCanvas.toDataURL("image/png");
-    capturedPhoto.src = imageData;
-    capturedPhoto.style.display = "block";
-    const a = document.createElement("a");
-    a.href = imageData;
-    a.download = "photo.png";
-    a.click();
-  }
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ canvas: avatarCanvas, alpha: true });
-  renderer.setSize(300, 300);
-
-  const geometry = new THREE.SphereGeometry(1, 32, 32);
-  const material = new THREE.MeshStandardMaterial({ color: 0x00bcd4, emissive: 0x004e61 });
-  const avatar = new THREE.Mesh(geometry, material);
-  scene.add(avatar);
-
-  const light = new THREE.PointLight(0xffffff, 1);
-  light.position.set(5, 5, 5);
-  scene.add(light);
-  camera.position.z = 3;
-
-  function animate() {
-    requestAnimationFrame(animate);
-    avatar.rotation.y += 0.01;
-    renderer.render(scene, camera);
-  }
-  animate();
+function animate() {
+  requestAnimationFrame(animate);
+  avatar.rotation.y += 0.01;
+  renderer.render(scene, camera);
+}
+animate();
 </script>
 
 </body>
