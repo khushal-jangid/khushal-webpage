@@ -3,24 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Friday AI Offline</title>
+  <title>Friday AI - Offline</title>
   <style>
     body {
-      margin: 0; background-color: #0b0f1a; color: white;
-      font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; height: 100vh;
+      background-color: #0b0f1a; color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100vh; margin: 0;
     }
-    button { padding: 12px 24px; margin: 10px; font-size: 18px; border-radius: 30px; border: none; cursor: pointer; }
+    button {
+      padding: 12px 24px; font-size: 18px; border: none;
+      border-radius: 30px; margin: 10px; cursor: pointer;
+    }
     #talkBtn { background: #00bcd4; color: white; }
-    #micBtn { background: #4CAF50; color: white; }
-    #output { margin-top: 20px; font-size: 16px; text-align: center; min-height: 40px; }
-    video, canvas, img { max-width: 320px; margin-top: 10px; border-radius: 10px; border: 2px solid #00bcd4; }
+    #output { margin-top: 15px; font-size: 16px; text-align: center; }
+    video, canvas, img {
+      margin-top: 10px; max-width: 320px; border-radius: 10px; border: 2px solid #00bcd4;
+    }
     .hidden { display: none; }
   </style>
 </head>
 <body>
   <button id="talkBtn">🎙️ Talk to Friday</button>
-  <button id="micBtn">🔁 Continuous Mic OFF</button>
   <div id="output">Say something to Friday...</div>
   <video id="cameraFeed" autoplay class="hidden"></video>
   <canvas id="cameraCanvas" class="hidden"></canvas>
@@ -28,95 +32,84 @@
 
 <script>
   const talkBtn = document.getElementById("talkBtn");
-  const micBtn = document.getElementById("micBtn");
   const output = document.getElementById("output");
   const cameraFeed = document.getElementById("cameraFeed");
   const cameraCanvas = document.getElementById("cameraCanvas");
   const capturedPhoto = document.getElementById("capturedPhoto");
-  let cameraStream = null;
-  let continuous = false;
 
+  let cameraStream = null;
+  let recognitionActive = false;
   const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = 'en-US';
-  recognition.interimResults = false;
+  recognition.lang = 'en-US'; recognition.interimResults = false;
 
   function speak(text) {
     const utter = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.speak(utter);
+    utter.lang = 'en-US'; window.speechSynthesis.speak(utter);
   }
 
-  function startListening() {
-    output.textContent = "🎧 Listening...";
+  function listen() {
+    if (recognitionActive) return;
     recognition.start();
+    recognitionActive = true;
+    output.textContent = "🎧 Listening...";
   }
 
-  talkBtn.onclick = () => startListening();
-
-  micBtn.onclick = () => {
-    continuous = !continuous;
-    micBtn.textContent = continuous ? "🟢 Continuous Mic ON" : "🔁 Continuous Mic OFF";
-    if (continuous) startListening();
-    else recognition.stop();
-  };
+  talkBtn.onclick = () => listen();
 
   recognition.onresult = (e) => {
     const msg = e.results[0][0].transcript.toLowerCase();
     output.textContent = `🗣️ You said: ${msg}`;
+    recognitionActive = false;
     handleCommand(msg);
   };
 
   recognition.onend = () => {
-    if (continuous) setTimeout(() => recognition.start(), 1000); // Delay to prevent repeat
+    recognitionActive = false;
+    setTimeout(() => listen(), 1500); // prevent repeat
   };
 
   function handleCommand(msg) {
-    let response = "Sorry, I didn’t get that.";
+    let res = "Sorry, I didn’t understand.";
 
-    if (msg.includes("your name")) response = "I'm Friday, your assistant.";
-    else if (msg.includes("time") || msg.includes("date")) {
+    if (msg.includes("name")) res = "I am Friday, your assistant.";
+    else if (msg.includes("time")) {
       const now = new Date();
-      response = `It is ${now.toLocaleTimeString()} on ${now.toLocaleDateString()}`;
+      res = `It is ${now.toLocaleTimeString()} on ${now.toLocaleDateString()}`;
     }
     else if (msg.includes("battery")) {
       navigator.getBattery().then(b => {
-        const level = Math.round(b.level * 100);
-        speak(`Battery is at ${level} percent.`);
-        output.textContent = `🔋 Battery: ${level}%`;
-      });
-      return;
+        res = `Battery is at ${Math.round(b.level * 100)} percent.`;
+        speak(res); output.textContent = res;
+      }); return;
     }
-    else if (msg.includes("camera")) openCamera(), response = "Opening camera.";
-    else if (msg.includes("photo") || msg.includes("picture")) takePhoto(), response = "Capturing photo.";
+    else if (msg.includes("camera")) { openCamera(); res = "Camera opened."; }
+    else if (msg.includes("photo") || msg.includes("picture")) { takePhoto(); res = "Photo taken."; }
     else if (msg.includes("note")) {
-      const note = prompt("Enter note:");
+      const note = prompt("Enter your note:");
       if (note) {
-        const blob = new Blob([note], {type: 'text/plain'});
+        const blob = new Blob([note], { type: 'text/plain' });
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = `note_${Date.now()}.txt`;
-        a.click();
-        response = "Note saved.";
-      } else response = "No note provided.";
+        a.href = URL.createObjectURL(blob); a.download = `note_${Date.now()}.txt`; a.click();
+        res = "Note saved.";
+      } else res = "No note saved.";
     }
     else if (msg.includes("call")) {
-      const number = prompt("Enter number:");
-      if (number) window.open(`tel:${number}`);
-      response = `Calling ${number}`;
+      const number = prompt("Enter number to call:");
+      if (number) { window.open(`tel:${number}`); res = `Calling ${number}`; }
     }
     else if (msg.includes("sms")) {
       const number = prompt("Enter number:");
-      const message = prompt("Enter message:");
-      if (number && message) window.open(`sms:${number}?body=${encodeURIComponent(message)}`);
-      response = `Sending SMS to ${number}`;
+      const text = prompt("Enter message:");
+      if (number && text) { window.open(`sms:${number}?body=${encodeURIComponent(text)}`); res = "SMS sent."; }
     }
     else if (msg.includes("flashlight")) {
-      document.body.style.backgroundColor = 
+      document.body.style.backgroundColor =
         document.body.style.backgroundColor === "white" ? "#0b0f1a" : "white";
-      response = "Toggled flashlight";
+      res = "Toggled flashlight.";
     }
 
-    output.textContent = `🤖 Friday: ${response}`;
-    speak(response);
+    output.textContent = `🤖 Friday: ${res}`;
+    speak(res);
   }
 
   function openCamera() {
@@ -124,24 +117,26 @@
       cameraFeed.srcObject = stream;
       cameraStream = stream;
       cameraFeed.classList.remove("hidden");
-    });
+    }).catch(err => alert("Camera error: " + err.message));
   }
 
   function takePhoto() {
-    if (!cameraStream) return alert("Camera not open.");
+    if (!cameraStream) return alert("Open camera first.");
     const ctx = cameraCanvas.getContext("2d");
     cameraCanvas.width = cameraFeed.videoWidth;
     cameraCanvas.height = cameraFeed.videoHeight;
     ctx.drawImage(cameraFeed, 0, 0);
-    const data = cameraCanvas.toDataURL("image/png");
-    capturedPhoto.src = data;
+    const imgData = cameraCanvas.toDataURL("image/png");
+    capturedPhoto.src = imgData;
     capturedPhoto.classList.remove("hidden");
 
     const a = document.createElement("a");
-    a.href = data;
+    a.href = imgData;
     a.download = "photo.png";
     a.click();
   }
+
+  window.onload = () => listen(); // auto mic start on load
 </script>
 </body>
 </html>
