@@ -139,6 +139,17 @@
                     </div>
                     <p class="text-sm text-gray-400">"Help", "What can you do?"</p>
                 </div>
+                
+                <!-- Exit -->
+                <div class="command-card bg-gray-800 rounded-xl shadow p-5 transition-all cursor-pointer hover:border-indigo-400 border border-transparent glow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="bg-blue-900 p-2 rounded-lg glow">
+                            <i class="fas fa-sign-out-alt text-blue-400"></i>
+                        </div>
+                        <h3 class="font-medium text-gray-200">Exit</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">"Exit", "Goodbye"</p>
+                </div>
             </div>
         </div>
 
@@ -258,6 +269,15 @@
             // Help commands
             else if (command.includes('help') || command.includes('what can you do')) {
                 speakResponse('I can help with camera, notes, location, time, and battery information. Try saying "take a photo" or "what time is it"');
+            }
+            // Exit command
+            else if (command.includes('exit') || command.includes('goodbye')) {
+                speakResponse('Goodbye! Have a nice day!');
+                setTimeout(() => {
+                    recognition.stop();
+                    document.querySelector('.fa-microphone').closest('button').classList.remove('bg-red-500', 'animate-pulse');
+                    document.querySelector('.fa-microphone').closest('button').classList.add('bg-indigo-600');
+                }, 1000);
             }
         }
 
