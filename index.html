@@ -1,1001 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Friday AI Assistant</title>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #0b0f2a, #1a1f3e);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #e0e0ff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-      transition: background 0.5s ease;
-    }
-    
-    .background-glow {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, rgba(0, 188, 212, 0.1) 0%, transparent 70%);
-      z-index: -1;
-      pointer-events: none;
-    }
-    
-    .permission-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 15, 40, 0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 20px;
-      text-align: center;
-      backdrop-filter: blur(10px);
-    }
-    
-    .permission-content {
-      max-width: 500px;
-      background: rgba(5, 10, 25, 0.7);
-      padding: 40px;
-      border-radius: 20px;
-      border: 1px solid rgba(0, 188, 212, 0.3);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-    
-    .permission-title {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      background: linear-gradient(to right, #00bcd4, #00ffea);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .permission-text {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      line-height: 1.6;
-      opacity: 0.9;
-    }
-    
-    .permission-btn {
-      padding: 15px 40px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(to right, #00bcd4, #00a8ff);
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-    }
-    
-    .permission-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0, 188, 212, 0.3);
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-      width: 100%;
-      max-width: 600px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 0.5s;
-    }
-    
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(to right, #00bcd4, #00ffea);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
-    }
-    
-    .subtitle {
-      font-size: 1.1rem;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
-    
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 600px;
-      gap: 25px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 1s;
-    }
-    
-    .avatar-container {
-      position: relative;
-      width: 280px;
-      height: 280px;
-      margin: 0 auto;
-    }
-    
-    #avatar {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      box-shadow: 0 0 30px rgba(0, 188, 212, 0.4);
-    }
-    
-    .status-indicator {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      background-color: #00ff9d;
-      box-shadow: 0 0 10px #00ff9d;
-      animation: pulse 1.5s infinite;
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(0.95); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(0.95); }
-    }
-    
-    .controls {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
-    }
-    
-    .control-btn {
-      padding: 12px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 50px;
-      background: rgba(0, 188, 212, 0.2);
-      color: #e0e0ff;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(0, 188, 212, 0.3);
-    }
-    
-    .control-btn:hover {
-      background: rgba(0, 188, 212, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
-    }
-    
-    .control-btn:active {
-      transform: translateY(0);
-    }
-    
-    .output-container {
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 25px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      min-height: 200px;
-    }
-    
-    .output-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0, 188, 212, 0.2);
-    }
-    
-    .output-header h2 {
-      font-size: 1.3rem;
-      color: #00bcd4;
-    }
-    
-    #output {
-      min-height: 120px;
-      padding: 15px;
-      background: rgba(5, 10, 25, 0.5);
-      border-radius: 15px;
-      font-size: 16px;
-      line-height: 1.6;
-      overflow-y: auto;
-      max-height: 200px;
-    }
-    
-    .command-list {
-      margin-top: 30px;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 25px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 1.5s;
-    }
-    
-    .command-list h2 {
-      font-size: 1.3rem;
-      color: #00bcd4;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    
-    .commands {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 15px;
-    }
-    
-    .command-card {
-      background: rgba(5, 10, 25, 0.5);
-      border-radius: 15px;
-      padding: 15px;
-      border-left: 3px solid #00bcd4;
-      transition: transform 0.3s ease;
-    }
-    
-    .command-card:hover {
-      transform: translateY(-5px);
-      background: rgba(5, 10, 25, 0.7);
-    }
-    
-    .command-icon {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-      color: #00bcd4;
-    }
-    
-    .command-title {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    
-    .command-desc {
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-    
-    .camera-container {
-      margin-top: 20px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 20px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-    }
-    
-    video, canvas, img {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-top: 15px;
-      border: 1px solid rgba(0, 188, 212, 0.3);
-    }
-    
-    .footer {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.7;
-      padding: 10px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 2s;
-    }
-    
-    .mic-wave {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      height: 40px;
-    }
-    
-    .wave-bar {
-      width: 6px;
-      background: #00bcd4;
-      border-radius: 3px;
-      animation: wave 1.2s infinite ease-in-out;
-    }
-    
-    @keyframes wave {
-      0%, 100% { height: 10px; }
-      50% { height: 30px; }
-    }
-    
-    .wave-bar:nth-child(1) { animation-delay: 0s; height: 8px; }
-    .wave-bar:nth-child(2) { animation-delay: 0.2s; height: 16px; }
-    .wave-bar:nth-child(3) { animation-delay: 0.4s; height: 24px; }
-    .wave-bar:nth-child(4) { animation-delay: 0.6s; height: 30px; }
-    .wave-bar:nth-child(5) { animation-delay: 0.8s; height: 24px; }
-    .wave-bar:nth-child(6) { animation-delay: 1.0s; height: 16px; }
-    .wave-bar:nth-child(7) { animation-delay: 1.2s; height: 8px; }
-    
-    /* Responsive design */
-    @media (max-width: 600px) {
-      .permission-title {
-        font-size: 2rem;
-      }
-      h1 {
-        font-size: 2rem;
-      }
-      .avatar-container {
-        width: 220px;
-        height: 220px;
-      }
-      .commands {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friday AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .listening-animation {
+            animation: pulse 1.5s infinite;
+        }
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .camera-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glow {
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+        .glow:hover {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.8);
+        }
+    </style>
 </head>
-<body>
-  <div class="background-glow"></div>
-  
-  <!-- Permission Screen -->
-  <div class="permission-screen" id="permissionScreen">
-    <div class="permission-content">
-      <h1 class="permission-title">Friday AI Assistant</h1>
-      <div class="permission-text">
-        <p>Friday needs microphone access to listen to your commands.</p>
-        <p>This is a one-time permission. Once granted, Friday will always be listening for your voice commands.</p>
-        <p>Your privacy is important - audio processing happens locally in your browser.</p>
-      </div>
-      <button class="permission-btn" id="grantPermission">Grant Microphone Access</button>
-      <p style="margin-top: 20px; opacity: 0.7;">Note: Microphone access is required for voice commands</p>
-    </div>
-  </div>
-  
-  <!-- Main Content (initially hidden) -->
-  <div class="header" id="mainHeader">
-    <h1>Friday AI Assistant</h1>
-    <div class="subtitle">Always listening, always ready to help</div>
-  </div>
-  
-  <div class="container" id="mainContainer">
-    <div class="avatar-container">
-      <canvas id="avatar"></canvas>
-      <div class="status-indicator" id="micIndicator"></div>
-    </div>
-    
-    <div class="controls">
-      <button class="control-btn" id="cameraBtn">
-        <span>📷</span> Camera
-      </button>
-      <button class="control-btn" id="micToggle">
-        <span>🔇</span> Mute Mic
-      </button>
-      <button class="control-btn" id="darkModeBtn">
-        <span>🌙</span> Dark Mode
-      </button>
-    </div>
-    
-    <div class="output-container">
-      <div class="output-header">
-        <h2>Assistant Response</h2>
-        <div class="status">Listening...</div>
-      </div>
-      <div id="output">Waiting for your command...</div>
-    </div>
-    
-    <div class="command-list">
-      <h2>Voice Commands</h2>
-      <div class="commands">
-        <div class="command-card">
-          <div class="command-icon">📷</div>
-          <div class="command-title">Camera Access</div>
-          <div class="command-desc">"Open camera", "Take a photo"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📱</div>
-          <div class="command-title">Call Contacts</div>
-          <div class="command-desc">"Call Mom", "Call Dad"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🔦</div>
-          <div class="command-title">Torch Control</div>
-          <div class="command-desc">"Turn on torch", "Turn off flashlight"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📝</div>
-          <div class="command-title">Save Note</div>
-          <div class="command-desc">"Save this note: [your text]"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📍</div>
-          <div class="command-title">Get Location</div>
-          <div class="command-desc">"Where am I?", "What's my location?"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🕒</div>
-          <div class="command-title">Time & Date</div>
-          <div class="command-desc">"What time is it?", "Current date"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🔋</div>
-          <div class="command-title">Battery Status</div>
-          <div class="command-desc">"Battery level", "How's my battery?"</div>
-        </div>
-      </div>
-    </div>
-    
-    <div id="cameraContainer" class="camera-container">
-      <h3>Camera Preview</h3>
-      <video id="cameraFeed" autoplay></video>
-      <canvas id="cameraCanvas" style="display:none;"></canvas>
-      <img id="capturedPhoto" />
-      <button class="control-btn" id="captureBtn" style="margin-top: 15px;">
-        <span>📸</span> Capture Photo
-      </button>
-      <button class="control-btn" id="closeCameraBtn" style="margin-top: 10px;">
-        <span>❌</span> Close Camera
-      </button>
-    </div>
-  </div>
-  
-  <div class="footer">
-    Friday AI Assistant • Always Listening • v3.0
-  </div>
-  
-  <div class="mic-wave" id="micWave">
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-  </div>
-  
-<script>
-  // DOM Elements
-  const permissionScreen = document.getElementById('permissionScreen');
-  const grantPermissionBtn = document.getElementById('grantPermission');
-  const mainHeader = document.getElementById('mainHeader');
-  const mainContainer = document.getElementById('mainContainer');
-  const output = document.getElementById("output");
-  const micIndicator = document.getElementById("micIndicator");
-  const avatarCanvas = document.getElementById("avatar");
-  const cameraContainer = document.getElementById("cameraContainer");
-  const cameraFeed = document.getElementById("cameraFeed");
-  const cameraCanvas = document.getElementById("cameraCanvas");
-  const capturedPhoto = document.getElementById("capturedPhoto");
-  const cameraBtn = document.getElementById("cameraBtn");
-  const captureBtn = document.getElementById("captureBtn");
-  const closeCameraBtn = document.getElementById("closeCameraBtn");
-  const micToggle = document.getElementById("micToggle");
-  const darkModeBtn = document.getElementById("darkModeBtn");
-  const micWave = document.getElementById('micWave');
-  
-  // State variables
-  let cameraStream = null;
-  let micMuted = false;
-  let darkMode = true;
-  let recognitionActive = false;
-  let permissionGranted = false;
-  let torchActive = false;
-  
-  // Predefined contacts
-  const contacts = {
-    "mom": "8930312540",
-    "dad": "9468401254"
-  };
+<body class="bg-gray-900 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-indigo-400 mb-2 glow">Friday AI</h1>
+            <p class="text-gray-400">Your personal voice assistant</p>
+        </header>
 
-  // Initialize Speech Recognition
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recognition;
-  
-  // Initialize Speech Synthesis
-  const synth = window.speechSynthesis;
-  
-  // Request permission on button click
-  grantPermissionBtn.addEventListener('click', requestMicrophonePermission);
-  
-  // Function to request microphone permission
-  async function requestMicrophonePermission() {
-    try {
-      // Request microphone permission
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-      // Close the stream immediately since we don't need it for recognition
-      stream.getTracks().forEach(track => track.stop());
-      
-      // Hide permission screen
-      permissionScreen.style.display = 'none';
-      
-      // Show main content
-      mainHeader.style.display = 'block';
-      mainContainer.style.display = 'flex';
-      
-      // Initialize speech recognition
-      initializeRecognition();
-      
-      // Update state
-      permissionGranted = true;
-      
-      // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'What can you do?'</i>";
-      speak("Microphone access granted! I'm Friday, your AI assistant. How can I help you today?");
-      
-    } catch (error) {
-      console.error("Permission error:", error);
-      permissionScreen.querySelector('.permission-text').innerHTML = 
-        `<p style="color: #ff6b6b;">Permission denied. Microphone access is required.</p>
-         <p>Please refresh the page and allow microphone access when prompted.</p>`;
-    }
-  }
-  
-  // Initialize speech recognition
-  function initializeRecognition() {
-    if (!SpeechRecognition) {
-      output.textContent = "Speech recognition not supported in this browser.";
-      return;
-    }
-    
-    recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-    
-    // Start recognition
-    startRecognition();
-    
-    // Event handlers
-    recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript;
-      processCommand(transcript);
-    };
-    
-    recognition.onerror = (event) => {
-      console.error("Recognition error:", event.error);
-      if (event.error === 'no-speech') {
-        // Automatically restart if no speech is detected
-        recognition.start();
-      } else if (!micMuted) {
-        output.textContent = "Recognition error: " + event.error;
-      }
-    };
-    
-    recognition.onend = () => {
-      // Automatically restart recognition if not muted
-      if (!micMuted && recognitionActive) {
-        recognition.start();
-      }
-    };
-  }
-  
-  // Start voice recognition
-  function startRecognition() {
-    if (!recognition) return;
-    
-    recognition.start();
-    micIndicator.style.backgroundColor = "#00ff9d";
-    micIndicator.style.boxShadow = "0 0 10px #00ff9d";
-    recognitionActive = true;
-    micToggle.innerHTML = '<span>🔇</span> Mute Mic';
-    micWave.style.display = 'flex';
-  }
-  
-  // Stop voice recognition
-  function stopRecognition() {
-    if (!recognition) return;
-    
-    recognition.stop();
-    micIndicator.style.backgroundColor = "#ff3b30";
-    micIndicator.style.boxShadow = "0 0 10px #ff3b30";
-    recognitionActive = false;
-    micToggle.innerHTML = '<span>🎤</span> Unmute Mic';
-    micWave.style.display = 'none';
-  }
-  
-  // Toggle microphone
-  micToggle.addEventListener('click', () => {
-    micMuted = !micMuted;
-    if (micMuted) {
-      stopRecognition();
-    } else {
-      startRecognition();
-    }
-  });
-  
-  // Toggle dark mode
-  darkModeBtn.addEventListener('click', () => {
-    darkMode = !darkMode;
-    if (darkMode) {
-      document.body.style.background = "linear-gradient(135deg, #0b0f2a, #1a1f3e)";
-      darkModeBtn.innerHTML = '<span>🌙</span> Dark Mode';
-    } else {
-      document.body.style.background = "linear-gradient(135deg, #3a3f5a, #5a5f7a)";
-      darkModeBtn.innerHTML = '<span>☀️</span> Light Mode';
-    }
-  });
-  
-  // Speak function
-  function speak(text) {
-    if (!synth.speaking) {
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'en-US';
-      utter.rate = 1;
-      utter.pitch = 1.0;
-      
-      const voices = synth.getVoices();
-      let selectedVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('en')) || 
-                         voices.find(v => v.lang.includes('en'));
-      
-      if (selectedVoice) utter.voice = selectedVoice;
-      
-      synth.speak(utter);
-      
-      // When done speaking, restart recognition if not muted
-      utter.onend = () => {
-        if (!micMuted && permissionGranted) {
-          recognition.start();
-        }
-      };
-    }
-  }
-  
-  // AI Response function
-  async function askAI(prompt) {
-    // Simulated AI response for this demo
-    // In a real app, this would connect to an AI API
-    const responses = [
-      "I've processed your request successfully.",
-      "I'm on it! Your command has been executed.",
-      "Done! Is there anything else I can help with?",
-      "Completed as requested.",
-      "Your wish is my command! Task completed."
-    ];
-    
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-    return `${randomResponse} You said: "${prompt}"`;
-  }
-  
-  // Camera functions
-  cameraBtn.addEventListener('click', openCamera);
-  captureBtn.addEventListener('click', takePhoto);
-  closeCameraBtn.addEventListener('click', closeCamera);
-  
-  function openCamera() {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-      .then(stream => {
-        cameraStream = stream;
-        cameraFeed.srcObject = stream;
-        cameraContainer.style.display = "flex";
-        capturedPhoto.style.display = "none";
-      })
-      .catch(err => {
-        output.textContent = "Failed to access camera: " + err.message;
-      });
-  }
-  
-  function closeCamera() {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop());
-      cameraFeed.srcObject = null;
-    }
-    cameraContainer.style.display = "none";
-  }
-  
-  function takePhoto() {
-    if (!cameraStream) return;
-    
-    const context = cameraCanvas.getContext("2d");
-    cameraCanvas.width = cameraFeed.videoWidth;
-    cameraCanvas.height = cameraFeed.videoHeight;
-    context.drawImage(cameraFeed, 0, 0);
-    
-    const imageData = cameraCanvas.toDataURL("image/png");
-    capturedPhoto.src = imageData;
-    capturedPhoto.style.display = "block";
-    
-    output.textContent = "Photo captured successfully!";
-    speak("Photo captured!");
-  }
-  
-  // Save note function
-  function saveNote(content) {
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `friday_note_${Date.now()}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-    return "Note saved successfully!";
-  }
-  
-  // Location function
-  function getLocation() {
-    return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject("Geolocation not supported");
-        return;
-      }
-      
-      navigator.geolocation.getCurrentPosition(
-        position => resolve({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          accuracy: position.coords.accuracy
-        }),
-        error => reject(error.message)
-      );
-    });
-  }
-  
-  // Battery function
-  async function getBatteryStatus() {
-    if ('getBattery' in navigator) {
-      const battery = await navigator.getBattery();
-      return `Battery: ${Math.round(battery.level * 100)}%`;
-    }
-    return "Battery info not available";
-  }
-  
-  // Torch control function
-  async function toggleTorch(state) {
-    try {
-      if (!cameraStream) {
-        // Open camera if not already open
-        await openCamera();
-      }
-      
-      const track = cameraStream.getVideoTracks()[0];
-      if (!track) throw new Error("No video track available");
-      
-      if (track.getCapabilities().torch) {
-        await track.applyConstraints({
-          advanced: [{torch: state}]
+        <!-- Assistant Status -->
+        <div class="bg-gray-800 rounded-xl shadow-md p-6 mb-8 glow">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-200">Assistant Response</h2>
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-green-400 glow"></div>
+                    <span class="text-sm text-gray-400">Active</span>
+                </div>
+            </div>
+            
+            <div class="bg-gray-700 rounded-lg p-4 text-center">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <i class="fas fa-microphone text-indigo-400 listening-animation glow"></i>
+                    <p class="text-gray-200 font-medium">Listening...</p>
+                </div>
+                <p class="text-gray-400">Waiting for your command...</p>
+            </div>
+            
+            <div class="mt-4 flex justify-center">
+                <button id="voiceBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full p-4 shadow-lg transition-all glow">
+                    <i class="fas fa-microphone text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Commands -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-200 mb-4">Voice Commands</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Camera -->
+                <div class="command-card bg-gray-800 rounded-xl shadow p-5 transition-all cursor-pointer hover:border-indigo-400 border border-transparent glow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="bg-indigo-900 p-2 rounded-lg glow">
+                            <i class="fas fa-camera text-indigo-400"></i>
+                        </div>
+                        <h3 class="font-medium text-gray-200">Camera Access</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">"Open camera", "Take a photo"</p>
+                </div>
+                
+                <!-- Notes -->
+                <div class="command-card bg-gray-800 rounded-xl shadow p-5 transition-all cursor-pointer hover:border-indigo-400 border border-transparent glow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="bg-green-900 p-2 rounded-lg glow">
+                            <i class="fas fa-sticky-note text-green-400"></i>
+                        </div>
+                        <h3 class="font-medium text-gray-200">Save Note</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">"Save this note: [your text]"</p>
+                </div>
+                
+                <!-- Location -->
+                <div class="command-card bg-gray-800 rounded-xl shadow p-5 transition-all cursor-pointer hover:border-indigo-400 border border-transparent glow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="bg-purple-900 p-2 rounded-lg glow">
+                            <i class="fas fa-map-marker-alt text-purple-400"></i>
+                        </div>
+                        <h3 class="font-medium text-gray-200">Get Location</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">"Where am I?", "What's my location?"</p>
+                </div>
+                
+                <!-- Time -->
+                <div class="command-card bg-gray-800 rounded-xl shadow p-5 transition-all cursor-pointer hover:border-indigo-400 border border-transparent glow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="bg-red-900 p-2 rounded-lg glow">
+                            <i class="fas fa-clock text-red-400"></i>
+                        </div>
+                        <h3 class="font-medium text-gray-200">Time & Date</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">"What time is it?", "Current date"</p>
+                </div>
+                
+                <!-- Battery -->
+                <div class="command-card bg-gray-800 rounded-xl shadow p-5 transition-all cursor-pointer hover:border-indigo-400 border border-transparent glow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="bg-pink-900 p-2 rounded-lg glow">
+                            <i class="fas fa-battery-three-quarters text-pink-400"></i>
+                        </div>
+                        <h3 class="font-medium text-gray-200">Battery Status</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">"Battery level", "How's my battery?"</p>
+                </div>
+                
+                <!-- More -->
+                <div class="command-card bg-gray-800 rounded-xl shadow p-5 transition-all cursor-pointer hover:border-indigo-400 border border-transparent glow">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="bg-gray-700 p-2 rounded-lg glow">
+                            <i class="fas fa-ellipsis-h text-gray-400"></i>
+                        </div>
+                        <h3 class="font-medium text-gray-200">More Commands</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">"Help", "What can you do?"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Camera Preview -->
+        <div class="bg-gray-800 rounded-xl shadow-md overflow-hidden glow">
+            <div class="flex items-center justify-between bg-gray-700 px-6 py-3 border-b border-gray-600">
+                <h2 class="text-xl font-semibold text-gray-200">Camera Preview</h2>
+                <div class="flex space-x-2">
+                    <button class="text-gray-500 hover:text-indigo-600">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-indigo-600">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="camera-preview aspect-video flex items-center justify-center">
+                <div class="text-center text-white">
+                    <i class="fas fa-camera text-4xl mb-2"></i>
+                    <p>Camera feed will appear here</p>
+                </div>
+            </div>
+            <div class="bg-gray-700 px-6 py-3 flex justify-center space-x-4">
+                <button class="bg-indigo-600 text-white rounded-full p-3 hover:bg-indigo-700 glow">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <button class="bg-gray-600 text-gray-200 rounded-full p-3 hover:bg-gray-500 border border-gray-500 glow">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="bg-gray-600 text-gray-200 rounded-full p-3 hover:bg-gray-500 border border-gray-500 glow">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button class="bg-gray-600 text-gray-200 rounded-full p-3 hover:bg-gray-500 border border-gray-500 glow">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-400 text-sm">
+            <p>Friday AI Assistant &copy; 2023 | Say "Hey Friday" to activate</p>
+        </footer>
+    </div>
+
+    <script>
+        // Voice command button interaction
+        const voiceBtn = document.getElementById('voiceBtn');
+        let isListening = false;
+        
+        voiceBtn.addEventListener('click', () => {
+            isListening = !isListening;
+            
+            if (isListening) {
+                voiceBtn.classList.remove('bg-indigo-600');
+                voiceBtn.classList.add('bg-red-500', 'animate-pulse');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone-slash text-2xl"></i>';
+                // Here you would normally start voice recognition
+                console.log("Listening for commands...");
+            } else {
+                voiceBtn.classList.remove('bg-red-500', 'animate-pulse');
+                voiceBtn.classList.add('bg-indigo-600');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone text-2xl"></i>';
+                // Here you would stop voice recognition
+                console.log("Stopped listening");
+            }
         });
-        torchActive = state;
-        return true;
-      } else {
-        throw new Error("Torch not supported on this device");
-      }
-    } catch (error) {
-      console.error("Torch error:", error);
-      return false;
-    }
-  }
-  
-  // Process voice commands
-  async function processCommand(transcript) {
-    const msg = transcript.toLowerCase();
-    let response = "I'm not sure how to help with that.";
-    
-    // Display user command
-    output.innerHTML = `<strong>You said:</strong> ${transcript}`;
-    
-    // Stop recognition while processing
-    recognition.stop();
-    micWave.style.display = 'none';
-    
-    // Simple command processing
-    if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
-      response = "Hello! How can I assist you today?";
-    } 
-    else if (msg.includes("name") || msg.includes("who are you")) {
-      response = "I'm Friday, your AI assistant. Always at your service!";
-    }
-    else if (msg.includes("camera") || msg.includes("photo")) {
-      if (msg.includes("open") || msg.includes("turn on")) {
-        openCamera();
-        response = "Opening camera...";
-      } 
-      else if (msg.includes("close") || msg.includes("turn off")) {
-        closeCamera();
-        response = "Camera closed";
-      }
-      else if (msg.includes("take") || msg.includes("capture")) {
-        takePhoto();
-        response = "Taking photo...";
-      }
-    }
-    else if (msg.includes("note") || msg.includes("remember")) {
-      const noteContent = msg.replace(/(save|note|remember)/gi, "").trim();
-      if (noteContent) {
-        response = saveNote(noteContent);
-      } else {
-        response = "Please tell me what to save in the note";
-      }
-    }
-    else if (msg.includes("call")) {
-      const contact = msg.replace("call", "").trim();
-      if (contact) {
-        // Check if it's a predefined contact
-        if (contacts[contact]) {
-          response = `Calling ${contact} at ${contacts[contact]}...`;
-        } else {
-          response = `Calling ${contact}...`;
-        }
-      } else {
-        response = "Who would you like to call?";
-      }
-    }
-    // Add torch commands
-    else if (msg.includes("torch") || msg.includes("flashlight")) {
-      if (msg.includes("on") || msg.includes("activate")) {
-        const success = await toggleTorch(true);
-        response = success ? "Torch activated!" : "Couldn't activate torch. Your device might not support this feature.";
-      } 
-      else if (msg.includes("off") || msg.includes("deactivate")) {
-        const success = await toggleTorch(false);
-        response = success ? "Torch deactivated!" : "Couldn't deactivate torch.";
-      }
-    }
-    else if (msg.includes("location") || msg.includes("where am i")) {
-      try {
-        const location = await getLocation();
-        response = `Your location: ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`;
-      } catch (e) {
-        response = "Couldn't get location: " + e;
-      }
-    }
-    else if (msg.includes("time") || msg.includes("date")) {
-      const now = new Date();
-      response = `Current time: ${now.toLocaleTimeString()}, Date: ${now.toLocaleDateString()}`;
-    }
-    else if (msg.includes("battery")) {
-      response = await getBatteryStatus();
-    }
-    else if (msg.includes("thank")) {
-      response = "You're welcome! Is there anything else I can do for you?";
-    }
-    else if (msg.includes("command") || msg.includes("can you do")) {
-      response = "I can help with: opening camera, taking photos, saving notes, making calls, telling time, checking battery, controlling torch, and more!";
-    }
-    else if (msg.includes("exit") || msg.includes("goodbye")) {
-      response = "Goodbye! Have a great day!";
-      speak(response);
-      setTimeout(() => {
-        output.textContent = "Friday has exited. Refresh the page to restart.";
-      }, 2000);
-      return;
-    }
-    else {
-      // Send to AI for more complex requests
-      response = await askAI(transcript);
-    }
-    
-    // Display and speak response
-    output.innerHTML += `<br><br><strong>Friday:</strong> ${response}`;
-    speak(response);
-    
-    // Restart recognition if mic is not muted
-    if (!micMuted && permissionGranted) {
-      micWave.style.display = 'flex';
-      setTimeout(() => recognition.start(), 1000);
-    }
-  }
-  
-  // 3D Avatar
-  const scene = new THREE.Scene();
-  const camera3D = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ 
-    canvas: avatarCanvas, 
-    alpha: true,
-    antialias: true
-  });
-  renderer.setSize(280, 280);
-  renderer.setClearColor(0x000000, 0);
-  
-  // Create glowing sphere avatar
-  const geometry = new THREE.SphereGeometry(1, 32, 32);
-  
-  // Main sphere
-  const material = new THREE.MeshStandardMaterial({ 
-    color: 0x00bcd4,
-    emissive: 0x0088aa,
-    emissiveIntensity: 1.5,
-    metalness: 0.8,
-    roughness: 0.2
-  });
-  const avatar = new THREE.Mesh(geometry, material);
-  scene.add(avatar);
-  
-  // Glow effect
-  const glowGeometry = new THREE.SphereGeometry(1.05, 32, 32);
-  const glowMaterial = new THREE.MeshBasicMaterial({
-    color: 0x00bcd4,
-    transparent: true,
-    opacity: 0.3
-  });
-  const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-  scene.add(glow);
-  
-  // Lights
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-  scene.add(ambientLight);
-  
-  const pointLight = new THREE.PointLight(0x00ffff, 1.5);
-  pointLight.position.set(3, 3, 3);
-  scene.add(pointLight);
-  
-  const pointLight2 = new THREE.PointLight(0xff00ff, 0.5);
-  pointLight2.position.set(-3, -3, -3);
-  scene.add(pointLight2);
-  
-  camera3D.position.z = 3;
-  
-  // Animation
-  function animate() {
-    requestAnimationFrame(animate);
-    
-    const time = Date.now() * 0.001;
-    
-    // Rotate avatar
-    avatar.rotation.x = Math.sin(time * 0.3) * 0.2;
-    avatar.rotation.y = time * 0.5;
-    
-    // Rotate glow
-    glow.rotation.y = time * 0.5;
-    glow.rotation.x = Math.cos(time * 0.2) * 0.2;
-    
-    // Pulsing effect
-    const pulse = Math.sin(time * 2) * 0.05 + 1;
-    avatar.scale.set(pulse, pulse, pulse);
-    glow.scale.set(pulse, pulse, pulse);
-    
-    // Light movement
-    pointLight.position.x = Math.sin(time * 0.7) * 4;
-    pointLight.position.y = Math.cos(time * 0.5) * 4;
-    
-    renderer.render(scene, camera3D);
-  }
-  
-  animate();
-</script>
+        
+        // Flip camera button
+        const flipBtn = document.querySelector('.fa-sync-alt').closest('button');
+        let isFrontCamera = true;
+        
+        flipBtn.addEventListener('click', () => {
+            isFrontCamera = !isFrontCamera;
+            console.log(`Switched to ${isFrontCamera ? 'front' : 'rear'} camera`);
+            flipBtn.classList.toggle('bg-indigo-600', isFrontCamera);
+            flipBtn.classList.toggle('bg-gray-600', !isFrontCamera);
+        });
+
+        // Command cards interaction
+        const commandCards = document.querySelectorAll('.command-card');
+        commandCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const commandText = card.querySelector('p').textContent;
+                const exampleCommand = commandText.match(/"([^"]+)"/)[1];
+                console.log(`Executing command: ${exampleCommand}`);
+                
+                // Show feedback
+                card.classList.add('bg-indigo-900', 'border-indigo-400');
+                setTimeout(() => {
+                    card.classList.remove('bg-indigo-900', 'border-indigo-400');
+                }, 500);
+            });
+        });
+    </script>
 </body>
 </html>
