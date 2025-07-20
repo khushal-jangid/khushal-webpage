@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Friday AI Assistant</title>
+  <title>Friday AI Assistant - Enhanced</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
   <style>
     * {
@@ -418,6 +418,106 @@
       text-align: center;
     }
     
+    /* Calculator Panel */
+    .calculator-container {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 15, 40, 0.9);
+      border-radius: 20px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 188, 212, 0.3);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      z-index: 1002;
+      width: 320px;
+    }
+    
+    .calculator-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .calculator-header h3 {
+      color: #00bcd4;
+      font-size: 1.4rem;
+    }
+    
+    .calculator-close {
+      background: none;
+      border: none;
+      color: #e0e0ff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    
+    .calculator-close:hover {
+      opacity: 1;
+    }
+    
+    #calculator-display {
+      width: 100%;
+      height: 60px;
+      background: rgba(5, 10, 25, 0.7);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 15px;
+      font-size: 1.8rem;
+      color: #e0e0ff;
+      overflow: hidden;
+      border: 1px solid rgba(0, 188, 212, 0.2);
+    }
+    
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    
+    .calc-btn {
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      background: rgba(0, 188, 212, 0.15);
+      color: #e0e0ff;
+      border: 1px solid rgba(0, 188, 212, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .calc-btn:hover {
+      background: rgba(0, 188, 212, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .calc-btn:active {
+      transform: translateY(0);
+    }
+    
+    .calc-btn.operator {
+      background: rgba(0, 188, 212, 0.3);
+    }
+    
+    .calc-btn.equals {
+      background: linear-gradient(to right, #00bcd4, #00a8ff);
+    }
+    
+    .calc-btn.clear {
+      background: rgba(255, 75, 75, 0.3);
+    }
+    
     /* Responsive design */
     @media (max-width: 600px) {
       .permission-title {
@@ -435,6 +535,9 @@
       }
       .website-grid {
         grid-template-columns: repeat(3, 1fr);
+      }
+      .calculator-container {
+        width: 90%;
       }
     }
   </style>
@@ -456,10 +559,44 @@
     </div>
   </div>
   
+  <!-- Calculator Panel -->
+  <div class="calculator-container" id="calculatorContainer">
+    <div class="calculator-header">
+      <h3>Voice Calculator</h3>
+      <button class="calculator-close" id="closeCalculatorBtn">×</button>
+    </div>
+    <div id="calculator-display">0</div>
+    <div class="calculator-grid">
+      <div class="calc-btn clear" data-value="clear">C</div>
+      <div class="calc-btn" data-value="backspace">⌫</div>
+      <div class="calc-btn operator" data-value="%">%</div>
+      <div class="calc-btn operator" data-value="/">÷</div>
+      
+      <div class="calc-btn" data-value="7">7</div>
+      <div class="calc-btn" data-value="8">8</div>
+      <div class="calc-btn" data-value="9">9</div>
+      <div class="calc-btn operator" data-value="*">×</div>
+      
+      <div class="calc-btn" data-value="4">4</div>
+      <div class="calc-btn" data-value="5">5</div>
+      <div class="calc-btn" data-value="6">6</div>
+      <div class="calc-btn operator" data-value="-">−</div>
+      
+      <div class="calc-btn" data-value="1">1</div>
+      <div class="calc-btn" data-value="2">2</div>
+      <div class="calc-btn" data-value="3">3</div>
+      <div class="calc-btn operator" data-value="+">+</div>
+      
+      <div class="calc-btn" data-value="0">0</div>
+      <div class="calc-btn" data-value=".">.</div>
+      <div class="calc-btn equals" data-value="=">=</div>
+    </div>
+  </div>
+  
   <!-- Main Content (initially hidden) -->
   <div class="header" id="mainHeader">
     <h1>Friday AI Assistant</h1>
-    <div class="subtitle">Always listening, always ready to help</div>
+    <div class="subtitle">Voice Commands • Always Listening • AI Assistant</div>
   </div>
   
   <div class="container" id="mainContainer">
@@ -475,6 +612,9 @@
       <button class="control-btn" id="websiteBtn">
         <span>🌐</span> Websites
       </button>
+      <button class="control-btn" id="calculatorBtn">
+        <span>🧮</span> Calculator
+      </button>
       <button class="control-btn" id="micToggle">
         <span>🔇</span> Mute Mic
       </button>
@@ -488,7 +628,7 @@
         <h2>Assistant Response</h2>
         <div class="status">Listening...</div>
       </div>
-      <div id="output">Waiting for your command...</div>
+      <div id="output">Say "Open Instagram", "Calculate 45 plus 67", or "What is 120 divided by 6" to get started...</div>
     </div>
     
     <div class="command-list">
@@ -500,29 +640,34 @@
           <div class="command-desc">"Open YouTube", "Go to Google"</div>
         </div>
         <div class="command-card">
+          <div class="command-icon">📱</div>
+          <div class="command-title">Open Apps</div>
+          <div class="command-desc">"Open WhatsApp", "Launch Camera"</div>
+        </div>
+        <div class="command-card">
+          <div class="command-icon">🧮</div>
+          <div class="command-title">Calculator</div>
+          <div class="command-desc">"Calculate 45 plus 67", "What is 120 divided by 6"</div>
+        </div>
+        <div class="command-card">
+          <div class="command-icon">📂</div>
+          <div class="command-title">File Manager</div>
+          <div class="command-desc">"Open file manager", "Show files"</div>
+        </div>
+        <div class="command-card">
           <div class="command-icon">📷</div>
           <div class="command-title">Camera Access</div>
           <div class="command-desc">"Open camera", "Take a photo"</div>
         </div>
         <div class="command-card">
-          <div class="command-icon">📝</div>
-          <div class="command-title">Save Note</div>
-          <div class="command-desc">"Save this note: [your text]"</div>
+          <div class="command-icon">🏠</div>
+          <div class="command-title">Home</div>
+          <div class="command-desc">"Return home", "Go back"</div>
         </div>
         <div class="command-card">
-          <div class="command-icon">📍</div>
-          <div class="command-title">Get Location</div>
-          <div class="command-desc">"Where am I?", "What's my location?"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🕒</div>
-          <div class="command-title">Time & Date</div>
-          <div class="command-desc">"What time is it?", "Current date"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🔋</div>
-          <div class="command-title">Battery Status</div>
-          <div class="command-desc">"Battery level", "How's my battery?"</div>
+          <div class="command-icon">🤖</div>
+          <div class="command-title">Assistant</div>
+          <div class="command-desc">"Activate Friday", "Open assistant"</div>
         </div>
       </div>
     </div>
@@ -550,7 +695,7 @@
   </div>
   
   <div class="footer">
-    Friday AI Assistant • Always Listening • v3.1
+    Friday AI Assistant • Voice Commands • Enhanced Version
   </div>
   
   <div class="mic-wave" id="micWave">
@@ -562,6 +707,9 @@
     <div class="wave-bar"></div>
     <div class="wave-bar"></div>
   </div>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
 <script>
   // DOM Elements
@@ -578,6 +726,7 @@
   const capturedPhoto = document.getElementById("capturedPhoto");
   const cameraBtn = document.getElementById("cameraBtn");
   const websiteBtn = document.getElementById("websiteBtn");
+  const calculatorBtn = document.getElementById("calculatorBtn");
   const captureBtn = document.getElementById("captureBtn");
   const closeCameraBtn = document.getElementById("closeCameraBtn");
   const micToggle = document.getElementById("micToggle");
@@ -585,6 +734,10 @@
   const micWave = document.getElementById('micWave');
   const websiteContainer = document.getElementById("websiteContainer");
   const websiteGrid = document.getElementById("websiteGrid");
+  const calculatorContainer = document.getElementById("calculatorContainer");
+  const calculatorDisplay = document.getElementById("calculator-display");
+  const closeCalculatorBtn = document.getElementById("closeCalculatorBtn");
+  const calcButtons = document.querySelectorAll('.calc-btn');
   
   // State variables
   let cameraStream = null;
@@ -592,6 +745,14 @@
   let darkMode = true;
   let recognitionActive = false;
   let permissionGranted = false;
+  let calculatorExpression = '';
+  
+  // Initialize speech recognition with browser prefixes
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition;
+  
+  // Speech synthesis
+  const synth = window.speechSynthesis;
   
   // Supported websites
   const websites = {
@@ -624,13 +785,54 @@
     "reddit": "👥",
     "linkedin": "💼"
   };
-
-  // Initialize Speech Recognition
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recognition;
   
-  // Initialize Speech Synthesis
-  const synth = window.speechSynthesis;
+  // Calculator functions
+  calculatorBtn.addEventListener('click', () => {
+    calculatorContainer.style.display = 'block';
+    cameraContainer.style.display = 'none';
+    websiteContainer.style.display = 'none';
+  });
+  
+  closeCalculatorBtn.addEventListener('click', () => {
+    calculatorContainer.style.display = 'none';
+  });
+  
+  // Initialize calculator buttons
+  calcButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const value = button.getAttribute('data-value');
+      
+      if (value === 'clear') {
+        calculatorExpression = '';
+        calculatorDisplay.textContent = '0';
+      } else if (value === 'backspace') {
+        calculatorExpression = calculatorExpression.slice(0, -1);
+        calculatorDisplay.textContent = calculatorExpression || '0';
+      } else if (value === '=') {
+        try {
+          // Replace operators with their JavaScript equivalents
+          const expression = calculatorExpression
+            .replace(/×/g, '*')
+            .replace(/÷/g, '/')
+            .replace(/%/g, '/100*');
+          
+          // Evaluate expression
+          const result = eval(expression);
+          calculatorExpression = String(result);
+          calculatorDisplay.textContent = result;
+          
+          // Speak the result
+          speak(`The result is ${result}`);
+        } catch (error) {
+          calculatorDisplay.textContent = 'Error';
+          speak("I couldn't calculate that expression");
+        }
+      } else {
+        calculatorExpression += value;
+        calculatorDisplay.textContent = calculatorExpression;
+      }
+    });
+  });
   
   // Request permission on button click
   grantPermissionBtn.addEventListener('click', requestMicrophonePermission);
@@ -661,7 +863,7 @@
       permissionGranted = true;
       
       // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'Open YouTube'</i>";
+      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'Open Instagram'</i> or <i>'Calculate 45 plus 67'</i>";
       speak("Microphone access granted! I'm Friday, your AI assistant. How can I help you today?");
       
     } catch (error) {
@@ -701,6 +903,7 @@
     } else {
       websiteContainer.style.display = 'block';
       cameraContainer.style.display = 'none';
+      calculatorContainer.style.display = 'none';
     }
   });
   
@@ -720,7 +923,7 @@
   
   // Initialize speech recognition
   function initializeRecognition() {
-    if (!SpeechRecognition) {
+    if (!window.SpeechRecognition) {
       output.textContent = "Speech recognition not supported in this browser.";
       return;
     }
@@ -805,7 +1008,7 @@
   
   // Speak function
   function speak(text) {
-    if (!synth.speaking) {
+    if (!synth.speaking && !synth.pending) {
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = 'en-US';
       utter.rate = 1;
@@ -850,16 +1053,18 @@
   closeCameraBtn.addEventListener('click', closeCamera);
   
   function openCamera() {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         cameraStream = stream;
         cameraFeed.srcObject = stream;
         cameraContainer.style.display = "flex";
         capturedPhoto.style.display = "none";
         websiteContainer.style.display = "none";
+        calculatorContainer.style.display = 'none';
       })
       .catch(err => {
         output.textContent = "Failed to access camera: " + err.message;
+        speak("I couldn't access the camera. Please check your permissions.");
       });
   }
   
@@ -921,10 +1126,71 @@
   // Battery function
   async function getBatteryStatus() {
     if ('getBattery' in navigator) {
-      const battery = await navigator.getBattery();
-      return `Battery: ${Math.round(battery.level * 100)}%`;
+      try {
+        const battery = await navigator.getBattery();
+        return `Battery: ${Math.round(battery.level * 100)}%`;
+      } catch (e) {
+        return "Battery info not available";
+      }
     }
     return "Battery info not available";
+  }
+  
+  // Calculate expression from voice command
+  function calculateExpression(transcript) {
+    // Normalize the transcript
+    let expression = transcript.toLowerCase()
+      .replace(/calculate|what is|how much is|compute|/gi, '') // Remove command words
+      .replace(/plus/gi, '+')
+      .replace(/minus/gi, '-')
+      .replace(/times|multiplied by/gi, '*')
+      .replace(/divided by|over/gi, '/')
+      .replace(/percent|percentage/gi, '%')
+      .replace(/\s+/g, '') // Remove spaces
+      .replace(/([0-9])and([0-9])/g, '$1.$2'); // Handle decimals like "5 and a half"
+    
+    // Extract numbers and operators
+    const parts = expression.split(/([+\-*/%])/);
+    let result = 0;
+    
+    try {
+      // Simple evaluation - for demo purposes only
+      // In a real app, use a proper expression parser
+      if (parts.length === 3) {
+        const num1 = parseFloat(parts[0]);
+        const operator = parts[1];
+        const num2 = parseFloat(parts[2]);
+        
+        switch (operator) {
+          case '+':
+            result = num1 + num2;
+            break;
+          case '-':
+            result = num1 - num2;
+            break;
+          case '*':
+            result = num1 * num2;
+            break;
+          case '/':
+            if (num2 === 0) return "Error: Division by zero";
+            result = num1 / num2;
+            break;
+          case '%':
+            result = num1 % num2;
+            break;
+          default:
+            return "I couldn't understand the calculation";
+        }
+        
+        return `${num1} ${operator} ${num2} = ${result}`;
+      } else {
+        // Try to evaluate the expression directly
+        result = eval(expression);
+        return `${expression} = ${result}`;
+      }
+    } catch (e) {
+      return "I couldn't perform that calculation. Please try again.";
+    }
   }
   
   // Process voice commands
@@ -943,8 +1209,18 @@
     if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
       response = "Hello! How can I assist you today?";
     } 
+    // NEW FEATURE: Added creator response
+    else if (msg.includes("tumko kisne banaya") || msg.includes("who made you") || 
+             msg.includes("who created you") || msg.includes("tumhara creator kaun hai")) {
+      response = "Mujhe Khushal Sharma ne banaya hai. Wo 19 saal ke hain aur Haryana ke Nangal Sirohi se hain.";
+    }
     else if (msg.includes("name") || msg.includes("who are you")) {
       response = "I'm Friday, your AI assistant. Always at your service!";
+    }
+    // Handle calculator commands
+    else if (msg.includes("calculate") || msg.includes("what is") || 
+             msg.includes("how much is") || msg.includes("compute")) {
+      response = calculateExpression(transcript);
     }
     // Handle "open" commands for websites
     else if (msg.startsWith("open ") || msg.startsWith("go to ") || msg.startsWith("launch ")) {
@@ -964,27 +1240,36 @@
           }
         }
         
+        // Special cases
         if (!found) {
-          // Try to find the best match
-          let bestMatch = "";
-          let bestMatchScore = 0;
-          
-          for (const name of Object.keys(websites)) {
-            if (siteName.includes(name) && name.length > bestMatchScore) {
-              bestMatch = name;
-              bestMatchScore = name.length;
-            }
-          }
-          
-          if (bestMatch) {
-            window.open(websites[bestMatch], '_blank');
-            response = `Opening ${bestMatch}...`;
-          } else {
-            response = `I don't know how to open "${siteName}". Try saying "help" for supported websites.`;
+          if (siteName.includes("whatsapp")) {
+            window.open("https://web.whatsapp.com", '_blank');
+            response = "Opening WhatsApp...";
+          } else if (siteName.includes("camera")) {
+            openCamera();
+            response = "Opening camera...";
+          } else if (siteName.includes("gallery")) {
+            response = "Gallery is not implemented in this demo";
+          } else if (siteName.includes("file manager")) {
+            window.open("file:///C:/", '_blank');
+            response = "Opening File Manager...";
+          } else if (siteName.includes("home") || siteName.includes("dashboard")) {
+            response = "You're already on the dashboard!";
+          } else if (siteName.includes("friday") || siteName.includes("assistant")) {
+            response = "Friday is activated and ready!";
+          } else if (siteName.includes("calculator")) {
+            calculatorContainer.style.display = 'block';
+            response = "Opening calculator...";
           }
         }
+        
+        // Fallback to Google search if still not found
+        if (!found && !response.includes("Opening")) {
+          window.open(`https://www.google.com/search?q=${encodeURIComponent(siteName)}`, '_blank');
+          response = `I don't know how to open "${siteName}", but I searched it for you`;
+        }
       } else {
-        response = "Which website would you like me to open?";
+        response = "Which website or app would you like me to open?";
       }
     }
     else if (msg.includes("camera") || msg.includes("photo")) {
@@ -1028,7 +1313,7 @@
       response = "You're welcome! Is there anything else I can do for you?";
     }
     else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
-      response = "I can help with: opening websites, opening camera, taking photos, saving notes, telling time, checking battery, and more!";
+      response = "I can help with: opening websites, opening camera, taking photos, calculations, saving notes, telling time, checking battery, and more!";
     }
     else if (msg.includes("exit") || msg.includes("goodbye")) {
       response = "Goodbye! Have a great day!";
