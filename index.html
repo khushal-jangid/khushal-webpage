@@ -417,105 +417,65 @@
       font-size: 0.8rem;
       text-align: center;
     }
-    
-    /* Calculator Panel */
-    .calculator-container {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(10, 15, 40, 0.9);
-      border-radius: 20px;
-      padding: 25px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.3);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      z-index: 1002;
-      width: 320px;
-    }
-    
-    .calculator-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .calculator-header h3 {
-      color: #00bcd4;
-      font-size: 1.4rem;
-    }
-    
-    .calculator-close {
-      background: none;
-      border: none;
-      color: #e0e0ff;
-      font-size: 1.5rem;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 0.3s;
-    }
-    
-    .calculator-close:hover {
-      opacity: 1;
-    }
-    
-    #calculator-display {
+
+    /* YouTube container */
+    .youtube-container {
+      margin-top: 20px;
       width: 100%;
-      height: 60px;
-      background: rgba(5, 10, 25, 0.7);
-      border-radius: 12px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 15px;
-      font-size: 1.8rem;
-      color: #e0e0ff;
-      overflow: hidden;
+      background: rgba(10, 15, 40, 0.7);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
       border: 1px solid rgba(0, 188, 212, 0.2);
+      display: none;
     }
     
-    .calculator-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+    .youtube-container h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #00bcd4;
     }
     
-    .calc-btn {
-      height: 50px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      background: rgba(0, 188, 212, 0.15);
-      color: #e0e0ff;
-      border: 1px solid rgba(0, 188, 212, 0.2);
+    #video-container {
+      width: 100%;
+      margin: 15px 0;
+    }
+    
+    #ytplayer {
+      width: 100%;
+      height: 400px;
+      border: none;
+      border-radius: 10px;
+    }
+    
+    #history-list {
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+      background: rgba(5, 10, 25, 0.5);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 15px 0;
+      list-style-type: none;
+    }
+    
+    #history-list li {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background 0.2s ease;
     }
     
-    .calc-btn:hover {
-      background: rgba(0, 188, 212, 0.3);
-      transform: translateY(-2px);
+    #history-list li:hover {
+      background: rgba(0, 188, 212, 0.2);
     }
     
-    .calc-btn:active {
-      transform: translateY(0);
-    }
-    
-    .calc-btn.operator {
-      background: rgba(0, 188, 212, 0.3);
-    }
-    
-    .calc-btn.equals {
-      background: linear-gradient(to right, #00bcd4, #00a8ff);
-    }
-    
-    .calc-btn.clear {
-      background: rgba(255, 75, 75, 0.3);
+    .youtube-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
     }
     
     /* Responsive design */
@@ -536,8 +496,8 @@
       .website-grid {
         grid-template-columns: repeat(3, 1fr);
       }
-      .calculator-container {
-        width: 90%;
+      #ytplayer {
+        height: 250px;
       }
     }
   </style>
@@ -556,40 +516,6 @@
       </div>
       <button class="permission-btn" id="grantPermission">Grant Microphone Access</button>
       <p style="margin-top: 20px; opacity: 0.7;">Note: Microphone access is required for voice commands</p>
-    </div>
-  </div>
-  
-  <!-- Calculator Panel -->
-  <div class="calculator-container" id="calculatorContainer">
-    <div class="calculator-header">
-      <h3>Voice Calculator</h3>
-      <button class="calculator-close" id="closeCalculatorBtn">×</button>
-    </div>
-    <div id="calculator-display">0</div>
-    <div class="calculator-grid">
-      <div class="calc-btn clear" data-value="clear">C</div>
-      <div class="calc-btn" data-value="backspace">⌫</div>
-      <div class="calc-btn operator" data-value="%">%</div>
-      <div class="calc-btn operator" data-value="/">÷</div>
-      
-      <div class="calc-btn" data-value="7">7</div>
-      <div class="calc-btn" data-value="8">8</div>
-      <div class="calc-btn" data-value="9">9</div>
-      <div class="calc-btn operator" data-value="*">×</div>
-      
-      <div class="calc-btn" data-value="4">4</div>
-      <div class="calc-btn" data-value="5">5</div>
-      <div class="calc-btn" data-value="6">6</div>
-      <div class="calc-btn operator" data-value="-">−</div>
-      
-      <div class="calc-btn" data-value="1">1</div>
-      <div class="calc-btn" data-value="2">2</div>
-      <div class="calc-btn" data-value="3">3</div>
-      <div class="calc-btn operator" data-value="+">+</div>
-      
-      <div class="calc-btn" data-value="0">0</div>
-      <div class="calc-btn" data-value=".">.</div>
-      <div class="calc-btn equals" data-value="=">=</div>
     </div>
   </div>
   
@@ -612,8 +538,8 @@
       <button class="control-btn" id="websiteBtn">
         <span>🌐</span> Websites
       </button>
-      <button class="control-btn" id="calculatorBtn">
-        <span>🧮</span> Calculator
+      <button class="control-btn" id="youtubeBtn">
+        <span>📺</span> YouTube
       </button>
       <button class="control-btn" id="micToggle">
         <span>🔇</span> Mute Mic
@@ -628,7 +554,7 @@
         <h2>Assistant Response</h2>
         <div class="status">Listening...</div>
       </div>
-      <div id="output">Say "Open Instagram", "Calculate 45 plus 67", or "What is 120 divided by 6" to get started...</div>
+      <div id="output">Say "Open Instagram", "Calculate 45 plus 67", or "Play music on YouTube" to get started...</div>
     </div>
     
     <div class="command-list">
@@ -645,14 +571,14 @@
           <div class="command-desc">"Open WhatsApp", "Launch Camera"</div>
         </div>
         <div class="command-card">
+          <div class="command-icon">🎵</div>
+          <div class="command-title">Music Player</div>
+          <div class="command-desc">"Play music", "Play Ed Sheeran"</div>
+        </div>
+        <div class="command-card">
           <div class="command-icon">🧮</div>
           <div class="command-title">Calculator</div>
           <div class="command-desc">"Calculate 45 plus 67", "What is 120 divided by 6"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📂</div>
-          <div class="command-title">File Manager</div>
-          <div class="command-desc">"Open file manager", "Show files"</div>
         </div>
         <div class="command-card">
           <div class="command-icon">📷</div>
@@ -663,11 +589,6 @@
           <div class="command-icon">🏠</div>
           <div class="command-title">Home</div>
           <div class="command-desc">"Return home", "Go back"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🤖</div>
-          <div class="command-title">Assistant</div>
-          <div class="command-desc">"Activate Friday", "Open assistant"</div>
         </div>
       </div>
     </div>
@@ -690,6 +611,30 @@
       <h3>Supported Websites</h3>
       <div class="website-grid" id="websiteGrid">
         <!-- Websites will be populated by JavaScript -->
+      </div>
+    </div>
+    
+    <!-- YouTube container -->
+    <div id="youtubeContainer" class="youtube-container">
+      <h3>YouTube Player</h3>
+      <div id="video-container">
+        <div id="ytplayer"></div>
+      </div>
+      <h4>Search History</h4>
+      <ul id="history-list"></ul>
+      <div class="youtube-controls">
+        <button class="control-btn" id="pauseBtn">
+          <span>⏸️</span> Pause
+        </button>
+        <button class="control-btn" id="resumeBtn">
+          <span>▶️</span> Resume
+        </button>
+        <button class="control-btn" id="stopBtn">
+          <span>⏹️</span> Stop
+        </button>
+        <button class="control-btn" id="closeYoutubeBtn">
+          <span>❌</span> Close
+        </button>
       </div>
     </div>
   </div>
@@ -726,7 +671,7 @@
   const capturedPhoto = document.getElementById("capturedPhoto");
   const cameraBtn = document.getElementById("cameraBtn");
   const websiteBtn = document.getElementById("websiteBtn");
-  const calculatorBtn = document.getElementById("calculatorBtn");
+  const youtubeBtn = document.getElementById("youtubeBtn");
   const captureBtn = document.getElementById("captureBtn");
   const closeCameraBtn = document.getElementById("closeCameraBtn");
   const micToggle = document.getElementById("micToggle");
@@ -734,10 +679,12 @@
   const micWave = document.getElementById('micWave');
   const websiteContainer = document.getElementById("websiteContainer");
   const websiteGrid = document.getElementById("websiteGrid");
-  const calculatorContainer = document.getElementById("calculatorContainer");
-  const calculatorDisplay = document.getElementById("calculator-display");
-  const closeCalculatorBtn = document.getElementById("closeCalculatorBtn");
-  const calcButtons = document.querySelectorAll('.calc-btn');
+  const youtubeContainer = document.getElementById("youtubeContainer");
+  const historyList = document.getElementById("history-list");
+  const pauseBtn = document.getElementById("pauseBtn");
+  const resumeBtn = document.getElementById("resumeBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const closeYoutubeBtn = document.getElementById("closeYoutubeBtn");
   
   // State variables
   let cameraStream = null;
@@ -745,7 +692,8 @@
   let darkMode = true;
   let recognitionActive = false;
   let permissionGranted = false;
-  let calculatorExpression = '';
+  let player; // YouTube player instance
+  let youtubeHistory = []; // Array to store search history
   
   // Initialize speech recognition with browser prefixes
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -786,54 +734,6 @@
     "linkedin": "💼"
   };
   
-  // Calculator functions
-  calculatorBtn.addEventListener('click', () => {
-    calculatorContainer.style.display = 'block';
-    cameraContainer.style.display = 'none';
-    websiteContainer.style.display = 'none';
-  });
-  
-  closeCalculatorBtn.addEventListener('click', () => {
-    calculatorContainer.style.display = 'none';
-  });
-  
-  // Initialize calculator buttons
-  calcButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const value = button.getAttribute('data-value');
-      
-      if (value === 'clear') {
-        calculatorExpression = '';
-        calculatorDisplay.textContent = '0';
-      } else if (value === 'backspace') {
-        calculatorExpression = calculatorExpression.slice(0, -1);
-        calculatorDisplay.textContent = calculatorExpression || '0';
-      } else if (value === '=') {
-        try {
-          // Replace operators with their JavaScript equivalents
-          const expression = calculatorExpression
-            .replace(/×/g, '*')
-            .replace(/÷/g, '/')
-            .replace(/%/g, '/100*');
-          
-          // Evaluate expression
-          const result = eval(expression);
-          calculatorExpression = String(result);
-          calculatorDisplay.textContent = result;
-          
-          // Speak the result
-          speak(`The result is ${result}`);
-        } catch (error) {
-          calculatorDisplay.textContent = 'Error';
-          speak("I couldn't calculate that expression");
-        }
-      } else {
-        calculatorExpression += value;
-        calculatorDisplay.textContent = calculatorExpression;
-      }
-    });
-  });
-  
   // Request permission on button click
   grantPermissionBtn.addEventListener('click', requestMicrophonePermission);
   
@@ -863,7 +763,7 @@
       permissionGranted = true;
       
       // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'Open Instagram'</i> or <i>'Calculate 45 plus 67'</i>";
+      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'Play music'</i> or <i>'Open Instagram'</i>";
       speak("Microphone access granted! I'm Friday, your AI assistant. How can I help you today?");
       
     } catch (error) {
@@ -903,7 +803,27 @@
     } else {
       websiteContainer.style.display = 'block';
       cameraContainer.style.display = 'none';
-      calculatorContainer.style.display = 'none';
+      youtubeContainer.style.display = 'none';
+    }
+  });
+  
+  // Toggle YouTube container
+  youtubeBtn.addEventListener('click', () => {
+    if (youtubeContainer.style.display === 'block') {
+      youtubeContainer.style.display = 'none';
+    } else {
+      youtubeContainer.style.display = 'block';
+      cameraContainer.style.display = 'none';
+      websiteContainer.style.display = 'none';
+      loadYoutubeAPI();
+    }
+  });
+  
+  // Close YouTube container
+  closeYoutubeBtn.addEventListener('click', () => {
+    youtubeContainer.style.display = 'none';
+    if (player) {
+      player.stopVideo();
     }
   });
   
@@ -1060,7 +980,7 @@
         cameraContainer.style.display = "flex";
         capturedPhoto.style.display = "none";
         websiteContainer.style.display = "none";
-        calculatorContainer.style.display = 'none';
+        youtubeContainer.style.display = "none";
       })
       .catch(err => {
         output.textContent = "Failed to access camera: " + err.message;
@@ -1192,6 +1112,145 @@
       return "I couldn't perform that calculation. Please try again.";
     }
   }
+
+  // YouTube Player Functions
+  function loadYoutubeAPI() {
+    return new Promise((resolve) => {
+      if (typeof YT !== 'undefined' && YT.Player) {
+        resolve();
+        return;
+      }
+
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      window.onYouTubeIframeAPIReady = function() {
+        resolve();
+      };
+    });
+  }
+
+  function addToHistory(query) {
+    // Add to the beginning of the array
+    youtubeHistory.unshift(query);
+    // Keep only the last 10 items
+    youtubeHistory = youtubeHistory.slice(0, 10);
+    // Update the history list in the DOM
+    updateHistoryList();
+  }
+
+  function updateHistoryList() {
+    historyList.innerHTML = '';
+    youtubeHistory.forEach(query => {
+      const li = document.createElement('li');
+      li.textContent = query;
+      li.onclick = () => {
+        fetchVideo(query);
+      };
+      historyList.appendChild(li);
+    });
+  }
+
+  function fetchVideo(query) {
+    const apiKey = "AIzaSyDEydBBiywt6DQS_ZrPxvmcRy9MSdBBP0o";
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${apiKey}&type=video&maxResults=5`;
+
+    fetch(searchUrl)
+      .then(res => res.json())
+      .then(data => {
+        const items = data.items;
+        if (items && items.length > 0) {
+          checkEmbeddableVideo(apiKey, items, 0);
+        } else {
+          output.innerHTML = "No videos found for: " + query;
+          speak("Sorry, no videos found for " + query);
+        }
+      })
+      .catch(err => {
+        console.error("Search API Error:", err);
+        output.innerHTML = "Error searching YouTube";
+        speak("There was an error finding the video.");
+      });
+  }
+
+  function checkEmbeddableVideo(apiKey, items, index) {
+    if (index >= items.length) {
+      output.innerHTML = "No embeddable videos found";
+      speak("Sorry, no embeddable videos found");
+      return;
+    }
+
+    const videoId = items[index].id.videoId;
+    const checkUrl = `https://www.googleapis.com/youtube/v3/videos?part=status&id=${videoId}&key=${apiKey}`;
+
+    fetch(checkUrl)
+      .then(res => res.json())
+      .then(data => {
+        const embeddable = data.items[0]?.status?.embeddable;
+        if (embeddable) {
+          loadVideo(videoId);
+          output.innerHTML = `Playing video: ${items[index].snippet.title}`;
+          speak(`Playing ${items[index].snippet.title}`);
+          addToHistory(items[index].snippet.title);
+        } else {
+          console.log("Skipping non-embeddable video:", videoId);
+          checkEmbeddableVideo(apiKey, items, index + 1);
+        }
+      })
+      .catch(err => {
+        console.error("Video Check Error:", err);
+        output.innerHTML = "Error checking video";
+        speak("There was an error checking the video.");
+      });
+  }
+
+  function loadVideo(videoId) {
+    youtubeContainer.style.display = "block";
+    cameraContainer.style.display = "none";
+    websiteContainer.style.display = "none";
+
+    if (typeof YT === "undefined" || !YT.Player) {
+      output.innerHTML = "YouTube API not loaded yet";
+      return;
+    }
+
+    if (player) {
+      player.loadVideoById(videoId);
+      return;
+    }
+
+    player = new YT.Player('ytplayer', {
+      height: '400',
+      width: '100%',
+      videoId: videoId,
+      events: {
+        'onReady': onPlayerReady
+      },
+      playerVars: {
+        autoplay: 1,
+        controls: 1,
+        enablejsapi: 1
+      }
+    });
+  }
+
+  function onPlayerReady(event) {
+    event.target.playVideo();
+    pauseBtn.addEventListener('click', () => {
+      event.target.pauseVideo();
+      speak("Video paused");
+    });
+    resumeBtn.addEventListener('click', () => {
+      event.target.playVideo();
+      speak("Video resumed");
+    });
+    stopBtn.addEventListener('click', () => {
+      event.target.stopVideo();
+      speak("Video stopped");
+    });
+  }
   
   // Process voice commands
   async function processCommand(transcript) {
@@ -1209,7 +1268,6 @@
     if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
       response = "Hello! How can I assist you today?";
     } 
-    // NEW FEATURE: Added creator response
     else if (msg.includes("tumko kisne banaya") || msg.includes("who made you") || 
              msg.includes("who created you") || msg.includes("tumhara creator kaun hai")) {
       response = "Mujhe Khushal Sharma ne banaya hai. Wo 19 saal ke hain aur Haryana ke Nangal Sirohi se hain.";
@@ -1250,16 +1308,13 @@
             response = "Opening camera...";
           } else if (siteName.includes("gallery")) {
             response = "Gallery is not implemented in this demo";
-          } else if (siteName.includes("file manager")) {
-            window.open("file:///C:/", '_blank');
-            response = "Opening File Manager...";
           } else if (siteName.includes("home") || siteName.includes("dashboard")) {
             response = "You're already on the dashboard!";
           } else if (siteName.includes("friday") || siteName.includes("assistant")) {
             response = "Friday is activated and ready!";
-          } else if (siteName.includes("calculator")) {
-            calculatorContainer.style.display = 'block';
-            response = "Opening calculator...";
+          } else if (siteName.includes("youtube")) {
+            youtubeContainer.style.display = "block";
+            response = "Opening YouTube player";
           }
         }
         
@@ -1270,6 +1325,50 @@
         }
       } else {
         response = "Which website or app would you like me to open?";
+      }
+    }
+    // Handle YouTube commands
+    else if (msg.startsWith("play ")) {
+      const query = msg.replace("play", "").trim();
+      if (query) {
+        youtubeContainer.style.display = "block";
+        cameraContainer.style.display = "none";
+        websiteContainer.style.display = "none";
+        
+        if (typeof YT === 'undefined') {
+          loadYoutubeAPI().then(() => {
+            fetchVideo(query);
+          });
+        } else {
+          fetchVideo(query);
+        }
+        response = `Searching YouTube for "${query}"...`;
+      } else {
+        response = "What would you like me to play?";
+      }
+    }
+    else if (msg.includes("pause video") || msg.includes("pause the video")) {
+      if (player) {
+        player.pauseVideo();
+        response = "Video paused";
+      } else {
+        response = "No video is playing";
+      }
+    }
+    else if (msg.includes("resume video") || msg.includes("resume the video")) {
+      if (player) {
+        player.playVideo();
+        response = "Video resumed";
+      } else {
+        response = "No video is playing";
+      }
+    }
+    else if (msg.includes("stop video") || msg.includes("stop the video")) {
+      if (player) {
+        player.stopVideo();
+        response = "Video stopped";
+      } else {
+        response = "No video is playing";
       }
     }
     else if (msg.includes("camera") || msg.includes("photo")) {
@@ -1313,7 +1412,7 @@
       response = "You're welcome! Is there anything else I can do for you?";
     }
     else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
-      response = "I can help with: opening websites, opening camera, taking photos, calculations, saving notes, telling time, checking battery, and more!";
+      response = "I can help with: opening websites, playing YouTube videos, opening camera, taking photos, calculations, saving notes, telling time, checking battery, and more!";
     }
     else if (msg.includes("exit") || msg.includes("goodbye")) {
       response = "Goodbye! Have a great day!";
