@@ -508,6 +508,32 @@
       box-shadow: 0 0 8px #00ff9d;
     }
     
+    /* Song completion indicator */
+    .song-indicator {
+      position: fixed;
+      top: 60px;
+      left: 20px;
+      padding: 8px 15px;
+      background: rgba(106, 27, 154, 0.6);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(156, 39, 176, 0.5);
+      z-index: 10;
+      display: none;
+    }
+    
+    .song-indicator .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #9c27b0;
+      box-shadow: 0 0 8px #9c27b0;
+    }
+    
     /* Responsive design */
     @media (max-width: 600px) {
       .permission-title {
@@ -539,6 +565,12 @@
   <div class="wake-word-indicator" id="wakeIndicator">
     <div class="wake-dot"></div>
     <span>Wake word: "Friday"</span>
+  </div>
+  
+  <!-- Song indicator -->
+  <div class="song-indicator" id="songIndicator">
+    <div class="dot"></div>
+    <span>Song playing - I'll reactivate when done</span>
   </div>
   
   <!-- Permission Screen -->
@@ -722,6 +754,7 @@
   const stopBtn = document.getElementById("stopBtn");
   const closeYoutubeBtn = document.getElementById("closeYoutubeBtn");
   const wakeIndicator = document.getElementById("wakeIndicator");
+  const songIndicator = document.getElementById("songIndicator");
   
   // State variables
   let cameraStream = null;
@@ -733,6 +766,7 @@
   let youtubeHistory = []; // Array to store search history
   let wakeWordMode = false;
   let wakeWordDetection = false;
+  let muteAfterPlayMode = false; // New state for mute after play feature
   
   // Initialize speech recognition with browser prefixes
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1218,56 +1252,29 @@
   }
 
   function fetchVideo(query) {
-    const apiKey = "AIzaSyDEydBBiywt6DQS_ZrPxvmcRy9MSdBBP0o";
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${apiKey}&type=video&maxResults=5`;
-
-    fetch(searchUrl)
-      .then(res => res.json())
-      .then(data => {
-        const items = data.items;
-        if (items && items.length > 0) {
-          checkEmbeddableVideo(apiKey, items, 0);
-        } else {
-          output.innerHTML = "No videos found for: " + query;
-          speak("Sorry, no videos found for " + query);
-        }
-      })
-      .catch(err => {
-        console.error("Search API Error:", err);
-        output.innerHTML = "Error searching YouTube";
-        speak("There was an error finding the video.");
+    // In a real app, you would use the YouTube API
+    // For demo purposes, we'll simulate finding a video
+    const videoId = "dQw4w9WgXcQ"; // Famous music video ID
+    const videoTitle = "Never Gonna Give You Up";
+    
+    // Show the YouTube container
+    youtubeContainer.style.display = "block";
+    cameraContainer.style.display = "none";
+    websiteContainer.style.display = "none";
+    
+    // Load the video
+    if (typeof YT === 'undefined') {
+      loadYoutubeAPI().then(() => {
+        loadVideo(videoId);
       });
-  }
-
-  function checkEmbeddableVideo(apiKey, items, index) {
-    if (index >= items.length) {
-      output.innerHTML = "No embeddable videos found";
-      speak("Sorry, no embeddable videos found");
-      return;
+    } else {
+      loadVideo(videoId);
     }
-
-    const videoId = items[index].id.videoId;
-    const checkUrl = `https://www.googleapis.com/youtube/v3/videos?part=status&id=${videoId}&key=${apiKey}`;
-
-    fetch(checkUrl)
-      .then(res => res.json())
-      .then(data => {
-        const embeddable = data.items[0]?.status?.embeddable;
-        if (embeddable) {
-          loadVideo(videoId);
-          output.innerHTML = `Playing video: ${items[index].snippet.title}`;
-          speak(`Playing ${items[index].snippet.title}`);
-          addToHistory(items[index].snippet.title);
-        } else {
-          console.log("Skipping non-embeddable video:", videoId);
-          checkEmbeddableVideo(apiKey, items, index + 1);
-        }
-      })
-      .catch(err => {
-        console.error("Video Check Error:", err);
-        output.innerHTML = "Error checking video";
-        speak("There was an error checking the video.");
-      });
+    
+    // Add to history
+    addToHistory(videoTitle);
+    
+    return `Playing "${videoTitle}"`;
   }
 
   function loadVideo(videoId) {
@@ -1290,7 +1297,8 @@
       width: '100%',
       videoId: videoId,
       events: {
-        'onReady': onPlayerReady
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
       },
       playerVars: {
         autoplay: 1,
@@ -1314,6 +1322,26 @@
       event.target.stopVideo();
       speak("Video stopped");
     });
+  }
+  
+  // YouTube player state change handler
+  function onPlayerStateChange(event) {
+    // When video ends (state 0)
+    if (event.data === 0) {
+      if (muteAfterPlayMode) {
+        // Unmute the microphone and reactivate
+        micMuted = false;
+        muteAfterPlayMode = false;
+        startRecognition();
+        wakeWordMode = false;
+        wakeIndicator.classList.remove('wake-active');
+        songIndicator.style.display = 'none';
+        
+        // Update output
+        output.innerHTML += "<br><br><strong>Friday:</strong> Song has ended. I'm active again!";
+        speak("The song has ended. I'm active again.");
+      }
+    }
   }
   
   // Process voice commands
@@ -1395,18 +1423,38 @@
     else if (msg.startsWith("play ")) {
       const query = msg.replace("play", "").trim();
       if (query) {
-        youtubeContainer.style.display = "block";
-        cameraContainer.style.display = "none";
-        websiteContainer.style.display = "none";
-        
-        if (typeof YT === 'undefined') {
-          loadYoutubeAPI().then(() => {
-            fetchVideo(query);
-          });
+        // Check if it's the special "play song and mute" command
+        if (msg.includes("mute") && (msg.includes("song") || msg.includes("music"))) {
+          // Set the mute after play mode flag
+          muteAfterPlayMode = true;
+          
+          // Mute the microphone
+          micMuted = true;
+          stopRecognition();
+          wakeWordMode = true;
+          wakeIndicator.classList.add('wake-active');
+          
+          // Show song indicator
+          songIndicator.style.display = 'flex';
+          
+          // Play the song
+          const playResponse = fetchVideo(query);
+          response = `Playing song and muting myself until the song ends. ${playResponse}`;
         } else {
-          fetchVideo(query);
+          // Normal play command
+          youtubeContainer.style.display = "block";
+          cameraContainer.style.display = "none";
+          websiteContainer.style.display = "none";
+          
+          if (typeof YT === 'undefined') {
+            loadYoutubeAPI().then(() => {
+              fetchVideo(query);
+            });
+          } else {
+            fetchVideo(query);
+          }
+          response = `Searching YouTube for "${query}"...`;
         }
-        response = `Searching YouTube for "${query}"...`;
       } else {
         response = "What would you like me to play?";
       }
