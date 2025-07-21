@@ -477,6 +477,36 @@
       margin-top: 10px;
       flex-wrap: wrap;
     }
+
+    /* Wake word indicator */
+    .wake-word-indicator {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 8px 15px;
+      background: rgba(0, 188, 212, 0.3);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(0, 188, 212, 0.3);
+      z-index: 10;
+      animation: pulse 2s infinite;
+    }
+    
+    .wake-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #ff3b30;
+    }
+    
+    .wake-active .wake-dot {
+      background-color: #00ff9d;
+      box-shadow: 0 0 8px #00ff9d;
+    }
     
     /* Responsive design */
     @media (max-width: 600px) {
@@ -504,6 +534,12 @@
 </head>
 <body>
   <div class="background-glow"></div>
+  
+  <!-- Wake word indicator -->
+  <div class="wake-word-indicator" id="wakeIndicator">
+    <div class="wake-dot"></div>
+    <span>Wake word: "Friday"</span>
+  </div>
   
   <!-- Permission Screen -->
   <div class="permission-screen" id="permissionScreen">
@@ -554,7 +590,7 @@
         <h2>Assistant Response</h2>
         <div class="status">Listening...</div>
       </div>
-      <div id="output">Say "Open Instagram", "Calculate 45 plus 67", or "Play music on YouTube" to get started...</div>
+      <div id="output">Say "Friday" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", or "Play music on YouTube"</div>
     </div>
     
     <div class="command-list">
@@ -685,6 +721,7 @@
   const resumeBtn = document.getElementById("resumeBtn");
   const stopBtn = document.getElementById("stopBtn");
   const closeYoutubeBtn = document.getElementById("closeYoutubeBtn");
+  const wakeIndicator = document.getElementById("wakeIndicator");
   
   // State variables
   let cameraStream = null;
@@ -694,6 +731,8 @@
   let permissionGranted = false;
   let player; // YouTube player instance
   let youtubeHistory = []; // Array to store search history
+  let wakeWordMode = false;
+  let wakeWordDetection = false;
   
   // Initialize speech recognition with browser prefixes
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -859,22 +898,40 @@
     // Event handlers
     recognition.onresult = (event) => {
       const transcript = event.results[event.results.length - 1][0].transcript;
-      processCommand(transcript);
+      
+      // Check if we're in wake word mode
+      if (wakeWordMode) {
+        // Only listen for the wake word "friday"
+        if (transcript.toLowerCase().includes("friday")) {
+          // Wake up the assistant
+          wakeWordMode = false;
+          wakeWordDetection = false;
+          wakeIndicator.classList.remove('wake-active');
+          output.innerHTML = "Friday activated! How can I help you?";
+          speak("I'm listening. How can I help you?");
+          startRecognition();
+        }
+      } else {
+        // Process normal commands
+        processCommand(transcript);
+      }
     };
     
     recognition.onerror = (event) => {
       console.error("Recognition error:", event.error);
       if (event.error === 'no-speech') {
         // Automatically restart if no speech is detected
-        recognition.start();
+        if (!wakeWordMode) {
+          recognition.start();
+        }
       } else if (!micMuted) {
         output.textContent = "Recognition error: " + event.error;
       }
     };
     
     recognition.onend = () => {
-      // Automatically restart recognition if not muted
-      if (!micMuted && recognitionActive) {
+      // Automatically restart recognition if not muted and not in wake word mode
+      if (!micMuted && recognitionActive && !wakeWordMode) {
         recognition.start();
       }
     };
@@ -890,6 +947,7 @@
     recognitionActive = true;
     micToggle.innerHTML = '<span>🔇</span> Mute Mic';
     micWave.style.display = 'flex';
+    wakeIndicator.classList.remove('wake-active');
   }
   
   // Stop voice recognition
@@ -909,7 +967,13 @@
     micMuted = !micMuted;
     if (micMuted) {
       stopRecognition();
+      wakeWordMode = true;
+      wakeIndicator.classList.add('wake-active');
+      output.innerHTML = "Microphone muted. Say 'Friday' to activate me again.";
+      speak("Microphone muted. Say Friday when you need me.");
     } else {
+      wakeWordMode = false;
+      wakeIndicator.classList.remove('wake-active');
       startRecognition();
     }
   });
@@ -944,7 +1008,7 @@
       
       // When done speaking, restart recognition if not muted
       utter.onend = () => {
-        if (!micMuted && permissionGranted) {
+        if (!micMuted && permissionGranted && !wakeWordMode) {
           recognition.start();
         }
       };
@@ -1409,7 +1473,7 @@
       response = await getBatteryStatus();
     }
     else if (msg.includes("thank")) {
-      response = "You're welcome! Is there anything else I can do for you?";
+      response = "You're welcome! Is there anything else I can help with?";
     }
     else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
       response = "I can help with: opening websites, playing YouTube videos, opening camera, taking photos, calculations, saving notes, telling time, checking battery, and more!";
@@ -1432,12 +1496,9 @@
     speak(response);
     
     // Restart recognition if mic is not muted
-    if (!micMuted && permissionGranted && !msg.startsWith("play ")) {
+    if (!micMuted && permissionGranted) {
       micWave.style.display = 'flex';
-      setTimeout(() => recognition.start(), 1000);
-    } else {
-      // For music, show wave but don't restart mic immediately
-      micWave.style.display = 'none';
+      recognition.start();
     }
   }
   
