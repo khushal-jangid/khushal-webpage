@@ -1432,9 +1432,12 @@
     speak(response);
     
     // Restart recognition if mic is not muted
-    if (!micMuted && permissionGranted) {
+    if (!micMuted && permissionGranted && !msg.startsWith("play ")) {
       micWave.style.display = 'flex';
       setTimeout(() => recognition.start(), 1000);
+    } else {
+      // For music, show wave but don't restart mic immediately
+      micWave.style.display = 'none';
     }
   }
   
