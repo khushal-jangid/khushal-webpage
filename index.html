@@ -550,15 +550,16 @@
           <div class="command-title">Camera Access</div>
           <div class="command-desc">"Open camera", "Take a photo"</div>
         </div>
+        <!-- Home and Notes cards removed -->
         <div class="command-card">
-          <div class="command-icon">🏠</div>
-          <div class="command-title">Home</div>
-          <div class="command-desc">"Return home", "Go back"</div>
+          <div class="command-icon">🔋</div>
+          <div class="command-title">Battery Status</div>
+          <div class="command-desc">"Check battery", "How much battery left"</div>
         </div>
         <div class="command-card">
-          <div class="command-icon">✏️</div>
-          <div class="command-title">Notes</div>
-          <div class="command-desc">"Save note", "Remember this"</div>
+          <div class="command-icon">📍</div>
+          <div class="command-title">Location</div>
+          <div class="command-desc">"Where am I?", "Get my location"</div>
         </div>
       </div>
     </div>
@@ -955,18 +956,6 @@
     speak("Photo captured!");
   }
   
-  // Save note function
-  function saveNote(content) {
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `friday_note_${Date.now()}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-    return "Note saved successfully!";
-  }
-  
   // Location function
   function getLocation() {
     return new Promise((resolve, reject) => {
@@ -1112,8 +1101,6 @@
             response = "Opening camera...";
           } else if (siteName.includes("gallery")) {
             response = "Gallery is not implemented in this demo";
-          } else if (siteName.includes("home") || siteName.includes("dashboard")) {
-            response = "You're already on the dashboard!";
           } else if (siteName.includes("friday") || siteName.includes("assistant")) {
             response = "Friday is activated and ready!";
           }
@@ -1142,14 +1129,6 @@
         response = "Taking photo...";
       }
     }
-    else if (msg.includes("note") || msg.includes("remember")) {
-      const noteContent = msg.replace(/(save|note|remember)/gi, "").trim();
-      if (noteContent) {
-        response = saveNote(noteContent);
-      } else {
-        response = "Please tell me what to save in the note";
-      }
-    }
     else if (msg.includes("location") || msg.includes("where am i")) {
       try {
         const location = await getLocation();
@@ -1169,7 +1148,7 @@
       response = "You're welcome! Is there anything else I can help with?";
     }
     else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
-      response = "I can help with: opening websites, opening camera, taking photos, calculations, saving notes, telling time, checking battery, and more!";
+      response = "I can help with: opening websites, opening camera, taking photos, calculations, telling time, checking battery, and more!";
     }
     else if (msg.includes("exit") || msg.includes("goodbye")) {
       response = "Goodbye! Have a great day!";
