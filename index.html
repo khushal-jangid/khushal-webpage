@@ -418,66 +418,6 @@
       text-align: center;
     }
 
-    /* YouTube container */
-    .youtube-container {
-      margin-top: 20px;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 20px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      display: none;
-    }
-    
-    .youtube-container h3 {
-      text-align: center;
-      margin-bottom: 15px;
-      color: #00bcd4;
-    }
-    
-    #video-container {
-      width: 100%;
-      margin: 15px 0;
-    }
-    
-    #ytplayer {
-      width: 100%;
-      height: 400px;
-      border: none;
-      border-radius: 10px;
-    }
-    
-    #history-list {
-      width: 100%;
-      max-height: 150px;
-      overflow-y: auto;
-      background: rgba(5, 10, 25, 0.5);
-      border-radius: 10px;
-      padding: 10px;
-      margin: 15px 0;
-      list-style-type: none;
-    }
-    
-    #history-list li {
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    
-    #history-list li:hover {
-      background: rgba(0, 188, 212, 0.2);
-    }
-    
-    .youtube-controls {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
     /* Wake word indicator */
     .wake-word-indicator {
       position: fixed;
@@ -508,32 +448,6 @@
       box-shadow: 0 0 8px #00ff9d;
     }
     
-    /* Song completion indicator */
-    .song-indicator {
-      position: fixed;
-      top: 60px;
-      left: 20px;
-      padding: 8px 15px;
-      background: rgba(106, 27, 154, 0.6);
-      border-radius: 20px;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(156, 39, 176, 0.5);
-      z-index: 10;
-      display: none;
-    }
-    
-    .song-indicator .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #9c27b0;
-      box-shadow: 0 0 8px #9c27b0;
-    }
-    
     /* Responsive design */
     @media (max-width: 600px) {
       .permission-title {
@@ -552,9 +466,6 @@
       .website-grid {
         grid-template-columns: repeat(3, 1fr);
       }
-      #ytplayer {
-        height: 250px;
-      }
     }
   </style>
 </head>
@@ -565,12 +476,6 @@
   <div class="wake-word-indicator" id="wakeIndicator">
     <div class="wake-dot"></div>
     <span>Wake word: "Friday"</span>
-  </div>
-  
-  <!-- Song indicator -->
-  <div class="song-indicator" id="songIndicator">
-    <div class="dot"></div>
-    <span>Song playing - I'll reactivate when done</span>
   </div>
   
   <!-- Permission Screen -->
@@ -606,9 +511,6 @@
       <button class="control-btn" id="websiteBtn">
         <span>🌐</span> Websites
       </button>
-      <button class="control-btn" id="youtubeBtn">
-        <span>📺</span> YouTube
-      </button>
       <button class="control-btn" id="micToggle">
         <span>🔇</span> Mute Mic
       </button>
@@ -622,7 +524,7 @@
         <h2>Assistant Response</h2>
         <div class="status">Listening...</div>
       </div>
-      <div id="output">Say "Friday" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", or "Play music on YouTube"</div>
+      <div id="output">Say "Friday" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", or "Take a photo"</div>
     </div>
     
     <div class="command-list">
@@ -639,11 +541,6 @@
           <div class="command-desc">"Open WhatsApp", "Launch Camera"</div>
         </div>
         <div class="command-card">
-          <div class="command-icon">🎵</div>
-          <div class="command-title">Music Player</div>
-          <div class="command-desc">"Play music", "Play Ed Sheeran"</div>
-        </div>
-        <div class="command-card">
           <div class="command-icon">🧮</div>
           <div class="command-title">Calculator</div>
           <div class="command-desc">"Calculate 45 plus 67", "What is 120 divided by 6"</div>
@@ -657,6 +554,11 @@
           <div class="command-icon">🏠</div>
           <div class="command-title">Home</div>
           <div class="command-desc">"Return home", "Go back"</div>
+        </div>
+        <div class="command-card">
+          <div class="command-icon">✏️</div>
+          <div class="command-title">Notes</div>
+          <div class="command-desc">"Save note", "Remember this"</div>
         </div>
       </div>
     </div>
@@ -679,30 +581,6 @@
       <h3>Supported Websites</h3>
       <div class="website-grid" id="websiteGrid">
         <!-- Websites will be populated by JavaScript -->
-      </div>
-    </div>
-    
-    <!-- YouTube container -->
-    <div id="youtubeContainer" class="youtube-container">
-      <h3>YouTube Player</h3>
-      <div id="video-container">
-        <div id="ytplayer"></div>
-      </div>
-      <h4>Search History</h4>
-      <ul id="history-list"></ul>
-      <div class="youtube-controls">
-        <button class="control-btn" id="pauseBtn">
-          <span>⏸️</span> Pause
-        </button>
-        <button class="control-btn" id="resumeBtn">
-          <span>▶️</span> Resume
-        </button>
-        <button class="control-btn" id="stopBtn">
-          <span>⏹️</span> Stop
-        </button>
-        <button class="control-btn" id="closeYoutubeBtn">
-          <span>❌</span> Close
-        </button>
       </div>
     </div>
   </div>
@@ -739,7 +617,6 @@
   const capturedPhoto = document.getElementById("capturedPhoto");
   const cameraBtn = document.getElementById("cameraBtn");
   const websiteBtn = document.getElementById("websiteBtn");
-  const youtubeBtn = document.getElementById("youtubeBtn");
   const captureBtn = document.getElementById("captureBtn");
   const closeCameraBtn = document.getElementById("closeCameraBtn");
   const micToggle = document.getElementById("micToggle");
@@ -747,14 +624,7 @@
   const micWave = document.getElementById('micWave');
   const websiteContainer = document.getElementById("websiteContainer");
   const websiteGrid = document.getElementById("websiteGrid");
-  const youtubeContainer = document.getElementById("youtubeContainer");
-  const historyList = document.getElementById("history-list");
-  const pauseBtn = document.getElementById("pauseBtn");
-  const resumeBtn = document.getElementById("resumeBtn");
-  const stopBtn = document.getElementById("stopBtn");
-  const closeYoutubeBtn = document.getElementById("closeYoutubeBtn");
   const wakeIndicator = document.getElementById("wakeIndicator");
-  const songIndicator = document.getElementById("songIndicator");
   
   // State variables
   let cameraStream = null;
@@ -762,11 +632,8 @@
   let darkMode = true;
   let recognitionActive = false;
   let permissionGranted = false;
-  let player; // YouTube player instance
-  let youtubeHistory = []; // Array to store search history
   let wakeWordMode = false;
   let wakeWordDetection = false;
-  let muteAfterPlayMode = false; // New state for mute after play feature
   
   // Initialize speech recognition with browser prefixes
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -836,7 +703,7 @@
       permissionGranted = true;
       
       // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'Play music'</i> or <i>'Open Instagram'</i>";
+      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'Take a photo'</i> or <i>'Open Instagram'</i>";
       speak("Microphone access granted! I'm Friday, your AI assistant. How can I help you today?");
       
     } catch (error) {
@@ -876,27 +743,6 @@
     } else {
       websiteContainer.style.display = 'block';
       cameraContainer.style.display = 'none';
-      youtubeContainer.style.display = 'none';
-    }
-  });
-  
-  // Toggle YouTube container
-  youtubeBtn.addEventListener('click', () => {
-    if (youtubeContainer.style.display === 'block') {
-      youtubeContainer.style.display = 'none';
-    } else {
-      youtubeContainer.style.display = 'block';
-      cameraContainer.style.display = 'none';
-      websiteContainer.style.display = 'none';
-      loadYoutubeAPI();
-    }
-  });
-  
-  // Close YouTube container
-  closeYoutubeBtn.addEventListener('click', () => {
-    youtubeContainer.style.display = 'none';
-    if (player) {
-      player.stopVideo();
     }
   });
   
@@ -1078,7 +924,6 @@
         cameraContainer.style.display = "flex";
         capturedPhoto.style.display = "none";
         websiteContainer.style.display = "none";
-        youtubeContainer.style.display = "none";
       })
       .catch(err => {
         output.textContent = "Failed to access camera: " + err.message;
@@ -1210,139 +1055,6 @@
       return "I couldn't perform that calculation. Please try again.";
     }
   }
-
-  // YouTube Player Functions
-  function loadYoutubeAPI() {
-    return new Promise((resolve) => {
-      if (typeof YT !== 'undefined' && YT.Player) {
-        resolve();
-        return;
-      }
-
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-      window.onYouTubeIframeAPIReady = function() {
-        resolve();
-      };
-    });
-  }
-
-  function addToHistory(query) {
-    // Add to the beginning of the array
-    youtubeHistory.unshift(query);
-    // Keep only the last 10 items
-    youtubeHistory = youtubeHistory.slice(0, 10);
-    // Update the history list in the DOM
-    updateHistoryList();
-  }
-
-  function updateHistoryList() {
-    historyList.innerHTML = '';
-    youtubeHistory.forEach(query => {
-      const li = document.createElement('li');
-      li.textContent = query;
-      li.onclick = () => {
-        fetchVideo(query);
-      };
-      historyList.appendChild(li);
-    });
-  }
-
-  function fetchVideo(query) {
-    // In a real app, you would use the YouTube API
-    // For demo purposes, we'll simulate finding a video
-    const videoId = "dQw4w9WgXcQ"; // Famous music video ID
-    const videoTitle = "Never Gonna Give You Up";
-    
-    // Show the YouTube container
-    youtubeContainer.style.display = "block";
-    cameraContainer.style.display = "none";
-    websiteContainer.style.display = "none";
-    
-    // Load the video
-    if (typeof YT === 'undefined') {
-      loadYoutubeAPI().then(() => {
-        loadVideo(videoId);
-      });
-    } else {
-      loadVideo(videoId);
-    }
-    
-    // Add to history
-    addToHistory(videoTitle);
-    
-    return `Playing "${videoTitle}"`;
-  }
-
-  function loadVideo(videoId) {
-    youtubeContainer.style.display = "block";
-    cameraContainer.style.display = "none";
-    websiteContainer.style.display = "none";
-
-    if (typeof YT === "undefined" || !YT.Player) {
-      output.innerHTML = "YouTube API not loaded yet";
-      return;
-    }
-
-    if (player) {
-      player.loadVideoById(videoId);
-      return;
-    }
-
-    player = new YT.Player('ytplayer', {
-      height: '400',
-      width: '100%',
-      videoId: videoId,
-      events: {
-        'onReady': onPlayerReady,
-        'onStateChange': onPlayerStateChange
-      },
-      playerVars: {
-        autoplay: 1,
-        controls: 1,
-        enablejsapi: 1
-      }
-    });
-  }
-
-  function onPlayerReady(event) {
-    event.target.playVideo();
-    pauseBtn.addEventListener('click', () => {
-      event.target.pauseVideo();
-      speak("Video paused");
-    });
-    resumeBtn.addEventListener('click', () => {
-      event.target.playVideo();
-      speak("Video resumed");
-    });
-    stopBtn.addEventListener('click', () => {
-      event.target.stopVideo();
-      speak("Video stopped");
-    });
-  }
-  
-  // YouTube player state change handler
-  function onPlayerStateChange(event) {
-    // When video ends (state 0)
-    if (event.data === 0) {
-      if (muteAfterPlayMode) {
-        // Unmute the microphone and reactivate
-        micMuted = false;
-        muteAfterPlayMode = false;
-        startRecognition();
-        wakeWordMode = false;
-        wakeIndicator.classList.remove('wake-active');
-        songIndicator.style.display = 'none';
-        
-        // Update output
-        output.innerHTML += "<br><br><strong>Friday:</strong> Song has ended. I'm active again!";
-        speak("The song has ended. I'm active again.");
-      }
-    }
-  }
   
   // Process voice commands
   async function processCommand(transcript) {
@@ -1404,9 +1116,6 @@
             response = "You're already on the dashboard!";
           } else if (siteName.includes("friday") || siteName.includes("assistant")) {
             response = "Friday is activated and ready!";
-          } else if (siteName.includes("youtube")) {
-            youtubeContainer.style.display = "block";
-            response = "Opening YouTube player";
           }
         }
         
@@ -1417,70 +1126,6 @@
         }
       } else {
         response = "Which website or app would you like me to open?";
-      }
-    }
-    // Handle YouTube commands
-    else if (msg.startsWith("play ")) {
-      const query = msg.replace("play", "").trim();
-      if (query) {
-        // Check if it's the special "play song and mute" command
-        if (msg.includes("mute") && (msg.includes("song") || msg.includes("music"))) {
-          // Set the mute after play mode flag
-          muteAfterPlayMode = true;
-          
-          // Mute the microphone
-          micMuted = true;
-          stopRecognition();
-          wakeWordMode = true;
-          wakeIndicator.classList.add('wake-active');
-          
-          // Show song indicator
-          songIndicator.style.display = 'flex';
-          
-          // Play the song
-          const playResponse = fetchVideo(query);
-          response = `Playing song and muting myself until the song ends. ${playResponse}`;
-        } else {
-          // Normal play command
-          youtubeContainer.style.display = "block";
-          cameraContainer.style.display = "none";
-          websiteContainer.style.display = "none";
-          
-          if (typeof YT === 'undefined') {
-            loadYoutubeAPI().then(() => {
-              fetchVideo(query);
-            });
-          } else {
-            fetchVideo(query);
-          }
-          response = `Searching YouTube for "${query}"...`;
-        }
-      } else {
-        response = "What would you like me to play?";
-      }
-    }
-    else if (msg.includes("pause video") || msg.includes("pause the video")) {
-      if (player) {
-        player.pauseVideo();
-        response = "Video paused";
-      } else {
-        response = "No video is playing";
-      }
-    }
-    else if (msg.includes("resume video") || msg.includes("resume the video")) {
-      if (player) {
-        player.playVideo();
-        response = "Video resumed";
-      } else {
-        response = "No video is playing";
-      }
-    }
-    else if (msg.includes("stop video") || msg.includes("stop the video")) {
-      if (player) {
-        player.stopVideo();
-        response = "Video stopped";
-      } else {
-        response = "No video is playing";
       }
     }
     else if (msg.includes("camera") || msg.includes("photo")) {
@@ -1524,7 +1169,7 @@
       response = "You're welcome! Is there anything else I can help with?";
     }
     else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
-      response = "I can help with: opening websites, playing YouTube videos, opening camera, taking photos, calculations, saving notes, telling time, checking battery, and more!";
+      response = "I can help with: opening websites, opening camera, taking photos, calculations, saving notes, telling time, checking battery, and more!";
     }
     else if (msg.includes("exit") || msg.includes("goodbye")) {
       response = "Goodbye! Have a great day!";
@@ -1590,7 +1235,7 @@
   scene.add(ambientLight);
   
   const pointLight = new THREE.PointLight(0x00ffff, 1.5);
-  pointLight.position.set(3, 3, 3);
+    pointLight.position.set(3, 3, 3);
   scene.add(pointLight);
   
   const pointLight2 = new THREE.PointLight(0xff00ff, 0.5);
