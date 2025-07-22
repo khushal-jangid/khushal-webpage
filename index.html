@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Friday AI Assistant - Enhanced</title>
+  <title>Friday AI Assistant - 3D Enhanced</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/js/controls/OrbitControls.js"></script>
   <style>
     * {
       margin: 0;
@@ -23,19 +24,25 @@
       justify-content: center;
       padding: 20px;
       position: relative;
-      overflow-x: hidden;
+      overflow: hidden;
       transition: background 0.5s ease;
     }
     
-    .background-glow {
+    #webgl-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at center, rgba(0, 188, 212, 0.1) 0%, transparent 70%);
       z-index: -1;
-      pointer-events: none;
+    }
+    
+    .ui-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 800px;
+      perspective: 1000px;
     }
     
     .permission-screen {
@@ -62,6 +69,7 @@
       border-radius: 20px;
       border: 1px solid rgba(0, 188, 212, 0.3);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transform: translateZ(50px);
     }
     
     .permission-title {
@@ -71,6 +79,7 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
     }
     
     .permission-text {
@@ -90,11 +99,13 @@
       cursor: pointer;
       transition: all 0.3s ease;
       margin-top: 20px;
+      transform: translateZ(30px);
+      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
     }
     
     .permission-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0, 188, 212, 0.3);
+      transform: translateY(-3px) translateZ(30px);
+      box-shadow: 0 10px 20px rgba(0, 188, 212, 0.5);
     }
     
     .header {
@@ -121,7 +132,7 @@
       background-clip: text;
       color: transparent;
       margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+      text-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
     }
     
     .subtitle {
@@ -140,6 +151,7 @@
       opacity: 0;
       transform: translateY(20px);
       animation: fadeIn 0.8s forwards 1s;
+      transform-style: preserve-3d;
     }
     
     .avatar-container {
@@ -147,13 +159,14 @@
       width: 280px;
       height: 280px;
       margin: 0 auto;
+      transform-style: preserve-3d;
     }
     
     #avatar {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      box-shadow: 0 0 30px rgba(0, 188, 212, 0.4);
+      box-shadow: 0 0 40px rgba(0, 188, 212, 0.6);
     }
     
     .status-indicator {
@@ -164,7 +177,7 @@
       height: 15px;
       border-radius: 50%;
       background-color: #00ff9d;
-      box-shadow: 0 0 10px #00ff9d;
+      box-shadow: 0 0 15px #00ff9d;
       animation: pulse 1.5s infinite;
     }
     
@@ -180,6 +193,7 @@
       flex-wrap: wrap;
       justify-content: center;
       margin-top: 10px;
+      transform-style: preserve-3d;
     }
     
     .control-btn {
@@ -196,16 +210,18 @@
       gap: 8px;
       backdrop-filter: blur(5px);
       border: 1px solid rgba(0, 188, 212, 0.3);
+      transform: translateZ(20px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
     
     .control-btn:hover {
       background: rgba(0, 188, 212, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
+      transform: translateY(-2px) translateZ(20px);
+      box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
     }
     
     .control-btn:active {
-      transform: translateY(0);
+      transform: translateY(0) translateZ(20px);
     }
     
     .output-container {
@@ -215,8 +231,9 @@
       padding: 25px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(0, 188, 212, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
       min-height: 200px;
+      transform: translateZ(30px);
     }
     
     .output-header {
@@ -252,10 +269,11 @@
       padding: 25px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(0, 188, 212, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
       opacity: 0;
       transform: translateY(20px);
       animation: fadeIn 0.8s forwards 1.5s;
+      transform-style: preserve-3d;
     }
     
     .command-list h2 {
@@ -276,12 +294,14 @@
       border-radius: 15px;
       padding: 15px;
       border-left: 3px solid #00bcd4;
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
+      transform: translateZ(10px);
     }
     
     .command-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-5px) translateZ(15px);
       background: rgba(5, 10, 25, 0.7);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
     
     .command-icon {
@@ -311,6 +331,7 @@
       padding: 20px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(0, 188, 212, 0.2);
+      transform: translateZ(30px);
     }
     
     video, canvas, img {
@@ -329,6 +350,7 @@
       opacity: 0;
       transform: translateY(20px);
       animation: fadeIn 0.8s forwards 2s;
+      transform: translateZ(20px);
     }
     
     .mic-wave {
@@ -340,6 +362,7 @@
       gap: 8px;
       align-items: flex-end;
       height: 40px;
+      transform-style: preserve-3d;
     }
     
     .wave-bar {
@@ -347,6 +370,7 @@
       background: #00bcd4;
       border-radius: 3px;
       animation: wave 1.2s infinite ease-in-out;
+      transform: translateZ(5px);
     }
     
     @keyframes wave {
@@ -372,6 +396,7 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(0, 188, 212, 0.2);
       display: none;
+      transform: translateZ(30px);
     }
     
     .website-container h3 {
@@ -394,11 +419,12 @@
       transition: all 0.3s ease;
       padding: 10px;
       border-radius: 10px;
+      transform: translateZ(10px);
     }
     
     .website-card:hover {
       background: rgba(0, 188, 212, 0.2);
-      transform: translateY(-3px);
+      transform: translateY(-3px) translateZ(15px);
     }
     
     .website-icon {
@@ -434,6 +460,7 @@
       border: 1px solid rgba(0, 188, 212, 0.3);
       z-index: 10;
       animation: pulse 2s infinite;
+      transform: translateZ(20px);
     }
     
     .wake-dot {
@@ -446,6 +473,27 @@
     .wake-active .wake-dot {
       background-color: #00ff9d;
       box-shadow: 0 0 8px #00ff9d;
+    }
+    
+    /* 3D Floating Effect */
+    .floating {
+      animation: floating 6s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0% { transform: translateY(0px) translateZ(0); }
+      50% { transform: translateY(-15px) translateZ(5px); }
+      100% { transform: translateY(0px) translateZ(0); }
+    }
+    
+    .floating-slow {
+      animation: floating-slow 8s ease-in-out infinite;
+    }
+    
+    @keyframes floating-slow {
+      0% { transform: translateY(0px) translateZ(0); }
+      50% { transform: translateY(-10px) translateZ(3px); }
+      100% { transform: translateY(0px) translateZ(0); }
     }
     
     /* Responsive design */
@@ -470,124 +518,127 @@
   </style>
 </head>
 <body>
-  <div class="background-glow"></div>
+  <div id="webgl-container"></div>
   
-  <!-- Wake word indicator -->
-  <div class="wake-word-indicator" id="wakeIndicator">
-    <div class="wake-dot"></div>
-    <span>Wake word: "Friday"</span>
-  </div>
-  
-  <!-- Permission Screen -->
-  <div class="permission-screen" id="permissionScreen">
-    <div class="permission-content">
-      <h1 class="permission-title">Friday AI Assistant</h1>
-      <div class="permission-text">
-        <p>Friday needs microphone access to listen to your commands.</p>
-        <p>This is a one-time permission. Once granted, Friday will always be listening for your voice commands.</p>
-        <p>Your privacy is important - audio processing happens locally in your browser.</p>
-      </div>
-      <button class="permission-btn" id="grantPermission">Grant Microphone Access</button>
-      <p style="margin-top: 20px; opacity: 0.7;">Note: Microphone access is required for voice commands</p>
-    </div>
-  </div>
-  
-  <!-- Main Content (initially hidden) -->
-  <div class="header" id="mainHeader">
-    <h1>Friday AI Assistant</h1>
-    <div class="subtitle">Voice Commands • Always Listening • AI Assistant</div>
-  </div>
-  
-  <div class="container" id="mainContainer">
-    <div class="avatar-container">
-      <canvas id="avatar"></canvas>
-      <div class="status-indicator" id="micIndicator"></div>
+  <div class="ui-container">
+    <!-- Wake word indicator -->
+    <div class="wake-word-indicator floating-slow" id="wakeIndicator">
+      <div class="wake-dot"></div>
+      <span>Wake word: "Friday"</span>
     </div>
     
-    <div class="controls">
-      <button class="control-btn" id="cameraBtn">
-        <span>📷</span> Camera
-      </button>
-      <button class="control-btn" id="websiteBtn">
-        <span>🌐</span> Websites
-      </button>
-      <button class="control-btn" id="micToggle">
-        <span>🔇</span> Mute Mic
-      </button>
-      <button class="control-btn" id="darkModeBtn">
-        <span>🌙</span> Dark Mode
-      </button>
-    </div>
-    
-    <div class="output-container">
-      <div class="output-header">
-        <h2>Assistant Response</h2>
-        <div class="status">Listening...</div>
-      </div>
-      <div id="output">Say "Friday" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", or "Take a photo"</div>
-    </div>
-    
-    <div class="command-list">
-      <h2>Voice Commands</h2>
-      <div class="commands">
-        <div class="command-card">
-          <div class="command-icon">🌐</div>
-          <div class="command-title">Open Websites</div>
-          <div class="command-desc">"Open YouTube", "Go to Google"</div>
+    <!-- Permission Screen -->
+    <div class="permission-screen" id="permissionScreen">
+      <div class="permission-content floating">
+        <h1 class="permission-title">Friday AI Assistant</h1>
+        <div class="permission-text">
+          <p>Friday needs microphone access to listen to your commands.</p>
+          <p>This is a one-time permission. Once granted, Friday will always be listening for your voice commands.</p>
+          <p>Your privacy is important - audio processing happens locally in your browser.</p>
         </div>
-        <div class="command-card">
-          <div class="command-icon">📱</div>
-          <div class="command-title">Open Apps</div>
-          <div class="command-desc">"Open WhatsApp", "Launch Camera"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🧮</div>
-          <div class="command-title">Calculator</div>
-          <div class="command-desc">"Calculate 45 plus 67", "What is 120 divided by 6"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📷</div>
-          <div class="command-title">Camera Access</div>
-          <div class="command-desc">"Open camera", "Take a photo"</div>
-        </div>
-        <!-- Home and Notes cards removed -->
-        <div class="command-card">
-          <div class="command-icon">🔋</div>
-          <div class="command-title">Battery Status</div>
-          <div class="command-desc">"Check battery", "How much battery left"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📍</div>
-          <div class="command-title">Location</div>
-          <div class="command-desc">"Where am I?", "Get my location"</div>
-        </div>
+        <button class="permission-btn" id="grantPermission">Grant Microphone Access</button>
+        <p style="margin-top: 20px; opacity: 0.7;">Note: Microphone access is required for voice commands</p>
       </div>
     </div>
     
-    <div id="cameraContainer" class="camera-container">
-      <h3>Camera Preview</h3>
-      <video id="cameraFeed" autoplay></video>
-      <canvas id="cameraCanvas" style="display:none;"></canvas>
-      <img id="capturedPhoto" />
-      <button class="control-btn" id="captureBtn" style="margin-top: 15px;">
-        <span>📸</span> Capture Photo
-      </button>
-      <button class="control-btn" id="closeCameraBtn" style="margin-top: 10px;">
-        <span>❌</span> Close Camera
-      </button>
+    <!-- Main Content (initially hidden) -->
+    <div class="header" id="mainHeader">
+      <h1>Friday AI Assistant</h1>
+      <div class="subtitle">Voice Commands • Always Listening • AI Assistant</div>
     </div>
     
-    <!-- Website container -->
-    <div id="websiteContainer" class="website-container">
-      <h3>Supported Websites</h3>
-      <div class="website-grid" id="websiteGrid">
-        <!-- Websites will be populated by JavaScript -->
+    <div class="container" id="mainContainer">
+      <div class="avatar-container floating">
+        <canvas id="avatar"></canvas>
+        <div class="status-indicator" id="micIndicator"></div>
+      </div>
+      
+      <div class="controls">
+        <button class="control-btn floating-slow" id="cameraBtn">
+          <span>📷</span> Camera
+        </button>
+        <button class="control-btn floating-slow" id="websiteBtn">
+          <span>🌐</span> Websites
+        </button>
+        <button class="control-btn floating-slow" id="micToggle">
+          <span>🔇</span> Mute Mic
+        </button>
+        <button class="control-btn floating-slow" id="darkModeBtn">
+          <span>🌙</span> Dark Mode
+        </button>
+      </div>
+      
+      <div class="output-container floating">
+        <div class="output-header">
+          <h2>Assistant Response</h2>
+          <div class="status">Listening...</div>
+        </div>
+        <div id="output">Say "Friday" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", or "Take a photo"</div>
+      </div>
+      
+      <div class="command-list floating-slow">
+        <h2>Voice Commands</h2>
+        <div class="commands">
+          <div class="command-card">
+            <div class="command-icon">🌐</div>
+            <div class="command-title">Open Websites</div>
+            <div class="command-desc">"Open YouTube", "Go to Google"</div>
+          </div>
+          <div class="command-card">
+            <div class="command-icon">📱</div>
+            <div class="command-title">Open Apps</div>
+            <div class="command-desc">"Open WhatsApp", "Launch Camera"</div>
+          </div>
+          <div class="command-card">
+            <div class="command-icon">🧮</div>
+            <div class="command-title">Calculator</div>
+            <div class="command-desc">"Calculate 45 plus 67", "What is 120 divided by 6"</div>
+          </div>
+          <div class="command-card">
+            <div class="command-icon">📷</div>
+            <div class="command-title">Camera Access</div>
+            <div class="command-desc">"Open camera", "Take a photo"</div>
+          </div>
+          <div class="command-card">
+            <div class="command-icon">🔋</div>
+            <div class="command-title">Battery Status</div>
+            <div class="command-desc">"Check battery", "How much battery left"</div>
+          </div>
+          <div class="command-card">
+            <div class="command-icon">📍</div>
+            <div class="command-title">Location</div>
+            <div class="command-desc">"Where am I?", "Get my location"</div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="cameraContainer" class="camera-container floating">
+        <h3>Camera Preview</h3>
+        <video id="cameraFeed" autoplay></video>
+        <canvas id="cameraCanvas" style="display:none;"></canvas>
+        <img id="capturedPhoto" />
+        <div class="controls">
+          <button class="control-btn floating-slow" id="captureBtn">
+            <span>📸</span> Capture Photo
+          </button>
+          <button class="control-btn floating-slow" id="closeCameraBtn">
+            <span>❌</span> Close Camera
+          </button>
+        </div>
+      </div>
+      
+      <!-- Website container -->
+      <div id="websiteContainer" class="website-container floating">
+        <h3>Supported Websites</h3>
+        <div class="website-grid" id="websiteGrid">
+          <!-- Websites will be populated by JavaScript -->
+        </div>
       </div>
     </div>
-  </div>
-  
-  <div class="footer">
-    Friday AI Assistant • Voice Commands • Enhanced Version
+    
+    <div class="footer floating-slow">
+      Friday AI Assistant • Voice Commands • 3D Enhanced Version
+    </div>
   </div>
   
   <div class="mic-wave" id="micWave">
@@ -604,6 +655,165 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
 <script>
+  // Initialize 3D environment
+  let scene, camera, renderer;
+  let stars = [];
+  
+  function init3DEnvironment() {
+    // Create scene
+    scene = new THREE.Scene();
+    
+    // Create camera
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 15;
+    
+    // Create renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+    document.getElementById('webgl-container').appendChild(renderer.domElement);
+    
+    // Add ambient light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    
+    // Add directional light
+    const directionalLight = new THREE.DirectionalLight(0x00bcd4, 1);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+    
+    // Add point lights
+    const pointLight1 = new THREE.PointLight(0xff00ff, 1, 50);
+    pointLight1.position.set(10, 10, 10);
+    scene.add(pointLight1);
+    
+    const pointLight2 = new THREE.PointLight(0x00ffff, 1, 50);
+    pointLight2.position.set(-10, -10, -10);
+    scene.add(pointLight2);
+    
+    // Create stars
+    createStars(1000);
+    
+    // Create nebula effect
+    createNebula();
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // Start animation
+    animate3DEnvironment();
+  }
+  
+  function createStars(count) {
+    const starGeometry = new THREE.BufferGeometry();
+    const starMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.05,
+      transparent: true,
+      opacity: 0.8
+    });
+    
+    const positions = [];
+    for (let i = 0; i < count; i++) {
+      positions.push(
+        (Math.random() - 0.5) * 1000,
+        (Math.random() - 0.5) * 1000,
+        (Math.random() - 0.5) * 1000
+      );
+    }
+    
+    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    const starField = new THREE.Points(starGeometry, starMaterial);
+    scene.add(starField);
+    stars.push(starField);
+  }
+  
+  function createNebula() {
+    // Create nebula particles
+    const nebulaGeometry = new THREE.BufferGeometry();
+    const nebulaMaterial = new THREE.PointsMaterial({
+      color: 0x8800ff,
+      size: 0.2,
+      transparent: true,
+      opacity: 0.1,
+      blending: THREE.AdditiveBlending
+    });
+    
+    const positions = [];
+    const colors = [];
+    
+    for (let i = 0; i < 500; i++) {
+      positions.push(
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200
+      );
+      
+      // Random color between blue and purple
+      colors.push(0.5 + Math.random() * 0.5);
+      colors.push(0.2 + Math.random() * 0.3);
+      colors.push(0.8 + Math.random() * 0.2);
+    }
+    
+    nebulaGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    nebulaGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    nebulaMaterial.vertexColors = true;
+    
+    const nebula = new THREE.Points(nebulaGeometry, nebulaMaterial);
+    nebula.position.set(30, 20, -50);
+    scene.add(nebula);
+    stars.push(nebula);
+    
+    // Create second nebula
+    const nebulaGeometry2 = new THREE.BufferGeometry();
+    const positions2 = [];
+    const colors2 = [];
+    
+    for (let i = 0; i < 500; i++) {
+      positions2.push(
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 200
+      );
+      
+      // Random color between blue and cyan
+      colors2.push(0.2 + Math.random() * 0.3);
+      colors2.push(0.5 + Math.random() * 0.5);
+      colors2.push(0.8 + Math.random() * 0.2);
+    }
+    
+    nebulaGeometry2.setAttribute('position', new THREE.Float32BufferAttribute(positions2, 3));
+    nebulaGeometry2.setAttribute('color', new THREE.Float32BufferAttribute(colors2, 3));
+    
+    const nebula2 = new THREE.Points(nebulaGeometry2, nebulaMaterial);
+    nebula2.position.set(-40, -30, -70);
+    scene.add(nebula2);
+    stars.push(nebula2);
+  }
+  
+  function animate3DEnvironment() {
+    requestAnimationFrame(animate3DEnvironment);
+    
+    // Animate stars
+    stars.forEach(starField => {
+      starField.rotation.x += 0.0001;
+      starField.rotation.y += 0.0002;
+    });
+    
+    // Animate camera for subtle movement
+    camera.position.x = Math.sin(Date.now() * 0.0003) * 2;
+    camera.position.y = Math.cos(Date.now() * 0.0002) * 1.5;
+    
+    renderer.render(scene, camera);
+  }
+  
+  // Initialize 3D environment
+  init3DEnvironment();
+
   // DOM Elements
   const permissionScreen = document.getElementById('permissionScreen');
   const grantPermissionBtn = document.getElementById('grantPermission');
@@ -824,7 +1034,7 @@
     
     recognition.start();
     micIndicator.style.backgroundColor = "#00ff9d";
-    micIndicator.style.boxShadow = "0 0 10px #00ff9d";
+    micIndicator.style.boxShadow = "0 0 15px #00ff9d";
     recognitionActive = true;
     micToggle.innerHTML = '<span>🔇</span> Mute Mic';
     micWave.style.display = 'flex';
@@ -837,7 +1047,7 @@
     
     recognition.stop();
     micIndicator.style.backgroundColor = "#ff3b30";
-    micIndicator.style.boxShadow = "0 0 10px #ff3b30";
+    micIndicator.style.boxShadow = "0 0 15px #ff3b30";
     recognitionActive = false;
     micToggle.innerHTML = '<span>🎤</span> Unmute Mic';
     micWave.style.display = 'none';
@@ -1175,15 +1385,15 @@
   }
   
   // 3D Avatar
-  const scene = new THREE.Scene();
+  const avatarScene = new THREE.Scene();
   const camera3D = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ 
+  const avatarRenderer = new THREE.WebGLRenderer({ 
     canvas: avatarCanvas, 
     alpha: true,
     antialias: true
   });
-  renderer.setSize(280, 280);
-  renderer.setClearColor(0x000000, 0);
+  avatarRenderer.setSize(280, 280);
+  avatarRenderer.setClearColor(0x000000, 0);
   
   // Create glowing sphere avatar
   const geometry = new THREE.SphereGeometry(1, 32, 32);
@@ -1192,40 +1402,66 @@
   const material = new THREE.MeshStandardMaterial({ 
     color: 0x00bcd4,
     emissive: 0x0088aa,
-    emissiveIntensity: 1.5,
+    emissiveIntensity: 1.8,
     metalness: 0.8,
     roughness: 0.2
   });
   const avatar = new THREE.Mesh(geometry, material);
-  scene.add(avatar);
+  avatarScene.add(avatar);
   
   // Glow effect
   const glowGeometry = new THREE.SphereGeometry(1.05, 32, 32);
   const glowMaterial = new THREE.MeshBasicMaterial({
     color: 0x00bcd4,
     transparent: true,
-    opacity: 0.3
+    opacity: 0.4
   });
   const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-  scene.add(glow);
+  avatarScene.add(glow);
+  
+  // Particle effect around avatar
+  const particlesGeometry = new THREE.BufferGeometry();
+  const particlesMaterial = new THREE.PointsMaterial({
+    color: 0x00ffff,
+    size: 0.03,
+    transparent: true,
+    blending: THREE.AdditiveBlending
+  });
+  
+  const particlesPositions = [];
+  for (let i = 0; i < 500; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const radius = 1.5 + Math.random() * 0.5;
+    
+    particlesPositions.push(
+      radius * Math.sin(phi) * Math.cos(theta),
+      radius * Math.sin(phi) * Math.sin(theta),
+      radius * Math.cos(phi)
+    );
+  }
+  
+  particlesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particlesPositions, 3));
+  const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+  avatarScene.add(particles);
   
   // Lights
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-  scene.add(ambientLight);
+  avatarScene.add(ambientLight);
   
-  const pointLight = new THREE.PointLight(0x00ffff, 1.5);
-    pointLight.position.set(3, 3, 3);
-  scene.add(pointLight);
+  const pointLight = new THREE.PointLight(0x00ffff, 2.0);
+  pointLight.position.set(3, 3, 3);
+  avatarScene.add(pointLight);
   
-  const pointLight2 = new THREE.PointLight(0xff00ff, 0.5);
+  const pointLight2 = new THREE.PointLight(0xff00ff, 0.8);
   pointLight2.position.set(-3, -3, -3);
-  scene.add(pointLight2);
+  avatarScene.add(pointLight2);
   
   camera3D.position.z = 3;
   
   // Animation
-  function animate() {
-    requestAnimationFrame(animate);
+  function animateAvatar() {
+    requestAnimationFrame(animateAvatar);
     
     const time = Date.now() * 0.001;
     
@@ -1246,10 +1482,14 @@
     pointLight.position.x = Math.sin(time * 0.7) * 4;
     pointLight.position.y = Math.cos(time * 0.5) * 4;
     
-    renderer.render(scene, camera3D);
+    // Rotate particles
+    particles.rotation.y = time * 0.2;
+    particles.rotation.x = time * 0.1;
+    
+    avatarRenderer.render(avatarScene, camera3D);
   }
   
-  animate();
+  animateAvatar();
 </script>
 </body>
 </html>
