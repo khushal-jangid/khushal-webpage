@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Friday AI Assistant - Enhanced with GIF Search</title>
+  <title>Eva AI Assistant - Enhanced with GIF Search</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
   <style>
     * {
@@ -566,16 +566,16 @@
   <!-- Wake word indicator -->
   <div class="wake-word-indicator" id="wakeIndicator">
     <div class="wake-dot"></div>
-    <span>Wake word: "Friday"</span>
+    <span>Wake word: "Eva"</span>
   </div>
   
   <!-- Permission Screen -->
   <div class="permission-screen" id="permissionScreen">
     <div class="permission-content">
-      <h1 class="permission-title">Friday AI Assistant</h1>
+      <h1 class="permission-title">Eva AI Assistant</h1>
       <div class="permission-text">
-        <p>Friday needs microphone access to listen to your commands.</p>
-        <p>This is a one-time permission. Once granted, Friday will always be listening for your voice commands.</p>
+        <p>Eva needs microphone access to listen to your commands.</p>
+        <p>This is a one-time permission. Once granted, Eva will always be listening for your voice commands.</p>
         <p>Your privacy is important - audio processing happens locally in your browser.</p>
       </div>
       <button class="permission-btn" id="grantPermission">Grant Microphone Access</button>
@@ -585,8 +585,8 @@
   
   <!-- Main Content (initially hidden) -->
   <div class="header" id="mainHeader">
-    <h1>Friday AI Assistant</h1>
-    <div class="subtitle">Voice Commands • Always Listening • GIF Search • AI Assistant</div>
+    <h1>Eva AI Assistant</h1>
+    <div class="subtitle">Voice Commands • Always Listening • GIF Search • Empowered Virtual Assistant</div>
   </div>
   
   <div class="container" id="mainContainer">
@@ -615,7 +615,7 @@
         <h2>Assistant Response</h2>
         <div class="status">Listening...</div>
       </div>
-      <div id="output">Say "Friday" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", "Find a GIF of cats", or "Take a photo"</div>
+      <div id="output">Say "Eva" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", "Find a GIF of cats", or "Take a photo"</div>
     </div>
     
     <div class="command-list">
@@ -693,7 +693,7 @@
   </div>
   
   <div class="footer">
-    Friday AI Assistant • Voice Commands • GIF Search • Enhanced Version
+    Eva AI Assistant • Voice Commands • GIF Search • Empowered Virtual Assistant
   </div>
   
   <div class="mic-wave" id="micWave">
@@ -817,8 +817,8 @@
       permissionGranted = true;
       
       // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Friday is now listening for your commands.<br><br>Try saying: <i>'Take a photo'</i>, <i>'Open Instagram'</i>, or <i>'Find a GIF of cats'</i>";
-      speak("Microphone access granted! I'm Friday, your AI assistant. How can I help you today?");
+      output.innerHTML = "Microphone access granted!<br><br>Eva is now listening for your commands.<br><br>Try saying: <i>'Take a photo'</i>, <i>'Open Instagram'</i>, or <i>'Find a GIF of cats'</i>";
+      speak("Microphone access granted! I'm Eva, your Empowered Virtual Assistant. How can I help you today?");
       
     } catch (error) {
       console.error("Permission error:", error);
@@ -912,14 +912,14 @@
       
       // Check if we're in wake word mode
       if (wakeWordMode) {
-        // Only listen for the wake word "friday"
-        if (transcript.toLowerCase().includes("friday")) {
+        // Only listen for the wake word "eva"
+        if (transcript.toLowerCase().includes("eva")) {
           // Wake up the assistant
           wakeWordMode = false;
           wakeWordDetection = false;
           wakeIndicator.classList.remove('wake-active');
-          output.innerHTML = "Friday activated! How can I help you?";
-          speak("I'm listening. How can I help you?");
+          output.innerHTML = "Eva activated! How can I help you?";
+          speak("I'm Eva, your Empowered Virtual Assistant. How can I help you?");
           startRecognition();
         }
       } else {
@@ -980,8 +980,8 @@
       stopRecognition();
       wakeWordMode = true;
       wakeIndicator.classList.add('wake-active');
-      output.innerHTML = "Microphone muted. Say 'Friday' to activate me again.";
-      speak("Microphone muted. Say Friday when you need me.");
+      output.innerHTML = "Microphone muted. Say 'Eva' to activate me again.";
+      speak("Microphone muted. Say Eva when you need me.");
     } else {
       wakeWordMode = false;
       wakeIndicator.classList.remove('wake-active');
@@ -1249,14 +1249,14 @@
     
     // Simple command processing
     if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
-      response = "Hello! How can I assist you today?";
+      response = "Hello! I'm Eva, your Empowered Virtual Assistant. How can I help you today?";
     } 
     else if (msg.includes("tumko kisne banaya") || msg.includes("who made you") || 
              msg.includes("who created you") || msg.includes("tumhara creator kaun hai")) {
       response = "Mujhe Khushal Sharma ne banaya hai. Wo 19 saal ke hain aur Haryana ke Nangal Sirohi se hain.";
     }
     else if (msg.includes("name") || msg.includes("who are you")) {
-      response = "I'm Friday, your AI assistant. Always at your service!";
+      response = "I'm Eva, your Empowered Virtual Assistant. Always at your service!";
     }
     // Handle calculator commands
     else if (msg.includes("calculate") || msg.includes("what is") || 
@@ -1303,8 +1303,8 @@
             response = "Opening camera...";
           } else if (siteName.includes("gallery")) {
             response = "Gallery is not implemented in this demo";
-          } else if (siteName.includes("friday") || siteName.includes("assistant")) {
-            response = "Friday is activated and ready!";
+          } else if (siteName.includes("eva") || siteName.includes("assistant")) {
+            response = "Eva is activated and ready!";
           }
         }
         
@@ -1356,7 +1356,7 @@
       response = "Goodbye! Have a great day!";
       speak(response);
       setTimeout(() => {
-        output.textContent = "Friday has exited. Refresh the page to restart.";
+        output.textContent = "Eva has exited. Refresh the page to restart.";
       }, 2000);
       return;
     }
@@ -1366,7 +1366,7 @@
     }
     
     // Display and speak response
-    output.innerHTML += `<br><br><strong>Friday:</strong> ${response}`;
+    output.innerHTML += `<br><br><strong>Eva:</strong> ${response}`;
     speak(response);
     
     // Restart recognition if mic is not muted
