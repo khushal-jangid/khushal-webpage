@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eva AI Assistant - Enhanced with GIF Search</title>
+  <title>Eva AI Assistant - Enhanced with Alarm & Timer</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
   <style>
-    /* CSS remains unchanged */
     * {
       margin: 0;
       padding: 0;
@@ -532,6 +531,61 @@
       z-index: 10;
     }
     
+    /* Alarm & Timer Styles */
+    .alarm-container {
+      margin-top: 20px;
+      width: 100%;
+      background: rgba(10, 15, 40, 0.7);
+      border-radius: 20px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 188, 212, 0.2);
+      display: none;
+    }
+    
+    .alarm-container h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #00bcd4;
+    }
+    
+    .alarm-clock {
+      font-size: 2.5rem;
+      text-align: center;
+      margin: 15px 0;
+      font-weight: bold;
+      background: linear-gradient(to right, #00bcd4, #00ffea);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .alarm-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .alarm-status {
+      font-size: 1.1rem;
+      margin-top: 15px;
+      padding: 10px;
+      background: rgba(5, 10, 25, 0.5);
+      border-radius: 10px;
+      min-height: 60px;
+    }
+    
+    .alarm-countdown {
+      font-size: 1.1rem;
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(5, 10, 25, 0.5);
+      border-radius: 10px;
+      min-height: 40px;
+    }
+    
     /* Responsive design */
     @media (max-width: 600px) {
       .permission-title {
@@ -552,6 +606,13 @@
       }
       .gif-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+      .alarm-clock {
+        font-size: 2rem;
+      }
+      .alarm-controls {
+        flex-direction: column;
+        align-items: center;
       }
     }
   </style>
@@ -587,7 +648,7 @@
   <!-- Main Content (initially hidden) -->
   <div class="header" id="mainHeader">
     <h1>Eva AI Assistant</h1>
-    <div class="subtitle">Voice Commands • Always Listening • GIF Search • Empowered Virtual Assistant</div>
+    <div class="subtitle">Voice Commands • Always Listening • Alarm & Timer • GIF Search</div>
   </div>
   
   <div class="container" id="mainContainer">
@@ -606,6 +667,9 @@
       <button class="control-btn" id="gifBtn">
         <span>🎬</span> GIF Search
       </button>
+      <button class="control-btn" id="alarmBtn">
+        <span>⏰</span> Alarm & Timer
+      </button>
       <button class="control-btn" id="micToggle">
         <span>🔇</span> Mute Mic
       </button>
@@ -616,21 +680,21 @@
         <h2>Assistant Response</h2>
         <div class="status">Listening...</div>
       </div>
-      <div id="output">Say "Eva" to activate me when mic is off<br><br>Try: "Open Instagram", "Calculate 45 plus 67", "Find a GIF of cats", or "Take a photo"</div>
+      <div id="output">Say "Eva" to activate me when mic is off<br><br>Try: "Set alarm at 6 PM", "Start a 5 minute timer", "Open Instagram", or "Find a GIF of cats"</div>
     </div>
     
     <div class="command-list">
       <h2>Voice Commands</h2>
       <div class="commands">
         <div class="command-card">
+          <div class="command-icon">⏰</div>
+          <div class="command-title">Alarm & Timer</div>
+          <div class="command-desc">"Set alarm at 6 PM", "Start a 5 minute timer"</div>
+        </div>
+        <div class="command-card">
           <div class="command-icon">🌐</div>
           <div class="command-title">Open Websites</div>
           <div class="command-desc">"Open YouTube", "Go to Google"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📱</div>
-          <div class="command-title">Open Apps</div>
-          <div class="command-desc">"Open WhatsApp", "Launch Camera"</div>
         </div>
         <div class="command-card">
           <div class="command-icon">🎬</div>
@@ -656,6 +720,11 @@
           <div class="command-icon">📍</div>
           <div class="command-title">Location</div>
           <div class="command-desc">"Where am I?", "Get my location"</div>
+        </div>
+        <div class="command-card">
+          <div class="command-icon">🗣️</div>
+          <div class="command-title">Voice Commands</div>
+          <div class="command-desc">"Hello Eva", "Thank you", "Goodbye"</div>
         </div>
       </div>
     </div>
@@ -691,10 +760,29 @@
         </button>
       </div>
     </div>
+    
+    <!-- Alarm & Timer container -->
+    <div id="alarmContainer" class="alarm-container">
+      <h3>Alarm & Timer</h3>
+      <div class="alarm-clock" id="alarmClock">--:--:--</div>
+      <div class="alarm-controls">
+        <button class="control-btn" id="startListeningBtn">
+          <span>🎤</span> Start Listening
+        </button>
+        <button class="control-btn" id="stopSoundBtn">
+          <span>🔇</span> Stop Sound
+        </button>
+        <button class="control-btn" id="closeAlarmBtn">
+          <span>❌</span> Close Panel
+        </button>
+      </div>
+      <div class="alarm-status" id="alarmStatus">Waiting for command...</div>
+      <div class="alarm-countdown" id="alarmCountdown"></div>
+    </div>
   </div>
   
   <div class="footer">
-    Eva AI Assistant • Voice Commands • GIF Search • Empowered Virtual Assistant
+    Eva AI Assistant • Voice Commands • Alarm & Timer • GIF Search • Empowered Virtual Assistant
   </div>
   
   <div class="mic-wave" id="micWave">
@@ -706,6 +794,9 @@
     <div class="wave-bar"></div>
     <div class="wave-bar"></div>
   </div>
+  
+  <!-- Alarm Sound -->
+  <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto" loop></audio>
   
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -726,6 +817,7 @@
   const cameraBtn = document.getElementById("cameraBtn");
   const websiteBtn = document.getElementById("websiteBtn");
   const gifBtn = document.getElementById("gifBtn");
+  const alarmBtn = document.getElementById("alarmBtn");
   const captureBtn = document.getElementById("captureBtn");
   const closeCameraBtn = document.getElementById("closeCameraBtn");
   const micToggle = document.getElementById("micToggle");
@@ -737,6 +829,14 @@
   const gifContainer = document.getElementById("gifContainer");
   const gifGrid = document.getElementById("gifGrid");
   const closeGifBtn = document.getElementById("closeGifBtn");
+  const alarmContainer = document.getElementById("alarmContainer");
+  const alarmClock = document.getElementById("alarmClock");
+  const alarmStatus = document.getElementById("alarmStatus");
+  const alarmCountdown = document.getElementById("alarmCountdown");
+  const startListeningBtn = document.getElementById("startListeningBtn");
+  const stopSoundBtn = document.getElementById("stopSoundBtn");
+  const closeAlarmBtn = document.getElementById("closeAlarmBtn");
+  const alarmSound = document.getElementById("alarmSound");
   
   // State variables
   let cameraStream = null;
@@ -746,6 +846,12 @@
   let permissionGranted = false;
   let wakeWordMode = false;
   let wakeWordDetection = false;
+  
+  // Alarm & Timer state
+  let alarmTimeout = null;
+  let timerTimeout = null;
+  let countdownInterval = null;
+  let timerEndTime = null;
   
   // Tenor API Key
   const tenorApiKey = "AIzaSyCod21w9UISRGTPekhgcHx3tpOfwEP37Cc";
@@ -818,8 +924,12 @@
       permissionGranted = true;
       
       // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Eva is now listening for your commands.<br><br>Try saying: <i>'Take a photo'</i>, <i>'Open Instagram'</i>, or <i>'Find a GIF of cats'</i>";
+      output.innerHTML = "Microphone access granted!<br><br>Eva is now listening for your commands.<br><br>Try saying: <i>'Set alarm at 6 PM'</i>, <i>'Open Instagram'</i>, or <i>'Find a GIF of cats'</i>";
       speak("Microphone access granted! I'm Eva, your Empowered Virtual Assistant. How can I help you today?");
+      
+      // Start clock
+      updateClock();
+      setInterval(updateClock, 1000);
       
     } catch (error) {
       console.error("Permission error:", error);
@@ -859,6 +969,7 @@
       websiteContainer.style.display = 'block';
       cameraContainer.style.display = 'none';
       gifContainer.style.display = 'none';
+      alarmContainer.style.display = 'none';
     }
   });
   
@@ -870,7 +981,25 @@
       gifContainer.style.display = 'block';
       cameraContainer.style.display = 'none';
       websiteContainer.style.display = 'none';
+      alarmContainer.style.display = 'none';
     }
+  });
+  
+  // Toggle Alarm container
+  alarmBtn.addEventListener('click', () => {
+    if (alarmContainer.style.display === 'block') {
+      alarmContainer.style.display = 'none';
+    } else {
+      alarmContainer.style.display = 'block';
+      cameraContainer.style.display = 'none';
+      websiteContainer.style.display = 'none';
+      gifContainer.style.display = 'none';
+    }
+  });
+  
+  // Close Alarm container
+  closeAlarmBtn.addEventListener('click', () => {
+    alarmContainer.style.display = 'none';
   });
   
   // Close GIF container
@@ -1057,6 +1186,7 @@
         capturedPhoto.style.display = "none";
         websiteContainer.style.display = "none";
         gifContainer.style.display = "none";
+        alarmContainer.style.display = "none";
       })
       .catch(err => {
         output.textContent = "Failed to access camera: " + err.message;
@@ -1203,6 +1333,7 @@
       gifContainer.style.display = "block";
       cameraContainer.style.display = "none";
       websiteContainer.style.display = "none";
+      alarmContainer.style.display = "none";
       
       // Clear previous results
       gifGrid.innerHTML = '';
@@ -1236,6 +1367,173 @@
     }
   }
   
+  // Alarm & Timer Functions
+  startListeningBtn.addEventListener('click', startListeningForAlarm);
+  stopSoundBtn.addEventListener('click', stopSound);
+  
+  // Update clock
+  function updateClock() {
+    const now = new Date();
+    alarmClock.textContent = now.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  }
+  
+  // Unlock sound for Safari
+  function unlockSound() {
+    alarmSound.play().then(() => {
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+    }).catch(() => {});
+  }
+  
+  // Start listening for alarm/timer commands
+  function startListeningForAlarm() {
+    unlockSound();
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.start();
+    alarmStatus.innerText = "🎙️ Listening for alarm/timer command...";
+    
+    recognition.onresult = (event) => {
+      const command = event.results[0][0].transcript.toLowerCase();
+      alarmStatus.innerText = `🗣️ You said: "${command}"`;
+      handleAlarmCommand(command);
+    };
+    
+    recognition.onerror = (e) => {
+      alarmStatus.innerText = `❌ Voice error: ${e.error}`;
+    };
+  }
+  
+  // Handle alarm/timer commands
+  function handleAlarmCommand(command) {
+    if (command.includes("set alarm at")) {
+      const match = command.match(/set alarm at (\d{1,2})(?::(\d{2}))?\s*(a\s*m|p\s*m|am|pm)?/);
+      if (match) {
+        let hour = parseInt(match[1]);
+        const minute = parseInt(match[2]) || 0;
+        const rawPeriod = match[3] || "";
+        const period = rawPeriod.replace(/\s+/g, "").toLowerCase();
+        
+        // Convert to 24-hour format
+        if (period === "pm" && hour < 12) hour += 12;
+        if (period === "am" && hour === 12) hour = 0;
+        
+        const now = new Date();
+        const alarmDate = new Date();
+        alarmDate.setHours(hour, minute, 0, 0);
+        
+        // If no AM/PM said, and time is past, set for next 12-hour period
+        if (!period && alarmDate <= now) {
+          alarmDate.setHours(alarmDate.getHours() + 12);
+        }
+        
+        if (alarmDate <= now) {
+          alarmDate.setDate(alarmDate.getDate() + 1);
+        }
+        
+        const diff = alarmDate - now;
+        
+        clearTimeout(alarmTimeout);
+        alarmTimeout = setTimeout(() => {
+          speak("⏰ Alarm ringing now!");
+          alarmSound.play();
+          alarmStatus.innerText += `\n⏰ Alarm ringing!`;
+        }, diff);
+        
+        const alarmTime = formatTime12(alarmDate);
+        speak(`Alarm set for ${alarmTime}`);
+        alarmStatus.innerText += `\n✅ Alarm set for ${alarmTime}`;
+      } else {
+        speak("Sorry, I didn't understand the alarm time.");
+      }
+    }
+    
+    else if (command.includes("start a") && command.includes("minute timer")) {
+      const match = command.match(/start a (\d{1,2}) minute timer/);
+      if (match) {
+        const minutes = parseInt(match[1]);
+        const ms = minutes * 60 * 1000;
+        
+        clearTimeout(timerTimeout);
+        clearInterval(countdownInterval);
+        
+        const now = new Date();
+        timerEndTime = new Date(now.getTime() + ms);
+        
+        countdownInterval = setInterval(updateCountdown, 1000);
+        
+        timerTimeout = setTimeout(() => {
+          clearInterval(countdownInterval);
+          alarmCountdown.innerText = "";
+          speak("⏱️ Timer complete!");
+          alarmSound.play();
+          alarmStatus.innerText += `\n⏱️ Timer finished!`;
+        }, ms);
+        
+        speak(`Timer started for ${minutes} minutes`);
+        alarmStatus.innerText += `\n⏱️ Timer started for ${minutes} minutes.`;
+      }
+    }
+    
+    else if (command.includes("cancel alarm")) {
+      clearTimeout(alarmTimeout);
+      stopSound();
+      speak("Alarm cancelled.");
+      alarmStatus.innerText += `\n❌ Alarm cancelled.`;
+    }
+    
+    else if (command.includes("cancel timer")) {
+      clearTimeout(timerTimeout);
+      clearInterval(countdownInterval);
+      alarmCountdown.innerText = "";
+      stopSound();
+      speak("Timer cancelled.");
+      alarmStatus.innerText += `\n❌ Timer cancelled.`;
+    }
+    
+    else {
+      speak("Sorry, I didn't understand.");
+    }
+  }
+  
+  // Format time in 12-hour format
+  function formatTime12(date) {
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    });
+  }
+  
+  // Update countdown display
+  function updateCountdown() {
+    const now = new Date();
+    const diff = timerEndTime - now;
+    if (diff <= 0) {
+      alarmCountdown.innerText = "";
+      clearInterval(countdownInterval);
+      return;
+    }
+    
+    const mins = Math.floor(diff / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    alarmCountdown.innerText = `⏳ Time remaining: ${mins}m ${secs}s`;
+  }
+  
+  // Stop alarm sound
+  function stopSound() {
+    alarmSound.pause();
+    alarmSound.currentTime = 0;
+  }
+  
   // Process voice commands
   async function processCommand(transcript) {
     const msg = transcript.toLowerCase();
@@ -1252,6 +1550,10 @@
     if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
       response = "Hello! I'm Eva, your Empowered Virtual Assistant. How can I help you today?";
     } 
+    else if (msg.includes("tumko kisne banaya") || msg.includes("who made you") || 
+             msg.includes("who created you") || msg.includes("tumhara creator kaun hai")) {
+      response = "Mujhe Khushal Sharma ne banaya hai. Wo 19 saal ke hain aur Haryana ke Nangal Sirohi se hain.";
+    }
     else if (msg.includes("name") || msg.includes("who are you")) {
       response = "I'm Eva, your Empowered Virtual Assistant. Always at your service!";
     }
@@ -1347,7 +1649,7 @@
       response = "You're welcome! Is there anything else I can help with?";
     }
     else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
-      response = "I can help with: opening websites, searching GIFs, opening camera, taking photos, calculations, telling time, checking battery, and more!";
+      response = "I can help with: setting alarms, starting timers, opening websites, searching GIFs, opening camera, taking photos, calculations, telling time, checking battery, and more!";
     }
     else if (msg.includes("exit") || msg.includes("goodbye")) {
       response = "Goodbye! Have a great day!";
@@ -1355,6 +1657,12 @@
       setTimeout(() => {
         output.textContent = "Eva has exited. Refresh the page to restart.";
       }, 2000);
+      return;
+    }
+    // Handle alarm/timer commands
+    else if (msg.includes("alarm") || msg.includes("timer")) {
+      // Pass command to alarm handler
+      handleAlarmCommand(msg);
       return;
     }
     else {
