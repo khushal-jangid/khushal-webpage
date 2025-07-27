@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eva AI Assistant - Enhanced with Alarm & Timer</title>
+  <title>EVA - Enhanced AI Assistant</title>
   <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -586,6 +587,21 @@
       min-height: 40px;
     }
     
+    /* Language selector */
+    .language-select {
+      position: absolute;
+      top: 20px;
+      right: 150px;
+      padding: 5px 10px;
+      background: rgba(0, 188, 212, 0.3);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      z-index: 10;
+      backdrop-filter: blur(5px);
+    }
+    
     /* Responsive design */
     @media (max-width: 600px) {
       .permission-title {
@@ -614,11 +630,22 @@
         flex-direction: column;
         align-items: center;
       }
+      .language-select {
+        top: 60px;
+        right: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="background-glow"></div>
+  
+  <!-- Language Selector -->
+  <select class="language-select" id="language">
+    <option value="en-US">English</option>
+    <option value="hi-IN">हिन्दी</option>
+    <option value="ur-PK">اردو</option>
+  </select>
   
   <!-- Theme Toggle -->
   <button class="theme-toggle" id="themeToggle">
@@ -798,10 +825,12 @@
   <!-- Alarm Sound -->
   <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto" loop></audio>
   
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
 <script>
+  // Gemini API Constants
+  const API_KEY = "AIzaSyABiyiUKvzjJ4TpJF08EACE3PWdeaGu6Ak";
+  const MODEL_NAME = "gemini-1.5-flash-latest";
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+
   // DOM Elements
   const permissionScreen = document.getElementById('permissionScreen');
   const grantPermissionBtn = document.getElementById('grantPermission');
@@ -837,6 +866,7 @@
   const stopSoundBtn = document.getElementById("stopSoundBtn");
   const closeAlarmBtn = document.getElementById("closeAlarmBtn");
   const alarmSound = document.getElementById("alarmSound");
+  const langSelect = document.getElementById("language");
   
   // State variables
   let cameraStream = null;
@@ -1031,10 +1061,15 @@
     recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = false;
-    recognition.lang = 'en-US';
+    recognition.lang = langSelect.value;
     
     // Start recognition
     startRecognition();
+    
+    // Update recognition language when dropdown changes
+    langSelect.addEventListener('change', () => {
+      recognition.lang = langSelect.value;
+    });
     
     // Event handlers
     recognition.onresult = (event) => {
@@ -1135,13 +1170,13 @@
   function speak(text) {
     if (!synth.speaking && !synth.pending) {
       const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'en-US';
+      utter.lang = langSelect.value;
       utter.rate = 1;
       utter.pitch = 1.0;
       
       const voices = synth.getVoices();
-      let selectedVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('en')) || 
-                         voices.find(v => v.lang.includes('en'));
+      let selectedVoice = voices.find(v => v.name.includes('Google') && v.lang.includes(langSelect.value.slice(0,2))) || 
+                         voices.find(v => v.lang.includes(langSelect.value.slice(0,2)));
       
       if (selectedVoice) utter.voice = selectedVoice;
       
@@ -1156,20 +1191,21 @@
     }
   }
   
-  // AI Response function
-  async function askAI(prompt) {
-    // Simulated AI response for this demo
-    // In a real app, this would connect to an AI API
-    const responses = [
-      "I've processed your request successfully.",
-      "I'm on it! Your command has been executed.",
-      "Done! Is there anything else I can help with?",
-      "Completed as requested.",
-      "Your wish is my command! Task completed."
-    ];
-    
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-    return `${randomResponse} You said: "${prompt}"`;
+  // Get Gemini Response
+  async function getGeminiResponse(message) {
+    const body = {
+      contents: [{ role: "user", parts: [{ text: message }] }],
+      generationConfig: { temperature: 0.8, maxOutputTokens: 2048 }
+    };
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't process that request. Please try again.";
   }
   
   // Camera functions
@@ -1666,12 +1702,17 @@
       return;
     }
     else {
-      // Send to AI for more complex requests
-      response = await askAI(transcript);
+      // Send to Gemini for complex responses
+      output.innerHTML += `<br><br><strong>Eva:</strong> Thinking...`;
+      try {
+        response = await getGeminiResponse(transcript);
+      } catch (e) {
+        response = "Sorry, I encountered an error. Please try again.";
+      }
     }
     
     // Display and speak response
-    output.innerHTML += `<br><br><strong>Eva:</strong> ${response}`;
+    output.innerHTML = `<strong>You said:</strong> ${transcript}<br><br><strong>Eva:</strong> ${response}`;
     speak(response);
     
     // Restart recognition if mic is not muted
