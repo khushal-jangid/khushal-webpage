@@ -602,6 +602,130 @@
       backdrop-filter: blur(5px);
     }
     
+    /* New features - Chat History */
+    .history-container {
+      margin-top: 20px;
+      width: 100%;
+      background: rgba(10, 15, 40, 0.7);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 188, 212, 0.2);
+      display: none;
+    }
+    
+    .history-container h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #00bcd4;
+    }
+    
+    #historyList {
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background: rgba(5, 10, 25, 0.5);
+      border-radius: 10px;
+    }
+    
+    .history-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background: rgba(0, 188, 212, 0.1);
+      border-left: 3px solid #00bcd4;
+    }
+    
+    .history-item.user {
+      background: rgba(0, 100, 200, 0.1);
+      border-left: 3px solid #0064c8;
+    }
+    
+    .history-item-timestamp {
+      font-size: 0.7rem;
+      opacity: 0.6;
+      margin-bottom: 3px;
+    }
+    
+    /* New features - Notes */
+    .notes-container {
+      margin-top: 20px;
+      width: 100%;
+      background: rgba(10, 15, 40, 0.7);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 188, 212, 0.2);
+      display: none;
+    }
+    
+    .notes-container h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #00bcd4;
+    }
+    
+    #notesList {
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 10px;
+      background: rgba(5, 10, 25, 0.5);
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .note-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background: rgba(0, 188, 212, 0.1);
+      border-left: 3px solid #00bcd4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .note-content {
+      flex: 1;
+    }
+    
+    .note-delete {
+      background: rgba(255, 80, 80, 0.3);
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .notes-input {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .notes-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      background: rgba(5, 10, 25, 0.7);
+      border: 1px solid rgba(0, 188, 212, 0.3);
+      color: white;
+    }
+    
+    .notes-input button {
+      padding: 10px 15px;
+      background: rgba(0, 188, 212, 0.3);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    
     /* Responsive design */
     @media (max-width: 600px) {
       .permission-title {
@@ -675,7 +799,7 @@
   <!-- Main Content (initially hidden) -->
   <div class="header" id="mainHeader">
     <h1>Eva AI Assistant</h1>
-    <div class="subtitle">Voice Commands • Always Listening • Alarm & Timer • GIF Search</div>
+    <div class="subtitle">Voice Commands • Always Listening • Alarm & Timer • Chat History • Notes</div>
   </div>
   
   <div class="container" id="mainContainer">
@@ -697,6 +821,12 @@
       <button class="control-btn" id="alarmBtn">
         <span>⏰</span> Alarm & Timer
       </button>
+      <button class="control-btn" id="historyBtn">
+        <span>📜</span> Chat History
+      </button>
+      <button class="control-btn" id="notesBtn">
+        <span>📝</span> Notes
+      </button>
       <button class="control-btn" id="micToggle">
         <span>🔇</span> Mute Mic
       </button>
@@ -707,7 +837,7 @@
         <h2>Assistant Response</h2>
         <div class="status">Listening...</div>
       </div>
-      <div id="output">Say "Eva" to activate me when mic is off<br><br>Try: "Set alarm at 6 PM", "Start a 5 minute timer", "Open Instagram", or "Find a GIF of cats"</div>
+      <div id="output">Say "Eva" to activate me when mic is off<br><br>Try: "Set alarm at 6 PM", "Save note: Buy vegetables", or "Show my notes"</div>
     </div>
     
     <div class="command-list">
@@ -729,29 +859,29 @@
           <div class="command-desc">"Find a GIF of cats", "Search GIF for dancing"</div>
         </div>
         <div class="command-card">
-          <div class="command-icon">🧮</div>
-          <div class="command-title">Calculator</div>
-          <div class="command-desc">"Calculate 45 plus 67", "What is 120 divided by 6"</div>
+          <div class="command-icon">📜</div>
+          <div class="command-title">Chat History</div>
+          <div class="command-desc">"Show chat history", "Clear history"</div>
+        </div>
+        <div class="command-card">
+          <div class="command-icon">📝</div>
+          <div class="command-title">Notes</div>
+          <div class="command-desc">"Save note: Buy vegetables", "Show my notes"</div>
+        </div>
+        <div class="command-card">
+          <div class="command-icon">⏱️</div>
+          <div class="command-title">Reminders</div>
+          <div class="command-desc">"Remind me to call mom at 5 PM"</div>
+        </div>
+        <div class="command-card">
+          <div class="command-icon">🌐</div>
+          <div class="command-title">Auto Language</div>
+          <div class="command-desc">Automatically detects Hindi/English</div>
         </div>
         <div class="command-card">
           <div class="command-icon">📷</div>
           <div class="command-title">Camera Access</div>
           <div class="command-desc">"Open camera", "Take a photo"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🔋</div>
-          <div class="command-title">Battery Status</div>
-          <div class="command-desc">"Check battery", "How much battery left"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📍</div>
-          <div class="command-title">Location</div>
-          <div class="command-desc">"Where am I?", "Get my location"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🗣️</div>
-          <div class="command-title">Voice Commands</div>
-          <div class="command-desc">"Hello Eva", "Thank you", "Goodbye"</div>
         </div>
       </div>
     </div>
@@ -806,10 +936,43 @@
       <div class="alarm-status" id="alarmStatus">Waiting for command...</div>
       <div class="alarm-countdown" id="alarmCountdown"></div>
     </div>
+    
+    <!-- Chat History container -->
+    <div id="historyContainer" class="history-container">
+      <h3>Chat History</h3>
+      <div id="historyList">
+        <!-- History items will be added here -->
+      </div>
+      <div style="text-align: center; margin-top: 15px;">
+        <button class="control-btn" id="clearHistoryBtn">
+          <span>🧹</span> Clear History
+        </button>
+        <button class="control-btn" id="closeHistoryBtn" style="margin-left: 10px;">
+          <span>❌</span> Close
+        </button>
+      </div>
+    </div>
+    
+    <!-- Notes container -->
+    <div id="notesContainer" class="notes-container">
+      <h3>Notes</h3>
+      <div id="notesList">
+        <!-- Notes will be added here -->
+      </div>
+      <div class="notes-input">
+        <input type="text" id="noteInput" placeholder="Add a new note...">
+        <button id="addNoteBtn">Add</button>
+      </div>
+      <div style="text-align: center; margin-top: 15px;">
+        <button class="control-btn" id="closeNotesBtn">
+          <span>❌</span> Close
+        </button>
+      </div>
+    </div>
   </div>
   
   <div class="footer">
-    Eva AI Assistant • Voice Commands • Alarm & Timer • GIF Search • Empowered Virtual Assistant
+    Eva AI Assistant • Voice Commands • Chat History • Notes • Empowered Virtual Assistant
   </div>
   
   <div class="mic-wave" id="micWave">
@@ -847,6 +1010,8 @@
   const websiteBtn = document.getElementById("websiteBtn");
   const gifBtn = document.getElementById("gifBtn");
   const alarmBtn = document.getElementById("alarmBtn");
+  const historyBtn = document.getElementById("historyBtn");
+  const notesBtn = document.getElementById("notesBtn");
   const captureBtn = document.getElementById("captureBtn");
   const closeCameraBtn = document.getElementById("closeCameraBtn");
   const micToggle = document.getElementById("micToggle");
@@ -867,6 +1032,15 @@
   const closeAlarmBtn = document.getElementById("closeAlarmBtn");
   const alarmSound = document.getElementById("alarmSound");
   const langSelect = document.getElementById("language");
+  const historyContainer = document.getElementById("historyContainer");
+  const historyList = document.getElementById("historyList");
+  const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+  const closeHistoryBtn = document.getElementById("closeHistoryBtn");
+  const notesContainer = document.getElementById("notesContainer");
+  const notesList = document.getElementById("notesList");
+  const noteInput = document.getElementById("noteInput");
+  const addNoteBtn = document.getElementById("addNoteBtn");
+  const closeNotesBtn = document.getElementById("closeNotesBtn");
   
   // State variables
   let cameraStream = null;
@@ -882,6 +1056,15 @@
   let timerTimeout = null;
   let countdownInterval = null;
   let timerEndTime = null;
+  
+  // Reminders state
+  let reminders = [];
+  
+  // Chat History
+  let chatHistory = [];
+  
+  // Notes
+  let notes = [];
   
   // Tenor API Key
   const tenorApiKey = "AIzaSyCod21w9UISRGTPekhgcHx3tpOfwEP37Cc";
@@ -925,6 +1108,17 @@
     "linkedin": "💼"
   };
   
+  // Initialize the application
+  function initApp() {
+    // Load saved data
+    loadNotes();
+    loadHistory();
+    loadReminders();
+    
+    // Check for reminders every minute
+    setInterval(checkReminders, 60000);
+  }
+  
   // Request permission on button click
   grantPermissionBtn.addEventListener('click', requestMicrophonePermission);
   
@@ -950,11 +1144,14 @@
       // Populate website grid
       populateWebsiteGrid();
       
+      // Initialize app
+      initApp();
+      
       // Update state
       permissionGranted = true;
       
       // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Eva is now listening for your commands.<br><br>Try saying: <i>'Set alarm at 6 PM'</i>, <i>'Open Instagram'</i>, or <i>'Find a GIF of cats'</i>";
+      output.innerHTML = "Microphone access granted!<br><br>Eva is now listening for your commands.<br><br>Try saying: <i>'Set alarm at 6 PM'</i>, <i>'Save note: Buy vegetables'</i>, or <i>'Show my notes'</i>";
       speak("Microphone access granted! I'm Eva, your Empowered Virtual Assistant. How can I help you today?");
       
       // Start clock
@@ -1000,6 +1197,8 @@
       cameraContainer.style.display = 'none';
       gifContainer.style.display = 'none';
       alarmContainer.style.display = 'none';
+      historyContainer.style.display = 'none';
+      notesContainer.style.display = 'none';
     }
   });
   
@@ -1012,6 +1211,8 @@
       cameraContainer.style.display = 'none';
       websiteContainer.style.display = 'none';
       alarmContainer.style.display = 'none';
+      historyContainer.style.display = 'none';
+      notesContainer.style.display = 'none';
     }
   });
   
@@ -1024,6 +1225,38 @@
       cameraContainer.style.display = 'none';
       websiteContainer.style.display = 'none';
       gifContainer.style.display = 'none';
+      historyContainer.style.display = 'none';
+      notesContainer.style.display = 'none';
+    }
+  });
+  
+  // Toggle History container
+  historyBtn.addEventListener('click', () => {
+    if (historyContainer.style.display === 'block') {
+      historyContainer.style.display = 'none';
+    } else {
+      historyContainer.style.display = 'block';
+      cameraContainer.style.display = 'none';
+      websiteContainer.style.display = 'none';
+      gifContainer.style.display = 'none';
+      alarmContainer.style.display = 'none';
+      notesContainer.style.display = 'none';
+      renderChatHistory();
+    }
+  });
+  
+  // Toggle Notes container
+  notesBtn.addEventListener('click', () => {
+    if (notesContainer.style.display === 'block') {
+      notesContainer.style.display = 'none';
+    } else {
+      notesContainer.style.display = 'block';
+      cameraContainer.style.display = 'none';
+      websiteContainer.style.display = 'none';
+      gifContainer.style.display = 'none';
+      alarmContainer.style.display = 'none';
+      historyContainer.style.display = 'none';
+      renderNotes();
     }
   });
   
@@ -1035,6 +1268,16 @@
   // Close GIF container
   closeGifBtn.addEventListener('click', () => {
     gifContainer.style.display = 'none';
+  });
+  
+  // Close History container
+  closeHistoryBtn.addEventListener('click', () => {
+    historyContainer.style.display = 'none';
+  });
+  
+  // Close Notes container
+  closeNotesBtn.addEventListener('click', () => {
+    notesContainer.style.display = 'none';
   });
   
   // Open website by name
@@ -1075,6 +1318,12 @@
     recognition.onresult = (event) => {
       const transcript = event.results[event.results.length - 1][0].transcript;
       
+      // Add to chat history
+      addToHistory("user", transcript);
+      
+      // Auto-detect language
+      detectLanguage(transcript);
+      
       // Check if we're in wake word mode
       if (wakeWordMode) {
         // Only listen for the wake word "eva"
@@ -1111,6 +1360,34 @@
         recognition.start();
       }
     };
+  }
+  
+  // Detect language automatically
+  function detectLanguage(text) {
+    // Check for Hindi characters (Devanagari Unicode range)
+    const hindiRegex = /[\u0900-\u097F]/;
+    
+    // Check for Urdu characters (Arabic Unicode range)
+    const urduRegex = /[\u0600-\u06FF]/;
+    
+    if (hindiRegex.test(text)) {
+      if (langSelect.value !== 'hi-IN') {
+        langSelect.value = 'hi-IN';
+        recognition.lang = 'hi-IN';
+        output.innerHTML += "<br><br>Language automatically set to Hindi";
+      }
+    } else if (urduRegex.test(text)) {
+      if (langSelect.value !== 'ur-PK') {
+        langSelect.value = 'ur-PK';
+        recognition.lang = 'ur-PK';
+        output.innerHTML += "<br><br>Language automatically set to Urdu";
+      }
+    } else {
+      if (langSelect.value !== 'en-US') {
+        langSelect.value = 'en-US';
+        recognition.lang = 'en-US';
+      }
+    }
   }
   
   // Start voice recognition
@@ -1223,6 +1500,8 @@
         websiteContainer.style.display = "none";
         gifContainer.style.display = "none";
         alarmContainer.style.display = "none";
+        historyContainer.style.display = "none";
+        notesContainer.style.display = "none";
       })
       .catch(err => {
         output.textContent = "Failed to access camera: " + err.message;
@@ -1370,6 +1649,8 @@
       cameraContainer.style.display = "none";
       websiteContainer.style.display = "none";
       alarmContainer.style.display = "none";
+      historyContainer.style.display = "none";
+      notesContainer.style.display = "none";
       
       // Clear previous results
       gifGrid.innerHTML = '';
@@ -1570,6 +1851,260 @@
     alarmSound.currentTime = 0;
   }
   
+  // Add to chat history
+  function addToHistory(speaker, text) {
+    const timestamp = new Date();
+    const historyItem = {
+      speaker,
+      text,
+      timestamp
+    };
+    
+    chatHistory.push(historyItem);
+    
+    // Save to localStorage
+    saveHistory();
+    
+    // Update UI if history panel is open
+    if (historyContainer.style.display === 'block') {
+      renderChatHistory();
+    }
+  }
+  
+  // Render chat history
+  function renderChatHistory() {
+    historyList.innerHTML = '';
+    
+    if (chatHistory.length === 0) {
+      historyList.innerHTML = '<div style="text-align: center; padding: 20px;">No chat history yet</div>';
+      return;
+    }
+    
+    chatHistory.forEach(item => {
+      const historyItem = document.createElement('div');
+      historyItem.className = `history-item ${item.speaker}`;
+      
+      const timestamp = document.createElement('div');
+      timestamp.className = 'history-item-timestamp';
+      timestamp.textContent = item.timestamp.toLocaleTimeString();
+      
+      const content = document.createElement('div');
+      content.textContent = item.text;
+      
+      historyItem.appendChild(timestamp);
+      historyItem.appendChild(content);
+      historyList.appendChild(historyItem);
+    });
+    
+    // Scroll to bottom
+    historyList.scrollTop = historyList.scrollHeight;
+  }
+  
+  // Clear chat history
+  clearHistoryBtn.addEventListener('click', () => {
+    chatHistory = [];
+    saveHistory();
+    renderChatHistory();
+    output.textContent = "Chat history cleared";
+    speak("Chat history cleared");
+  });
+  
+  // Save history to localStorage
+  function saveHistory() {
+    localStorage.setItem('eva_chat_history', JSON.stringify(chatHistory));
+  }
+  
+  // Load history from localStorage
+  function loadHistory() {
+    const savedHistory = localStorage.getItem('eva_chat_history');
+    if (savedHistory) {
+      try {
+        chatHistory = JSON.parse(savedHistory);
+      } catch (e) {
+        console.error("Error loading history", e);
+        chatHistory = [];
+      }
+    }
+  }
+  
+  // Add a note
+  function addNote(text) {
+    if (!text.trim()) return;
+    
+    const note = {
+      id: Date.now(),
+      text: text.trim(),
+      timestamp: new Date()
+    };
+    
+    notes.push(note);
+    saveNotes();
+    renderNotes();
+    
+    output.textContent = `Note added: ${text}`;
+    speak(`Note added: ${text}`);
+  }
+  
+  // Delete a note
+  function deleteNote(id) {
+    notes = notes.filter(note => note.id !== id);
+    saveNotes();
+    renderNotes();
+    
+    output.textContent = "Note deleted";
+    speak("Note deleted");
+  }
+  
+  // Render notes
+  function renderNotes() {
+    notesList.innerHTML = '';
+    
+    if (notes.length === 0) {
+      notesList.innerHTML = '<div style="text-align: center; padding: 20px;">No notes yet</div>';
+      return;
+    }
+    
+    notes.forEach(note => {
+      const noteItem = document.createElement('div');
+      noteItem.className = 'note-item';
+      
+      const noteContent = document.createElement('div');
+      noteContent.className = 'note-content';
+      noteContent.textContent = note.text;
+      
+      const noteTimestamp = document.createElement('div');
+      noteTimestamp.className = 'history-item-timestamp';
+      noteTimestamp.textContent = note.timestamp.toLocaleString();
+      
+      const noteDelete = document.createElement('button');
+      noteDelete.className = 'note-delete';
+      noteDelete.innerHTML = '✕';
+      noteDelete.onclick = () => deleteNote(note.id);
+      
+      noteItem.appendChild(noteContent);
+      noteItem.appendChild(noteTimestamp);
+      noteItem.appendChild(noteDelete);
+      notesList.appendChild(noteItem);
+    });
+  }
+  
+  // Add note button click
+  addNoteBtn.addEventListener('click', () => {
+    addNote(noteInput.value);
+    noteInput.value = '';
+  });
+  
+  // Add note on Enter key
+  noteInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      addNote(noteInput.value);
+      noteInput.value = '';
+    }
+  });
+  
+  // Save notes to localStorage
+  function saveNotes() {
+    localStorage.setItem('eva_notes', JSON.stringify(notes));
+  }
+  
+  // Load notes from localStorage
+  function loadNotes() {
+    const savedNotes = localStorage.getItem('eva_notes');
+    if (savedNotes) {
+      try {
+        notes = JSON.parse(savedNotes);
+      } catch (e) {
+        console.error("Error loading notes", e);
+        notes = [];
+      }
+    }
+  }
+  
+  // Set reminder
+  function setReminder(text, time) {
+    const now = new Date();
+    const reminderTime = new Date(time);
+    
+    if (reminderTime <= now) {
+      output.textContent = "Reminder time must be in the future";
+      speak("Reminder time must be in the future");
+      return;
+    }
+    
+    const reminder = {
+      id: Date.now(),
+      text,
+      time: reminderTime
+    };
+    
+    reminders.push(reminder);
+    saveReminders();
+    
+    // Set timeout for reminder
+    const diff = reminderTime - now;
+    setTimeout(() => {
+      speak(`Reminder: ${text}`);
+      output.innerHTML = `⏰ Reminder: ${text}`;
+      
+      // Remove from reminders
+      reminders = reminders.filter(r => r.id !== reminder.id);
+      saveReminders();
+    }, diff);
+    
+    output.textContent = `Reminder set: ${text} at ${formatTime12(reminderTime)}`;
+    speak(`Reminder set for ${formatTime12(reminderTime)}`);
+  }
+  
+  // Check for reminders that need to be triggered
+  function checkReminders() {
+    const now = new Date();
+    
+    reminders.forEach(reminder => {
+      if (reminder.time <= now) {
+        speak(`Reminder: ${reminder.text}`);
+        output.innerHTML = `⏰ Reminder: ${reminder.text}`;
+        
+        // Remove from reminders
+        reminders = reminders.filter(r => r.id !== reminder.id);
+        saveReminders();
+      }
+    });
+  }
+  
+  // Save reminders to localStorage
+  function saveReminders() {
+    localStorage.setItem('eva_reminders', JSON.stringify(reminders));
+  }
+  
+  // Load reminders from localStorage
+  function loadReminders() {
+    const savedReminders = localStorage.getItem('eva_reminders');
+    if (savedReminders) {
+      try {
+        reminders = JSON.parse(savedReminders);
+        
+        // Re-set timeouts for reminders
+        const now = new Date();
+        reminders.forEach(reminder => {
+          const diff = new Date(reminder.time) - now;
+          if (diff > 0) {
+            setTimeout(() => {
+              speak(`Reminder: ${reminder.text}`);
+              output.innerHTML = `⏰ Reminder: ${reminder.text}`;
+              
+              // Remove from reminders
+              reminders = reminders.filter(r => r.id !== reminder.id);
+              saveReminders();
+            }, diff);
+          }
+        });
+      } catch (e) {
+        console.error("Error loading reminders", e);
+        reminders = [];
+      }
+    }
+  }
+  
   // Process voice commands
   async function processCommand(transcript) {
     const msg = transcript.toLowerCase();
@@ -1666,6 +2201,67 @@
         response = "Taking photo...";
       }
     }
+    // Handle history commands
+    else if (msg.includes("history") || msg.includes("chat history")) {
+      if (msg.includes("show") || msg.includes("view")) {
+        historyContainer.style.display = "block";
+        renderChatHistory();
+        response = "Showing chat history";
+      } else if (msg.includes("clear")) {
+        chatHistory = [];
+        saveHistory();
+        response = "Chat history cleared";
+      }
+    }
+    // Handle notes commands
+    else if (msg.includes("note") || msg.includes("notes")) {
+      if (msg.includes("save") || msg.includes("add")) {
+        const noteText = msg.replace(/(save|add|note|notes)/gi, '').replace(':', '').trim();
+        if (noteText) {
+          addNote(noteText);
+          return;
+        } else {
+          response = "What would you like me to save in the note?";
+        }
+      } else if (msg.includes("show") || msg.includes("view")) {
+        notesContainer.style.display = "block";
+        renderNotes();
+        response = "Showing your notes";
+      }
+    }
+    // Handle reminders
+    else if (msg.includes("remind") || msg.includes("reminder")) {
+      const match = msg.match(/remind me to (.*) at (\d{1,2})(?::(\d{2}))?\s*(a\s*m|p\s*m|am|pm)?/);
+      if (match) {
+        const reminderText = match[1];
+        let hour = parseInt(match[2]);
+        const minute = parseInt(match[3]) || 0;
+        const rawPeriod = match[4] || "";
+        const period = rawPeriod.replace(/\s+/g, "").toLowerCase();
+        
+        // Convert to 24-hour format
+        if (period === "pm" && hour < 12) hour += 12;
+        if (period === "am" && hour === 12) hour = 0;
+        
+        const now = new Date();
+        const reminderDate = new Date();
+        reminderDate.setHours(hour, minute, 0, 0);
+        
+        // If no AM/PM said, and time is past, set for next 12-hour period
+        if (!period && reminderDate <= now) {
+          reminderDate.setHours(reminderDate.getHours() + 12);
+        }
+        
+        if (reminderDate <= now) {
+          reminderDate.setDate(reminderDate.getDate() + 1);
+        }
+        
+        setReminder(reminderText, reminderDate);
+        return;
+      } else {
+        response = "I couldn't understand the reminder details. Please try again.";
+      }
+    }
     else if (msg.includes("location") || msg.includes("where am i")) {
       try {
         const location = await getLocation();
@@ -1685,7 +2281,7 @@
       response = "You're welcome! Is there anything else I can help with?";
     }
     else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
-      response = "I can help with: setting alarms, starting timers, opening websites, searching GIFs, opening camera, taking photos, calculations, telling time, checking battery, and more!";
+      response = "I can help with: setting alarms, starting timers, opening websites, searching GIFs, opening camera, taking photos, calculations, telling time, checking battery, managing notes, setting reminders, and more!";
     }
     else if (msg.includes("exit") || msg.includes("goodbye")) {
       response = "Goodbye! Have a great day!";
@@ -1713,6 +2309,7 @@
     
     // Display and speak response
     output.innerHTML = `<strong>You said:</strong> ${transcript}<br><br><strong>Eva:</strong> ${response}`;
+    addToHistory("eva", response);
     speak(response);
     
     // Restart recognition if mic is not muted
