@@ -3,1801 +3,3100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EVA - Enhanced AI Assistant</title>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/build/three.min.js"></script>
+  <title>Khushal's Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
   <style>
+    /* Apple-inspired global styles */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     }
     
     body {
-      background: linear-gradient(135deg, #0b0f2a, #1a1f3e);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #e0e0ff;
+      background: linear-gradient(135deg, #0d0d14, #0a1120, #0d1d2d);
+      color: #fff;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      position: relative;
       overflow-x: hidden;
-      transition: background 0.5s ease;
+      position: relative;
     }
     
-    .background-glow {
+    /* Apple-like subtle background */
+    body::before {
+      content: '';
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at center, rgba(0, 188, 212, 0.1) 0%, transparent 70%);
+      background: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.1), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.08), transparent);
+      background-repeat: repeat;
+      background-size: 400px 300px;
+      animation: stars-twinkle 5s infinite ease-in-out alternate;
       z-index: -1;
       pointer-events: none;
     }
     
-    .permission-screen {
+    /* Header Styling - Apple style */
+    header {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      padding: 15px 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .profile-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-right: 20px; /* Added spacing */
+    }
+    
+    .profile-container:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .profile-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .profile-name {
+      font-weight: 500;
+      font-size: 1rem;
+      color: #fff;
+    }
+    
+    .header-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.5px;
+      margin: 0 auto;
+    }
+    
+    /* Search Bar - Apple style */
+    .search-container {
+      margin: 30px auto;
+      max-width: 680px;
+      position: relative;
+      padding: 0 30px;
+    }
+    
+    .search-bar {
+      width: 100%;
+      padding: 18px 60px 18px 30px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      color: #fff;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-bar:focus {
+      outline: none;
+      border-color: rgba(10, 132, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
+    }
+    
+    .search-icon {
+      position: absolute;
+      right: 50px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.2rem;
+    }
+    
+    /* Main content */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 30px;
+      position: relative;
+      z-index: 10;
+    }
+    
+    /* Apple-style glass cards */
+    .section {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.6s ease-out;
+      position: relative;
+      overflow: hidden;
+      min-height: 280px;
+    }
+    
+    .section:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    .section h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #fff;
+    }
+    
+    .section h3 i {
+      color: #0a84ff;
+      transition: all 0.3s ease;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 132, 255, 0.15);
+      border-radius: 10px;
+    }
+    
+    .socials {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 24px;
+      justify-items: center;
+    }
+    
+    .icon-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+      width: 90px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .icon-group:hover {
+      transform: translateY(-5px);
+    }
+    
+    .icon-group img {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .icon-group:hover img {
+      background: rgba(10, 132, 255, 0.15);
+      transform: scale(1.05);
+      border-color: rgba(10, 132, 255, 0.3);
+    }
+    
+    .socials-labels {
+      font-size: 0.95rem;
+      margin-top: 14px;
+      font-weight: 500;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+    }
+    
+    .icon-group:hover .socials-labels {
+      color: #fff;
+    }
+    
+    /* Mod Apps section styling */
+    .mod-apps .icon-group {
+      position: relative;
+    }
+    
+    .mod-apps .icon-group .app-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: linear-gradient(45deg, #ff375f, #ff2d55);
+      color: white;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(255, 55, 95, 0.3);
+      animation: badge-pulse 2s infinite ease-in-out;
+    }
+    
+    @keyframes badge-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    /* AI Tools specific styling */
+    .ai-tools .icon-group img {
+      border-radius: 18px;
+      background: rgba(100, 210, 255, 0.1);
+    }
+    
+    /* Back to Top Button - Apple style */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 100;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .back-to-top.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .back-to-top:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      transform: translateY(-5px);
+    }
+    
+    /* Notification - Apple style */
+    .notification {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      padding: 22px 26px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      max-width: 380px;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-100px);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+    
+    .notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .notification-icon {
+      font-size: 1.6rem;
+      color: #0a84ff;
+      margin-top: 4px;
+    }
+    
+    .notification-content {
+      flex: 1;
+    }
+    
+    .notification h4 {
+      margin-bottom: 8px;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .notification p {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
+    
+    .notification-close {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 4px;
+      border-radius: 50%;
+    }
+    
+    .notification-close:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Profile Modal - Apple style */
+    .profile-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(10, 15, 40, 0.95);
+      background: rgba(0, 0, 0, 0.7);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 100;
-      padding: 20px;
-      text-align: center;
-      backdrop-filter: blur(10px);
-    }
-    
-    .permission-content {
-      max-width: 500px;
-      background: rgba(5, 10, 25, 0.7);
-      padding: 40px;
-      border-radius: 20px;
-      border: 1px solid rgba(0, 188, 212, 0.3);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-    
-    .permission-title {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      background: linear-gradient(to right, #00bcd4, #00ffea);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .permission-text {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      line-height: 1.6;
-      opacity: 0.9;
-    }
-    
-    .permission-btn {
-      padding: 15px 40px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 50px;
-      background: linear-gradient(to right, #00bcd4, #00a8ff);
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-    }
-    
-    .permission-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(0, 188, 212, 0.3);
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-      width: 100%;
-      max-width: 600px;
+      z-index: 2000;
       opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 0.5s;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(20px);
     }
     
+    .profile-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      background: rgba(30, 30, 40, 0.8);
+      backdrop-filter: blur(30px);
+      border-radius: 28px;
+      width: 90%;
+      max-width: 480px;
+      padding: 50px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .profile-modal.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+    
+    .modal-profile-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 30px;
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 40px rgba(10, 132, 255, 0.3);
+    }
+    
+    .modal-profile-name {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      color: #fff;
+      font-weight: 600;
+    }
+    
+    .modal-profile-email {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 40px;
+      font-size: 1.2rem;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .close-modal:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Keyframe animations - Optimized */
     @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
     
-    h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(to right, #00bcd4, #00ffea);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
-    }
-    
-    .subtitle {
-      font-size: 1.1rem;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
-    
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 600px;
-      gap: 25px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 1s;
-    }
-    
-    .avatar-container {
-      position: relative;
-      width: 280px;
-      height: 280px;
-      margin: 0 auto;
-    }
-    
-    #avatar {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      box-shadow: 0 0 30px rgba(0, 188, 212, 0.4);
-    }
-    
-    .status-indicator {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      background-color: #00ff9d;
-      box-shadow: 0 0 10px #00ff9d;
-      animation: pulse 1.5s infinite;
+    @keyframes stars-twinkle {
+      0% { opacity: 0.2; }
+      50% { opacity: 0.5; }
+      100% { opacity: 0.2; }
     }
     
     @keyframes pulse {
-      0% { transform: scale(0.95); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(0.95); }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
     }
     
-    .controls {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
-    }
-    
-    .control-btn {
-      padding: 12px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 50px;
-      background: rgba(0, 188, 212, 0.2);
-      color: #e0e0ff;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(0, 188, 212, 0.3);
-    }
-    
-    .control-btn:hover {
-      background: rgba(0, 188, 212, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
-    }
-    
-    .control-btn:active {
-      transform: translateY(0);
-    }
-    
-    .output-container {
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 25px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      min-height: 200px;
-    }
-    
-    .output-header {
+    /* Apple-style section titles */
+    .section-title-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+      margin-bottom: 10px;
     }
     
-    .output-header h2 {
-      font-size: 1.3rem;
-      color: #00bcd4;
+    .view-all {
+      color: #0a84ff;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
     
-    #output {
-      min-height: 120px;
-      padding: 15px;
-      background: rgba(5, 10, 25, 0.5);
-      border-radius: 15px;
-      font-size: 16px;
-      line-height: 1.6;
-      overflow-y: auto;
-      max-height: 200px;
+    .view-all:hover {
+      text-decoration: underline;
     }
     
-    .command-list {
-      margin-top: 30px;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 25px;
+    /* Apple-style logout button */
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 1.5s;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     
-    .command-list h2 {
-      font-size: 1.3rem;
-      color: #00bcd4;
-      margin-bottom: 20px;
-      text-align: center;
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transform: translateY(-2px);
     }
     
-    .commands {
+    /* COMPACT Apple-style bottom navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0; /* Reduced padding */
+      z-index: 90;
+      height: 52px; /* Fixed height */
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px; /* Reduced gap */
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 0.75rem; /* Smaller font */
+      transition: all 0.3s ease;
+      padding: 6px 12px; /* Reduced padding */
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    
+    .nav-item i {
+      font-size: 1.1rem; /* Smaller icons */
+    }
+    
+    .nav-item.active, .nav-item:hover {
+      color: #0a84ff;
+      background: rgba(10, 132, 255, 0.1);
+    }
+    
+    /* New sections styling */
+    .page {
+      display: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 30px;
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    .explore-section, .saved-section, .settings-section {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    .explore-section h3, .saved-section h3, .settings-section h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: #fff;
+    }
+    
+    .explore-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
     }
     
-    .command-card {
-      background: rgba(5, 10, 25, 0.5);
-      border-radius: 15px;
-      padding: 15px;
-      border-left: 3px solid #00bcd4;
-      transition: transform 0.3s ease;
+    .explore-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
     }
     
-    .command-card:hover {
+    .explore-card:hover {
+      background: rgba(255, 255, 255, 0.06);
       transform: translateY(-5px);
-      background: rgba(5, 10, 25, 0.7);
+      border-color: rgba(10, 132, 255, 0.3);
     }
     
-    .command-icon {
+    .explore-card img {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 15px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      object-fit: contain;
+    }
+    
+    .explore-card h4 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+    
+    .explore-card p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+    
+    /* Empty State Styling */
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    
+    .empty-state i {
+      font-size: 4rem;
+      color: rgba(255, 255, 255, 0.2);
+      margin-bottom: 20px;
+    }
+    
+    .empty-state h4 {
       font-size: 1.5rem;
       margin-bottom: 10px;
-      color: #00bcd4;
+      color: rgba(255, 255, 255, 0.8);
     }
     
-    .command-title {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .empty-state p {
+      color: rgba(255, 255, 255, 0.5);
+      max-width: 400px;
+      margin: 0 auto;
     }
     
-    .command-desc {
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-    
-    .camera-container {
-      margin-top: 20px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 20px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-    }
-    
-    video, canvas, img {
-      max-width: 100%;
-      border-radius: 10px;
-      margin-top: 15px;
-      border: 1px solid rgba(0, 188, 212, 0.3);
-    }
-    
-    .footer {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.7;
-      padding: 10px;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 0.8s forwards 2s;
-    }
-    
-    .mic-wave {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+    .settings-option {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
-      gap: 8px;
-      align-items: flex-end;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .settings-option:last-child {
+      border-bottom: none;
+    }
+    
+    .option-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .option-icon {
+      width: 40px;
       height: 40px;
-    }
-    
-    .wave-bar {
-      width: 6px;
-      background: #00bcd4;
-      border-radius: 3px;
-      animation: wave 1.2s infinite ease-in-out;
-    }
-    
-    @keyframes wave {
-      0%, 100% { height: 10px; }
-      50% { height: 30px; }
-    }
-    
-    .wave-bar:nth-child(1) { animation-delay: 0s; height: 8px; }
-    .wave-bar:nth-child(2) { animation-delay: 0.2s; height: 16px; }
-    .wave-bar:nth-child(3) { animation-delay: 0.4s; height: 24px; }
-    .wave-bar:nth-child(4) { animation-delay: 0.6s; height: 30px; }
-    .wave-bar:nth-child(5) { animation-delay: 0.8s; height: 24px; }
-    .wave-bar:nth-child(6) { animation-delay: 1.0s; height: 16px; }
-    .wave-bar:nth-child(7) { animation-delay: 1.2s; height: 8px; }
-    
-    /* Website list */
-    .website-container {
-      margin-top: 20px;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 20px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      display: none;
-    }
-    
-    .website-container h3 {
-      text-align: center;
-      margin-bottom: 15px;
-      color: #00bcd4;
-    }
-    
-    .website-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 15px;
-    }
-    
-    .website-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 10px;
       border-radius: 10px;
-    }
-    
-    .website-card:hover {
-      background: rgba(0, 188, 212, 0.2);
-      transform: translateY(-3px);
-    }
-    
-    .website-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: rgba(5, 10, 25, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 8px;
+      background: rgba(10, 132, 255, 0.15);
+      color: #0a84ff;
     }
     
-    .website-name {
-      font-size: 0.8rem;
-      text-align: center;
-    }
-
-    /* Wake word indicator */
-    .wake-word-indicator {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      padding: 8px 15px;
-      background: rgba(0, 188, 212, 0.3);
-      border-radius: 20px;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(0, 188, 212, 0.3);
-      z-index: 10;
-      animation: pulse 2s infinite;
-    }
-    
-    .wake-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #ff3b30;
-    }
-    
-    .wake-active .wake-dot {
-      background-color: #00ff9d;
-      box-shadow: 0 0 8px #00ff9d;
-    }
-    
-    /* GIF Container Styles */
-    .gif-container {
-      margin-top: 20px;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 20px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      display: none;
-    }
-    
-    .gif-container h3 {
-      text-align: center;
-      margin-bottom: 15px;
-      color: #00bcd4;
-    }
-    
-    .gif-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 15px;
-    }
-    
-    .gif-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: all 0.3s ease;
-      padding: 10px;
-      border-radius: 10px;
-    }
-    
-    .gif-card:hover {
-      background: rgba(0, 188, 212, 0.2);
-      transform: translateY(-3px);
-    }
-    
-    .gif-card img {
-      width: 100%;
-      border-radius: 8px;
-      aspect-ratio: 1/1;
-      object-fit: cover;
-      border: 1px solid rgba(0, 188, 212, 0.3);
-    }
-    
-    .gif-name {
-      font-size: 0.75rem;
-      text-align: center;
-      margin-top: 8px;
-      height: 32px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-    
-    .gif-controls {
-      display: flex;
-      justify-content: center;
-      margin-top: 15px;
-      gap: 10px;
-    }
-    
-    /* Theme toggle button */
-    .theme-toggle {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      padding: 8px 15px;
-      background: rgba(0, 188, 212, 0.3);
-      color: white;
-      border: none;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 10;
-    }
-    
-    /* Alarm & Timer Styles */
-    .alarm-container {
-      margin-top: 20px;
-      width: 100%;
-      background: rgba(10, 15, 40, 0.7);
-      border-radius: 20px;
-      padding: 25px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 188, 212, 0.2);
-      display: none;
-    }
-    
-    .alarm-container h3 {
-      text-align: center;
-      margin-bottom: 15px;
-      color: #00bcd4;
-    }
-    
-    .alarm-clock {
-      font-size: 2.5rem;
-      text-align: center;
-      margin: 15px 0;
-      font-weight: bold;
-      background: linear-gradient(to right, #00bcd4, #00ffea);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .alarm-controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-    
-    .alarm-status {
+    .option-text h4 {
       font-size: 1.1rem;
-      margin-top: 15px;
+      margin-bottom: 4px;
+    }
+    
+    .option-text p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 4px;
+      background-color: rgba(255, 255, 255, 0.7);
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: #0a84ff;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(24px);
+      background-color: white;
+    }
+    
+    .theme-selector {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    
+    .theme-option {
+      flex: 1;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    
+    .theme-option:hover, .theme-option.active {
+      border-color: #0a84ff;
+      background: rgba(10, 132, 255, 0.1);
+    }
+    
+    .theme-option.active {
+      border-width: 2px;
+    }
+    
+    .theme-preview {
+      width: 100%;
+      height: 80px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    
+    .theme-dark {
+      background: linear-gradient(135deg, #0d0d14, #0a1120);
+    }
+    
+    .theme-light {
+      background: linear-gradient(135deg, #f5f7fa, #e4e7eb);
+    }
+    
+    .theme-blue {
+      background: linear-gradient(135deg, #0d1d2d, #0a3d62);
+    }
+    
+    .theme-purple {
+      background: linear-gradient(135deg, #1a0d2d, #3d0a62);
+    }
+    
+    .theme-name {
+      font-size: 0.9rem;
+    }
+    
+    /* 404 Animation Styling */
+    .not-found-container {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(#010163 80%, #5294ff 80%);
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .not-found-text {
+      width: 100%;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+      color: #ffffffcc;
+      z-index: 1;
+      pointer-events: none;
+      padding-top: 40px;
+    }
+    
+    .not-found-text h2 {
+      font-size: 8em;
+      font-weight: 800;
+      letter-spacing: 0.3em;
+      margin: 0;
+      text-shadow: 0 0 15px #ffffff88;
+    }
+    
+    .not-found-text h3 {
+      font-size: 2.5em;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      margin: 0;
+      text-shadow: 0 0 10px #ffffff88;
+    }
+    
+    .not-found-animation {
+      height: 32.87em;
+      width: 21.87em;
+      position: relative;
+      z-index: 2;
+      margin-top: -50px;
+    }
+    
+    .sand {
+      background-color: #fecd64;
+      height: 6.25em;
+      width: 100%;
+      border-radius: 10.93em 10.93em 0 0;
+      position: absolute;
+      top: 26.62em;
+    }
+    
+    .tower {
+      height: 0;
+      width: 7.5em;
+      border-bottom: 18.75em solid #deeefa;
+      border-left: 1.25em solid transparent;
+      border-right: 1.25em solid transparent;
+      position: absolute;
+      left: 5.93em;
+      top: 11.31em;
+    }
+    
+    .tower:before {
+      position: absolute;
+      content: "";
+      top: 11.87em;
+      left: -1em;
+      width: 9.18em;
+      height: 0;
+      border-bottom: 1.56em solid #f94862;
+      border-left: 0.12em solid transparent;
+      border-right: 0.12em solid transparent;
+    }
+    
+    .tower:after {
+      position: absolute;
+      content: "";
+      top: 0.93em;
+      right: -0.18em;
+      height: 0;
+      width: 7.62em;
+      border-bottom: 1.56em solid #f94862;
+      border-left: 0.12em solid transparent;
+      border-right: 0.12em solid transparent;
+    }
+    
+    .pole {
+      height: 3em;
+      width: 0.8em;
+      background-color: #f94862;
+      border-radius: 0.5em 0.5em 0 0;
+      position: absolute;
+      left: 3.2em;
+      bottom: 8em;
+    }
+    
+    .door {
+      width: 3.75em;
+      height: 4.37em;
+      background-color: #1d3260;
+      border-radius: 2.18em 2.18em 0 0;
+      position: absolute;
+      left: 1.87em;
+      top: 14.37em;
+      box-shadow: 0 -9.37em #1d3260;
+    }
+    
+    .light-base {
+      background-color: #f7859a;
+      height: 1em;
+      width: 10.62em;
+      position: absolute;
+      left: -1.56em;
+      bottom: 0;
+    }
+    
+    .light-base:before {
+      position: absolute;
+      content: "";
+      background-color: #f94862;
+      height: 1.25em;
+      width: 7.5em;
+      bottom: 1em;
+      left: 1.56em;
+      right: 0.06em;
+    }
+    
+    .dome {
+      position: absolute;
+      height: 6.25em;
+      width: 7.5em;
+      background: linear-gradient(
+        to bottom,
+        #f94862 3.43em,
+        #5ab7ff 3.43em,
+        #5ab7ff 5.31em,
+        #f94862 5.31em
+      );
+      bottom: 2em;
+      border-radius: 3.75em 3.73em 0 0;
+    }
+    
+    .light {
+      width: 7.5em;
+      border-right: 15.62em solid #fecf2b;
+      border-top: 2.5em solid transparent;
+      border-bottom: 2.5em solid transparent;
+      position: absolute;
+      bottom: 1.5em;
+      left: 0;
+      animation: search 4s infinite;
+    }
+    
+    @keyframes search {
+      50% {
+        transform: translateX(-15.62em) rotateY(180deg);
+      }
+    }
+    
+    .sand-extra {
+      height: 3.12em;
+      width: 4.37em;
+      background-color: #fecd64;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 1.87em;
+      left: 4.06em;
+      box-shadow: 2.5em 0.62em 0 -0.62em #fecd64;
+    }
+    
+    /* PDF Converter Modal */
+    .pdf-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(20px);
+    }
+    
+    .pdf-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .pdf-modal-content {
+      background: rgba(30, 30, 40, 0.9);
+      backdrop-filter: blur(30px);
+      border-radius: 28px;
+      width: 90%;
+      max-width: 600px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .pdf-modal.active .pdf-modal-content {
+      transform: translateY(0) scale(1);
+    }
+    
+    .pdf-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .pdf-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .pdf-modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .pdf-modal input {
+      width: 100%;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+    }
+    
+    .pdf-modal button {
+      background: rgba(10, 132, 255, 0.2);
+      color: #0a84ff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 16px 30px;
+      border-radius: 50px;
+      border: 1px solid rgba(10, 132, 255, 0.3);
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+    
+    .pdf-modal button:hover {
+      background: rgba(10, 132, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .preview {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
       padding: 10px;
-      background: rgba(5, 10, 25, 0.5);
+    }
+    
+    .preview img {
+      max-width: 150px;
+      margin: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 5px;
+    }
+    
+    #pdf-status {
+      color: #0a84ff;
+      margin-top: 15px;
+      font-size: 1rem;
+    }
+    
+    /* QR Modal Styling */
+    .qr-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(20px);
+    }
+    
+    .qr-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .qr-modal-content {
+      background: rgba(30, 30, 40, 0.9);
+      backdrop-filter: blur(30px);
+      border-radius: 28px;
+      width: 90%;
+      max-width: 600px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .qr-modal.active .qr-modal-content {
+      transform: translateY(0) scale(1);
+    }
+    
+    .qr-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .qr-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .qr-modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .qr-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .qr-tab {
+      background: #222;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .qr-tab.active {
+      background: #0a84ff;
+      color: #000;
+    }
+    
+    .qr-input-group {
+      margin: 10px 0;
+    }
+    
+    .qr-modal input, 
+    .qr-modal textarea {
+      padding: 16px;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .qr-modal input:focus,
+    .qr-modal textarea:focus {
+      outline: none;
+      border-color: rgba(10, 132, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .qr-modal button {
+      background: rgba(10, 132, 255, 0.2);
+      color: #0a84ff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 16px 30px;
+      border-radius: 50px;
+      border: 1px solid rgba(10, 132, 255, 0.3);
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+    
+    .qr-modal button:hover {
+      background: rgba(10, 132, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    #qr-canvas {
+      margin: 20px auto;
+      background: white;
+      padding: 10px;
       border-radius: 10px;
+      max-width: 100%;
+    }
+    
+    #qr-status {
+      color: #0a84ff;
+      margin-top: 15px;
+      font-size: 1rem;
+    }
+    
+    .qr-result-container {
+      margin: 20px auto;
+      text-align: center;
+    }
+    
+    .qr-image-container {
+      display: inline-block;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Logo upload container */
+    .logo-upload-container {
+      margin: 15px 0;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    .logo-preview {
+      width: 80px;
+      height: 80px;
+      margin: 10px auto;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .logo-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .logo-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .logo-actions button {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+    
+    /* Text Encryptor Modal */
+    .text-encryptor-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(20px);
+    }
+    
+    .text-encryptor-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .text-encryptor-modal-content {
+      background: rgba(30, 30, 40, 0.9);
+      backdrop-filter: blur(30px);
+      border-radius: 28px;
+      width: 90%;
+      max-width: 600px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .text-encryptor-modal.active .text-encryptor-modal-content {
+      transform: translateY(0) scale(1);
+    }
+    
+    .text-encryptor-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .text-encryptor-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .text-encryptor-modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .text-encryptor-modal textarea {
+      width: 100%;
+      height: 120px;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #0ff;
+      font-size: 1rem;
+      resize: none;
+    }
+    
+    .text-encryptor-modal textarea:focus {
+      outline: none;
+      border-color: rgba(10, 132, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .text-encryptor-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .text-encryptor-modal button {
+      background: rgba(10, 132, 255, 0.2);
+      color: #0a84ff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 12px 24px;
+      border-radius: 50px;
+      border: 1px solid rgba(10, 132, 255, 0.3);
+      font-size: 1rem;
+    }
+    
+    .text-encryptor-modal button:hover {
+      background: rgba(10, 132, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .text-encryptor-output {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 20px;
+      text-align: left;
+      word-wrap: break-word;
+      color: #0f0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       min-height: 60px;
     }
     
-    .alarm-countdown {
-      font-size: 1.1rem;
-      margin-top: 10px;
-      padding: 10px;
-      background: rgba(5, 10, 25, 0.5);
-      border-radius: 10px;
-      min-height: 40px;
+    /* Custom QR input fields */
+    .qr-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 15px;
     }
     
-    /* Language selector */
-    .language-select {
-      position: absolute;
-      top: 20px;
-      right: 150px;
-      padding: 5px 10px;
-      background: rgba(0, 188, 212, 0.3);
-      color: white;
-      border: none;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      z-index: 10;
-      backdrop-filter: blur(5px);
+    .qr-field-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
     
-    /* Responsive design */
-    @media (max-width: 600px) {
-      .permission-title {
-        font-size: 2rem;
+    .qr-field-label {
+      width: 100px;
+      text-align: right;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+    }
+    
+    .qr-field-input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 0.95rem;
+    }
+    
+    .qr-field-input:focus {
+      outline: none;
+      border-color: rgba(10, 132, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        padding: 15px;
+        gap: 20px;
       }
-      h1 {
-        font-size: 2rem;
+      
+      .section {
+        padding: 24px;
+        min-height: 260px;
       }
-      .avatar-container {
-        width: 220px;
-        height: 220px;
+      
+      .icon-group {
+        width: 80px;
       }
-      .commands {
+      
+      .icon-group img {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .search-container {
+        padding: 0 20px;
+      }
+      
+      .explore-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
+      
+      .not-found-text h2 {
+        font-size: 6em;
+      }
+      
+      .not-found-text h3 {
+        font-size: 1.8em;
+      }
+      
+      .pdf-modal-content,
+      .qr-modal-content,
+      .text-encryptor-modal-content {
+        padding: 30px 20px;
+      }
+      
+      .qr-field-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+      
+      .qr-field-label {
+        text-align: left;
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 20px;
+      }
+      
+      header h1 {
+        font-size: 1.4rem;
+      }
+      
+      .profile-name {
+        display: none;
+      }
+      
+      .section {
+        padding: 22px;
+      }
+      
+      .socials {
+        gap: 20px;
+      }
+      
+      /* Adjust bottom nav for tablet */
+      .bottom-nav {
+        height: 50px;
+        padding: 7px 0;
+      }
+      
+      .nav-item {
+        padding: 5px 10px;
+      }
+      
+      .explore-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      
+      .not-found-text h2 {
+        font-size: 4em;
+      }
+      
+      .not-found-text h3 {
+        font-size: 1.5em;
+      }
+      
+      .not-found-animation {
+        transform: scale(0.8);
+      }
+      
+      .pdf-modal h2,
+      .qr-modal h2,
+      .text-encryptor-modal h2 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 10px;
+      }
+      
+      .section {
+        padding: 20px;
+        min-height: 240px;
+      }
+      
+      .icon-group {
+        width: 75px;
+      }
+      
+      .icon-group img {
+        width: 55px;
+        height: 55px;
+      }
+      
+      header h1 {
+        font-size: 1.2rem;
+      }
+      
+      .section h3 {
+        font-size: 1.2rem;
+      }
+      
+      .notification {
+        padding: 18px 22px;
+        right: 15px;
+        top: 15px;
+        max-width: calc(100% - 30px);
+      }
+      
+      .search-container {
+        padding: 0 10px;
+      }
+      
+      .socials {
+        grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+        gap: 18px;
+      }
+      
+      .modal-content {
+        padding: 40px 30px;
+      }
+      
+      .modal-profile-img {
+        width: 110px;
+        height: 110px;
+      }
+      
+      .modal-profile-name {
+        font-size: 1.8rem;
+      }
+      
+      /* Compact bottom nav for mobile */
+      .bottom-nav {
+        height: 48px;
+        padding: 6px 0;
+      }
+      
+      .nav-item {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+      
+      .nav-item i {
+        font-size: 1rem;
+      }
+      
+      .explore-grid {
         grid-template-columns: 1fr;
       }
-      .website-grid {
-        grid-template-columns: repeat(3, 1fr);
+      
+      .not-found-text h2 {
+        font-size: 3em;
       }
-      .gif-grid {
-        grid-template-columns: repeat(2, 1fr);
+      
+      .not-found-text h3 {
+        font-size: 1.2em;
       }
-      .alarm-clock {
-        font-size: 2rem;
+      
+      .not-found-animation {
+        transform: scale(0.7);
       }
-      .alarm-controls {
+      
+      .pdf-modal-content,
+      .qr-modal-content,
+      .text-encryptor-modal-content {
+        padding: 25px 15px;
+      }
+      
+      .preview img {
+        max-width: 120px;
+      }
+      
+      .qr-tabs {
+        gap: 5px;
+      }
+      
+      .qr-tab {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .text-encryptor-buttons {
         flex-direction: column;
-        align-items: center;
-      }
-      .language-select {
-        top: 60px;
-        right: 20px;
+        gap: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="background-glow"></div>
-  
-  <!-- Language Selector -->
-  <select class="language-select" id="language">
-    <option value="en-US">English</option>
-    <option value="hi-IN">हिन्दी</option>
-    <option value="ur-PK">اردو</option>
-  </select>
-  
-  <!-- Theme Toggle -->
-  <button class="theme-toggle" id="themeToggle">
-    <span>🌙</span> Dark Mode
-  </button>
-  
-  <!-- Wake word indicator -->
-  <div class="wake-word-indicator" id="wakeIndicator">
-    <div class="wake-dot"></div>
-    <span>Wake word: "Eva"</span>
-  </div>
-  
-  <!-- Permission Screen -->
-  <div class="permission-screen" id="permissionScreen">
-    <div class="permission-content">
-      <h1 class="permission-title">Eva AI Assistant</h1>
-      <div class="permission-text">
-        <p>Eva needs microphone access to listen to your commands.</p>
-        <p>This is a one-time permission. Once granted, Eva will always be listening for your voice commands.</p>
-        <p>Your privacy is important - audio processing happens locally in your browser.</p>
-      </div>
-      <button class="permission-btn" id="grantPermission">Grant Microphone Access</button>
-      <p style="margin-top: 20px; opacity: 0.7;">Note: Microphone access is required for voice commands</p>
-    </div>
-  </div>
-  
-  <!-- Main Content (initially hidden) -->
-  <div class="header" id="mainHeader">
-    <h1>Eva AI Assistant</h1>
-    <div class="subtitle">Voice Commands • Always Listening • Alarm & Timer • GIF Search</div>
-  </div>
-  
-  <div class="container" id="mainContainer">
-    <div class="avatar-container">
-      <canvas id="avatar"></canvas>
-      <div class="status-indicator" id="micIndicator"></div>
-    </div>
-    
-    <div class="controls">
-      <button class="control-btn" id="cameraBtn">
-        <span>📷</span> Camera
-      </button>
-      <button class="control-btn" id="websiteBtn">
-        <span>🌐</span> Websites
-      </button>
-      <button class="control-btn" id="gifBtn">
-        <span>🎬</span> GIF Search
-      </button>
-      <button class="control-btn" id="alarmBtn">
-        <span>⏰</span> Alarm & Timer
-      </button>
-      <button class="control-btn" id="micToggle">
-        <span>🔇</span> Mute Mic
-      </button>
-    </div>
-    
-    <div class="output-container">
-      <div class="output-header">
-        <h2>Assistant Response</h2>
-        <div class="status">Listening...</div>
-      </div>
-      <div id="output">Say "Eva" to activate me when mic is off<br><br>Try: "Set alarm at 6 PM", "Start a 5 minute timer", "Open Instagram", or "Find a GIF of cats"</div>
-    </div>
-    
-    <div class="command-list">
-      <h2>Voice Commands</h2>
-      <div class="commands">
-        <div class="command-card">
-          <div class="command-icon">⏰</div>
-          <div class="command-title">Alarm & Timer</div>
-          <div class="command-desc">"Set alarm at 6 PM", "Start a 5 minute timer"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🌐</div>
-          <div class="command-title">Open Websites</div>
-          <div class="command-desc">"Open YouTube", "Go to Google"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🎬</div>
-          <div class="command-title">Search GIFs</div>
-          <div class="command-desc">"Find a GIF of cats", "Search GIF for dancing"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🧮</div>
-          <div class="command-title">Calculator</div>
-          <div class="command-desc">"Calculate 45 plus 67", "What is 120 divided by 6"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📷</div>
-          <div class="command-title">Camera Access</div>
-          <div class="command-desc">"Open camera", "Take a photo"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🔋</div>
-          <div class="command-title">Battery Status</div>
-          <div class="command-desc">"Check battery", "How much battery left"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">📍</div>
-          <div class="command-title">Location</div>
-          <div class="command-desc">"Where am I?", "Get my location"</div>
-        </div>
-        <div class="command-card">
-          <div class="command-icon">🗣️</div>
-          <div class="command-title">Voice Commands</div>
-          <div class="command-desc">"Hello Eva", "Thank you", "Goodbye"</div>
+  <!-- Dashboard -->
+  <div id="dashboard-page">
+    <header>
+      <div class="header-left">
+        <div class="profile-container" id="profile-container">  
+          <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="K Logo" class="profile-img">
+          <span class="profile-name">Khushal</span>
         </div>
       </div>
-    </div>
-    
-    <div id="cameraContainer" class="camera-container">
-      <h3>Camera Preview</h3>
-      <video id="cameraFeed" autoplay></video>
-      <canvas id="cameraCanvas" style="display:none;"></canvas>
-      <img id="capturedPhoto" />
-      <button class="control-btn" id="captureBtn" style="margin-top: 15px;">
-        <span>📸</span> Capture Photo
-      </button>
-      <button class="control-btn" id="closeCameraBtn" style="margin-top: 10px;">
-        <span>❌</span> Close Camera
-      </button>
-    </div>
-    
-    <!-- Website container -->
-    <div id="websiteContainer" class="website-container">
-      <h3>Supported Websites</h3>
-      <div class="website-grid" id="websiteGrid">
-        <!-- Websites will be populated by JavaScript -->
+      
+      <div class="header-center">
+        <h1 id="page-title">Dashboard</h1>
       </div>
-    </div>
-    
-    <!-- GIF container -->
-    <div id="gifContainer" class="gif-container">
-      <h3>Search Results</h3>
-      <div class="gif-grid" id="gifGrid"></div>
-      <div class="gif-controls">
-        <button class="control-btn" id="closeGifBtn">
-          <span>❌</span> Close GIFs
+      
+      <div class="header-right">
+        <button class="logout-btn" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Sign Out</span>
         </button>
       </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" class="search-bar" placeholder="Search for apps, games, or resources..." id="search-bar">
+      <i class="fas fa-search search-icon"></i>
     </div>
-    
-    <!-- Alarm & Timer container -->
-    <div id="alarmContainer" class="alarm-container">
-      <h3>Alarm & Timer</h3>
-      <div class="alarm-clock" id="alarmClock">--:--:--</div>
-      <div class="alarm-controls">
-        <button class="control-btn" id="startListeningBtn">
-          <span>🎤</span> Start Listening
-        </button>
-        <button class="control-btn" id="stopSoundBtn">
-          <span>🔇</span> Stop Sound
-        </button>
-        <button class="control-btn" id="closeAlarmBtn">
-          <span>❌</span> Close Panel
-        </button>
-      </div>
-      <div class="alarm-status" id="alarmStatus">Waiting for command...</div>
-      <div class="alarm-countdown" id="alarmCountdown"></div>
-    </div>
-  </div>
-  
-  <div class="footer">
-    Eva AI Assistant • Voice Commands • Alarm & Timer • GIF Search • Empowered Virtual Assistant
-  </div>
-  
-  <div class="mic-wave" id="micWave">
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-    <div class="wave-bar"></div>
-  </div>
-  
-  <!-- Alarm Sound -->
-  <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto" loop></audio>
-  
-<script>
-  // Gemini API Constants
-  const API_KEY = "AIzaSyABiyiUKvzjJ4TpJF08EACE3PWdeaGu6Ak";
-  const MODEL_NAME = "gemini-1.5-flash-latest";
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
 
-  // DOM Elements
-  const permissionScreen = document.getElementById('permissionScreen');
-  const grantPermissionBtn = document.getElementById('grantPermission');
-  const mainHeader = document.getElementById('mainHeader');
-  const mainContainer = document.getElementById('mainContainer');
-  const output = document.getElementById("output");
-  const micIndicator = document.getElementById("micIndicator");
-  const avatarCanvas = document.getElementById("avatar");
-  const cameraContainer = document.getElementById("cameraContainer");
-  const cameraFeed = document.getElementById("cameraFeed");
-  const cameraCanvas = document.getElementById("cameraCanvas");
-  const capturedPhoto = document.getElementById("capturedPhoto");
-  const cameraBtn = document.getElementById("cameraBtn");
-  const websiteBtn = document.getElementById("websiteBtn");
-  const gifBtn = document.getElementById("gifBtn");
-  const alarmBtn = document.getElementById("alarmBtn");
-  const captureBtn = document.getElementById("captureBtn");
-  const closeCameraBtn = document.getElementById("closeCameraBtn");
-  const micToggle = document.getElementById("micToggle");
-  const themeToggle = document.getElementById("themeToggle");
-  const micWave = document.getElementById('micWave');
-  const websiteContainer = document.getElementById("websiteContainer");
-  const websiteGrid = document.getElementById("websiteGrid");
-  const wakeIndicator = document.getElementById("wakeIndicator");
-  const gifContainer = document.getElementById("gifContainer");
-  const gifGrid = document.getElementById("gifGrid");
-  const closeGifBtn = document.getElementById("closeGifBtn");
-  const alarmContainer = document.getElementById("alarmContainer");
-  const alarmClock = document.getElementById("alarmClock");
-  const alarmStatus = document.getElementById("alarmStatus");
-  const alarmCountdown = document.getElementById("alarmCountdown");
-  const startListeningBtn = document.getElementById("startListeningBtn");
-  const stopSoundBtn = document.getElementById("stopSoundBtn");
-  const closeAlarmBtn = document.getElementById("closeAlarmBtn");
-  const alarmSound = document.getElementById("alarmSound");
-  const langSelect = document.getElementById("language");
-  
-  // State variables
-  let cameraStream = null;
-  let micMuted = false;
-  let darkMode = true;
-  let recognitionActive = false;
-  let permissionGranted = false;
-  let wakeWordMode = false;
-  let wakeWordDetection = false;
-  
-  // Alarm & Timer state
-  let alarmTimeout = null;
-  let timerTimeout = null;
-  let countdownInterval = null;
-  let timerEndTime = null;
-  
-  // Tenor API Key
-  const tenorApiKey = "AIzaSyCod21w9UISRGTPekhgcHx3tpOfwEP37Cc";
-  
-  // Initialize speech recognition with browser prefixes
-  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recognition;
-  
-  // Speech synthesis
-  const synth = window.speechSynthesis;
-  
-  // Supported websites
-  const websites = {
-    "google": "https://www.google.com",
-    "youtube": "https://www.youtube.com",
-    "facebook": "https://www.facebook.com",
-    "twitter": "https://www.twitter.com",
-    "instagram": "https://www.instagram.com",
-    "gmail": "https://mail.google.com",
-    "github": "https://www.github.com",
-    "wikipedia": "https://www.wikipedia.org",
-    "amazon": "https://www.amazon.com",
-    "netflix": "https://www.netflix.com",
-    "reddit": "https://www.reddit.com",
-    "linkedin": "https://www.linkedin.com"
-  };
+    <!-- Home Page -->
+    <div class="page active" id="home-page">
+      <div class="container">
+        <div class="section">
+          <div class="section-title-container">
+            <h3><i class="fas fa-link"></i>Contact Me</h3>
+            <a class="view-all">View All</a>
+          </div>
+          <div class="socials">
+            <div class="icon-group">
+              <a href="https://instagram.com/khushaljangra_7" target="_blank">
+                <img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram">
+              </a>
+              <div class="socials-labels">Instagram</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://facebook.com" target="_blank">
+                <img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook">
+              </a>
+              <div class="socials-labels">Facebook</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://github.com/khushaljangra" target="_blank">
+                <img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub">
+              </a>
+              <div class="socials-labels">GitHub</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://twitter.com" target="_blank">
+                <img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter">
+              </a>
+              <div class="socials-labels">Twitter</div>
+            </div>
+          </div>
+        </div>
 
-  // Website icons
-  const websiteIcons = {
-    "google": "🔍",
-    "youtube": "📺",
-    "facebook": "📘",
-    "twitter": "🐦",
-    "instagram": "📸",
-    "gmail": "✉️",
-    "github": "💻",
-    "wikipedia": "📚",
-    "amazon": "📦",
-    "netflix": "🎬",
-    "reddit": "👥",
-    "linkedin": "💼"
-  };
-  
-  // Request permission on button click
-  grantPermissionBtn.addEventListener('click', requestMicrophonePermission);
-  
-  // Function to request microphone permission
-  async function requestMicrophonePermission() {
-    try {
-      // Request microphone permission
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-      // Close the stream immediately since we don't need it for recognition
-      stream.getTracks().forEach(track => track.stop());
-      
-      // Hide permission screen
-      permissionScreen.style.display = 'none';
-      
-      // Show main content
-      mainHeader.style.display = 'block';
-      mainContainer.style.display = 'flex';
-      
-      // Initialize speech recognition
-      initializeRecognition();
-      
-      // Populate website grid
-      populateWebsiteGrid();
-      
-      // Update state
-      permissionGranted = true;
-      
-      // Show welcome message
-      output.innerHTML = "Microphone access granted!<br><br>Eva is now listening for your commands.<br><br>Try saying: <i>'Set alarm at 6 PM'</i>, <i>'Open Instagram'</i>, or <i>'Find a GIF of cats'</i>";
-      speak("Microphone access granted! I'm Eva, your Empowered Virtual Assistant. How can I help you today?");
-      
-      // Start clock
-      updateClock();
-      setInterval(updateClock, 1000);
-      
-    } catch (error) {
-      console.error("Permission error:", error);
-      permissionScreen.querySelector('.permission-text').innerHTML = 
-        `<p style="color: #ff6b6b;">Permission denied. Microphone access is required.</p>
-         <p>Please refresh the page and allow microphone access when prompted.</p>`;
-    }
-  }
-  
-  // Populate website grid
-  function populateWebsiteGrid() {
-    websiteGrid.innerHTML = '';
-    for (const [name, url] of Object.entries(websites)) {
-      const websiteCard = document.createElement('div');
-      websiteCard.className = 'website-card';
-      websiteCard.onclick = () => openWebsite(name);
-      
-      const icon = document.createElement('div');
-      icon.className = 'website-icon';
-      icon.textContent = websiteIcons[name] || '🌐';
-      
-      const nameElement = document.createElement('div');
-      nameElement.className = 'website-name';
-      nameElement.textContent = name.charAt(0).toUpperCase() + name.slice(1);
-      
-      websiteCard.appendChild(icon);
-      websiteCard.appendChild(nameElement);
-      websiteGrid.appendChild(websiteCard);
-    }
-  }
-  
-  // Toggle website container
-  websiteBtn.addEventListener('click', () => {
-    if (websiteContainer.style.display === 'block') {
-      websiteContainer.style.display = 'none';
-    } else {
-      websiteContainer.style.display = 'block';
-      cameraContainer.style.display = 'none';
-      gifContainer.style.display = 'none';
-      alarmContainer.style.display = 'none';
-    }
-  });
-  
-  // Toggle GIF container
-  gifBtn.addEventListener('click', () => {
-    if (gifContainer.style.display === 'block') {
-      gifContainer.style.display = 'none';
-    } else {
-      gifContainer.style.display = 'block';
-      cameraContainer.style.display = 'none';
-      websiteContainer.style.display = 'none';
-      alarmContainer.style.display = 'none';
-    }
-  });
-  
-  // Toggle Alarm container
-  alarmBtn.addEventListener('click', () => {
-    if (alarmContainer.style.display === 'block') {
-      alarmContainer.style.display = 'none';
-    } else {
-      alarmContainer.style.display = 'block';
-      cameraContainer.style.display = 'none';
-      websiteContainer.style.display = 'none';
-      gifContainer.style.display = 'none';
-    }
-  });
-  
-  // Close Alarm container
-  closeAlarmBtn.addEventListener('click', () => {
-    alarmContainer.style.display = 'none';
-  });
-  
-  // Close GIF container
-  closeGifBtn.addEventListener('click', () => {
-    gifContainer.style.display = 'none';
-  });
-  
-  // Open website by name
-  function openWebsite(siteName) {
-    const site = siteName.toLowerCase();
-    if (websites[site]) {
-      window.open(websites[site], '_blank');
-      output.innerHTML = `Opening ${site}...`;
-      speak(`Opening ${site}`);
-      websiteContainer.style.display = 'none';
-    } else {
-      output.innerHTML = `I don't know how to open ${site}. Try saying "help" for supported websites.`;
-      speak(`Sorry, I don't know how to open ${site}`);
-    }
-  }
-  
-  // Initialize speech recognition
-  function initializeRecognition() {
-    if (!window.SpeechRecognition) {
-      output.textContent = "Speech recognition not supported in this browser.";
-      return;
-    }
-    
-    recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = false;
-    recognition.lang = langSelect.value;
-    
-    // Start recognition
-    startRecognition();
-    
-    // Update recognition language when dropdown changes
-    langSelect.addEventListener('change', () => {
-      recognition.lang = langSelect.value;
-    });
-    
-    // Event handlers
-    recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript;
-      
-      // Check if we're in wake word mode
-      if (wakeWordMode) {
-        // Only listen for the wake word "eva"
-        if (transcript.toLowerCase().includes("eva")) {
-          // Wake up the assistant
-          wakeWordMode = false;
-          wakeWordDetection = false;
-          wakeIndicator.classList.remove('wake-active');
-          output.innerHTML = "Eva activated! How can I help you?";
-          speak("I'm Eva, your Empowered Virtual Assistant. How can I help you?");
-          startRecognition();
-        }
-      } else {
-        // Process normal commands
-        processCommand(transcript);
-      }
-    };
-    
-    recognition.onerror = (event) => {
-      console.error("Recognition error:", event.error);
-      if (event.error === 'no-speech') {
-        // Automatically restart if no speech is detected
-        if (!wakeWordMode) {
-          recognition.start();
-        }
-      } else if (!micMuted) {
-        output.textContent = "Recognition error: " + event.error;
-      }
-    };
-    
-    recognition.onend = () => {
-      // Automatically restart recognition if not muted and not in wake word mode
-      if (!micMuted && recognitionActive && !wakeWordMode) {
-        recognition.start();
-      }
-    };
-  }
-  
-  // Start voice recognition
-  function startRecognition() {
-    if (!recognition) return;
-    
-    recognition.start();
-    micIndicator.style.backgroundColor = "#00ff9d";
-    micIndicator.style.boxShadow = "0 0 10px #00ff9d";
-    recognitionActive = true;
-    micToggle.innerHTML = '<span>🔇</span> Mute Mic';
-    micWave.style.display = 'flex';
-    wakeIndicator.classList.remove('wake-active');
-  }
-  
-  // Stop voice recognition
-  function stopRecognition() {
-    if (!recognition) return;
-    
-    recognition.stop();
-    micIndicator.style.backgroundColor = "#ff3b30";
-    micIndicator.style.boxShadow = "0 0 10px #ff3b30";
-    recognitionActive = false;
-    micToggle.innerHTML = '<span>🎤</span> Unmute Mic';
-    micWave.style.display = 'none';
-  }
-  
-  // Toggle microphone
-  micToggle.addEventListener('click', () => {
-    micMuted = !micMuted;
-    if (micMuted) {
-      stopRecognition();
-      wakeWordMode = true;
-      wakeIndicator.classList.add('wake-active');
-      output.innerHTML = "Microphone muted. Say 'Eva' to activate me again.";
-      speak("Microphone muted. Say Eva when you need me.");
-    } else {
-      wakeWordMode = false;
-      wakeIndicator.classList.remove('wake-active');
-      startRecognition();
-    }
-  });
-  
-  // Toggle theme
-  themeToggle.addEventListener('click', () => {
-    darkMode = !darkMode;
-    if (darkMode) {
-      document.body.style.background = "linear-gradient(135deg, #0b0f2a, #1a1f3e)";
-      themeToggle.innerHTML = '<span>🌙</span> Dark Mode';
-    } else {
-      document.body.style.background = "linear-gradient(135deg, #3a3f5a, #5a5f7a)";
-      themeToggle.innerHTML = '<span>☀️</span> Light Mode';
-    }
-  });
-  
-  // Speak function
-  function speak(text) {
-    if (!synth.speaking && !synth.pending) {
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = langSelect.value;
-      utter.rate = 1;
-      utter.pitch = 1.0;
-      
-      const voices = synth.getVoices();
-      let selectedVoice = voices.find(v => v.name.includes('Google') && v.lang.includes(langSelect.value.slice(0,2))) || 
-                         voices.find(v => v.lang.includes(langSelect.value.slice(0,2)));
-      
-      if (selectedVoice) utter.voice = selectedVoice;
-      
-      synth.speak(utter);
-      
-      // When done speaking, restart recognition if not muted
-      utter.onend = () => {
-        if (!micMuted && permissionGranted && !wakeWordMode) {
-          recognition.start();
-        }
-      };
-    }
-  }
-  
-  // Get Gemini Response
-  async function getGeminiResponse(message) {
-    const body = {
-      contents: [{ role: "user", parts: [{ text: message }] }],
-      generationConfig: { temperature: 0.8, maxOutputTokens: 2048 }
-    };
+        <div class="section">
+          <div class="section-title-container">
+            <h3><i class="fas fa-gamepad"></i> PC Mod Apps</h3>
+            <a class="view-all">View All</a>
+          </div>
+          <div class="socials">
+            <div class="icon-group">
+              <a href="https://se7en.ws/games/?lang=en" target="_blank">
+                <img src="https://img.icons8.com/fluency/100/controller.png" alt="se7en.ws">
+              </a>
+              <div class="socials-labels">Se7en.ws</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://creativeconor.com/" target="_blank">
+                <img src="https://img.icons8.com/fluency/100/epic-games.png" alt="creativeconor">
+              </a>
+              <div class="socials-labels">CreativeConor</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://gamingbeasts.com/" target="_blank">
+                <img src="https://img.icons8.com/color/100/controller.png" alt="gamingbeasts">
+              </a>
+              <div class="socials-labels">GamingBeasts</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://itch.io" target="_blank">
+                <img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch.io">
+              </a>
+              <div class="socials-labels">Itch.io</div>
+            </div>
+          </div>
+        </div>
 
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+        <div class="section">
+          <div class="section-title-container">
+            <h3><i class="fas fa-dice"></i> Online Games</h3>
+            <a class="view-all">View All</a>
+          </div>
+          <div class="socials">
+            <div class="icon-group">
+              <a href="https://deadshot.io/" target="_blank">
+                <img src="https://image.pngaaa.com/885/1977885-middle.png" alt="DEADSHOT">
+              </a>
+              <div class="socials-labels">DEADSHOT</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://slowroads.io/" target="_blank">
+                <img src="https://img.icons8.com/fluency/100/gaming.png" alt="Slow Road">
+              </a>
+              <div class="socials-labels">Slow Road</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://armedforces.io/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce">
+              </a>
+              <div class="socials-labels">Armedforce</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://www.miniclip.com" target="_blank">
+                <img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip">
+              </a>
+              <div class="socials-labels">Miniclip</div>
+            </div>
+          </div>
+        </div>
 
-    const data = await res.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't process that request. Please try again.";
-  }
-  
-  // Camera functions
-  cameraBtn.addEventListener('click', openCamera);
-  captureBtn.addEventListener('click', takePhoto);
-  closeCameraBtn.addEventListener('click', closeCamera);
-  
-  function openCamera() {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        cameraStream = stream;
-        cameraFeed.srcObject = stream;
-        cameraContainer.style.display = "flex";
-        capturedPhoto.style.display = "none";
-        websiteContainer.style.display = "none";
-        gifContainer.style.display = "none";
-        alarmContainer.style.display = "none";
-      })
-      .catch(err => {
-        output.textContent = "Failed to access camera: " + err.message;
-        speak("I couldn't access the camera. Please check your permissions.");
-      });
-  }
-  
-  function closeCamera() {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop());
-      cameraFeed.srcObject = null;
-    }
-    cameraContainer.style.display = "none";
-  }
-  
-  function takePhoto() {
-    if (!cameraStream) return;
-    
-    const context = cameraCanvas.getContext("2d");
-    cameraCanvas.width = cameraFeed.videoWidth;
-    cameraCanvas.height = cameraFeed.videoHeight;
-    context.drawImage(cameraFeed, 0, 0);
-    
-    const imageData = cameraCanvas.toDataURL("image/png");
-    capturedPhoto.src = imageData;
-    capturedPhoto.style.display = "block";
-    
-    output.textContent = "Photo captured successfully!";
-    speak("Photo captured!");
-  }
-  
-  // Location function
-  function getLocation() {
-    return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject("Geolocation not supported");
-        return;
-      }
-      
-      navigator.geolocation.getCurrentPosition(
-        position => resolve({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          accuracy: position.coords.accuracy
-        }),
-        error => reject(error.message)
-      );
-    });
-  }
-  
-  // Battery function
-  async function getBatteryStatus() {
-    if ('getBattery' in navigator) {
-      try {
-        const battery = await navigator.getBattery();
-        return `Battery: ${Math.round(battery.level * 100)}%`;
-      } catch (e) {
-        return "Battery info not available";
-      }
-    }
-    return "Battery info not available";
-  }
-  
-  // Calculate expression from voice command
-  function calculateExpression(transcript) {
-    // Normalize the transcript
-    let expression = transcript.toLowerCase()
-      .replace(/calculate|what is|how much is|compute|/gi, '') // Remove command words
-      .replace(/plus/gi, '+')
-      .replace(/minus/gi, '-')
-      .replace(/times|multiplied by/gi, '*')
-      .replace(/divided by|over/gi, '/')
-      .replace(/percent|percentage/gi, '%')
-      .replace(/\s+/g, '') // Remove spaces
-      .replace(/([0-9])and([0-9])/g, '$1.$2'); // Handle decimals like "5 and a half"
-    
-    // Extract numbers and operators
-    const parts = expression.split(/([+\-*/%])/);
-    let result = 0;
-    
-    try {
-      // Simple evaluation - for demo purposes only
-      // In a real app, use a proper expression parser
-      if (parts.length === 3) {
-        const num1 = parseFloat(parts[0]);
-        const operator = parts[1];
-        const num2 = parseFloat(parts[2]);
+        <div class="section">
+          <div class="section-title-container">
+            <h3><i class="fas fa-film"></i> Movie Sites</h3>
+            <a class="view-all">View All</a>
+          </div>
+          <div class="socials">
+            <div class="icon-group">
+              <a href="https://hdhub4u.gd/" target="_blank">
+                <img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub4u">
+              </a>
+              <div class="socials-labels">HDHub4u</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://netfree2.cc/home?utm_source=home_page" target="_blank">
+                <img src="https://img.icons8.com/color/100/netflix.png" alt="Net mirror">
+              </a>
+              <div class="socials-labels">Net Mirror</div>
+            </div>
+            <div class="icon-group">
+              <a href="https" target="_blank">
+                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="PR movie">
+              </a>
+              <div class="socials-labels">movie</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://moviesdrive.mom/" target="_blank">
+                <img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="Movie drive">
+              </a>
+              <div class="socials-labels">movie drive</div>
+            </div>
+          </div>
+        </div>
         
-        switch (operator) {
-          case '+':
-            result = num1 + num2;
+        <!-- Mod Apps Section -->
+        <div class="section mod-apps">
+          <div class="section-title-container">
+            <h3><i class="fas fa-mobile-alt"></i> Mod Apps</h3>
+            <a class="view-all">View All</a>
+          </div>
+          <div class="socials">
+            <div class="icon-group">
+              <a href="https://jarmod.com/" target="_blank">
+                <img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="jarmod">
+              
+              </a>
+              <div class="socials-labels">Jarmod</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://adescargar.online/" target="_blank">
+                <img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar">
+              
+              </a>
+              <div class="socials-labels">Adescargar</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://an1.com/" target="_blank">
+                <img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="desk">
+              
+              </a>
+              <div class="socials-labels">desk</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://jollymod.com/" target="_blank">
+                <img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="jolly mod">
+            
+              </a>
+              <div class="socials-labels">Jolly Mod</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="section-title-container">
+            <h3><i class="fas fa-graduation-cap"></i> Study Resources</h3>
+            <a class="view-all">View All</a>
+          </div>
+          <div class="socials">
+            <div class="icon-group">
+              <a href="https://www.codewithharry.com/notes" target="_blank">
+                <img src="https://image.pngaaa.com/764/3513764-middle.png" alt="code with Harry">
+              </a>
+              <div class="socials-labels">Code With Harry</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://www.mygreatlearning.com/academy" target="_blank">
+                <img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="My Great learning">
+              </a>
+              <div class="socials-labels">My Great Learning</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://sathee.iitk.ac.in/" target="_blank">
+                <img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE">
+              </a>
+              <div class="socials-labels">SATHEE</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm?usp=drive_link" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive">
+              </a>
+              <div class="socials-labels">Drive</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Tools Section -->
+        <div class="section ai-tools">
+          <div class="section-title-container">
+            <h3><i class="fas fa-robot"></i> AI Tools</h3>
+            <a class="view-all">View All</a>
+          </div>
+          <div class="socials">
+            <div class="icon-group">
+              <a href="https://chat.openai.com" target="_blank">
+                <img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT">
+              </a>
+              <div class="socials-labels">ChatGPT</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://ai-search.io/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/11698/11698467.png" alt="AI-SEARCH">
+              </a>
+              <div class="socials-labels">AI-SEARCH</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://www.aixploria.com/en/" target="_blank">
+                <img src="https://img.icons8.com/color/100/artificial-intelligence.png" alt="AI Exploria">
+              </a>
+              <div class="socials-labels">AI Exploria</div>
+            </div>
+            <div class="icon-group">
+              <a href="https://perplexity.ai" target="_blank">
+                <img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity">
+              </a>
+              <div class="socials-labels">Perplexity</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explore Page -->
+    <div class="page" id="explore-page">
+      <div class="explore-section">
+        <h3><i class="fas fa-fire"></i> Trending Apps</h3>
+        <div class="explore-grid">
+          <!-- PDF Converter Card -->
+          <div class="explore-card" id="pdf-converter-card">
+            <img src="https://img.icons8.com/color/100/pdf.png" alt="PDF Converter">
+            <h4>Image to PDF</h4>
+            <p>Convert multiple images to PDF</p>
+          </div>
+          
+          <!-- QR Code Generator Card -->
+          <div class="explore-card" id="qr-generator-card">
+            <img src="https://img.icons8.com/color/100/qr-code.png" alt="QR Code Generator">
+            <h4>QR Code Generator</h4>
+            <p>Create QR codes with your logo</p>
+          </div>
+          
+          <!-- Text Encryptor Card -->
+          <div class="explore-card" id="text-encryptor-card">
+            <img src="https://img.icons8.com/fluency/100/lock.png" alt="Text Encryptor">
+            <h4>Text Encryptor</h4>
+            <p>Encrypt and decrypt text securely</p>
+          </div>
+          
+          <!-- WIFI QR Card -->
+          <div class="explore-card" id="wifi-qr-card">
+            <img src="https://img.icons8.com/color/100/wifi.png" alt="WIFI QR">
+            <h4>WIFI QR Code</h4>
+            <p>Create QR code for WIFI login</p>
+          </div>
+          
+          <!-- Phone QR Card -->
+          <div class="explore-card" id="phone-qr-card">
+            <img src="https://img.icons8.com/color/100/phone.png" alt="Phone QR">
+            <h4>Phone QR Code</h4>
+            <p>Create QR code for phone number</p>
+          </div>
+          
+          <!-- Text QR Card -->
+          <div class="explore-card" id="text-qr-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Code_Icon.PNG" alt="Text QR">
+            <h4>Text QR Code</h4>
+            <p>Create QR code for plain text</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Page with 404 Animation -->
+    <div class="page" id="saved-page">
+      <div class="saved-section">
+        <div class="not-found-container">
+          <div class="not-found-text">
+            <h2>404</h2>
+            <h3>Sorry! Page Not Found</h3>
+          </div>
+          
+          <div class="not-found-animation">
+            <div class="sand"></div>
+            <div class="tower">
+              <div class="pole"></div>
+              <div class="door"></div>
+              <div class="light-base"></div>
+              <div class="dome"></div>
+              <div class="light"></div>
+            </div>
+            <div class="sand-extra"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div class="page" id="settings-page">
+      <div class="settings-section">
+        <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="option-text">
+              <h4>Profile Information</h4>
+              <p>Change your name, email, and profile picture</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="option-text">
+              <h4>Security</h4>
+              <p>Change password and enable two-factor authentication</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="option-text">
+              <h4>Notifications</h4>
+              <p>Manage notification preferences</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h3><i class="fas fa-paint-brush"></i> Appearance</h3>
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-icon">
+              <i class="fas fa-moon"></i>
+            </div>
+            <div class="option-text">
+              <h4>Dark Mode</h4>
+              <p>Enable dark theme for better night viewing</p>
+            </div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" checked id="dark-mode-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-icon">
+              <i class="fas fa-palette"></i>
+            </div>
+            <div class="option-text">
+              <h4>Theme</h4>
+              <p>Choose your preferred color scheme</p>
+            </div>
+          </div>
+        </div>
+        <div class="theme-selector">
+          <div class="theme-option active" data-theme="dark">
+            <div class="theme-preview theme-dark"></div>
+            <div class="theme-name">Dark</div>
+          </div>
+          <div class="theme-option" data-theme="light">
+            <div class="theme-preview theme-light"></div>
+            <div class="theme-name">Light</div>
+          </div>
+          <div class="theme-option" data-theme="blue">
+            <div class="theme-preview theme-blue"></div>
+            <div class="theme-name">Ocean</div>
+          </div>
+          <div class="theme-option" data-theme="purple">
+            <div class="theme-preview theme-purple"></div>
+            <div class="theme-name">Amethyst</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h3><i class="fas fa-download"></i> Downloads</h3>
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-icon">
+              <i class="fas fa-folder"></i>
+            </div>
+            <div class="option-text">
+              <h4>Download Location</h4>
+              <p>Choose where to save downloaded files</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+        <div class="settings-option">
+          <div class="option-info">
+            <div class="option-icon">
+              <i class="fas fa-wifi"></i>
+            </div>
+            <div class="option-text">
+              <h4>Network Settings</h4>
+              <p>Configure download speed and connections</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Compact Apple-style bottom navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item active" data-target="home">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </div>
+      <div class="nav-item" data-target="explore">
+        <i class="fas fa-compass"></i>
+        <span>Explore</span>
+      </div>
+      <div class="nav-item" data-target="saved">
+        <i class="fas fa-bookmark"></i>
+        <span>Saved</span>
+      </div>
+      <div class="nav-item" data-target="settings">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </div>
+    </div>
+    
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+      <div class="notification-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="notification-content">
+        <h4>Welcome to Your Dashboard!</h4>
+        <p>Experience the Apple-inspired interface with enhanced performance.</p>
+      </div>
+      <button class="notification-close" id="notification-close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div class="profile-modal" id="profile-modal">
+      <div class="modal-content">
+        <button class="close-modal" id="close-modal">
+          <i class="fas fa-times"></i>
+        </button>
+        <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="K Logo" class="modal-profile-img">
+        <h2 class="modal-profile-name">Khushal Jangra</h2>
+        <p class="modal-profile-email">choyal034@gmail.com</p>
+        <div style="margin-top: 30px; display: flex; gap: 15px;">
+          <button class="logout-btn" id="edit-profile-btn">
+            <i class="fas fa-user-edit"></i>
+            <span>Edit Profile</span>
+          </button>
+          <button class="logout-btn" id="settings-btn">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- PDF Converter Modal -->
+    <div class="pdf-modal" id="pdf-modal">
+      <div class="pdf-modal-content">
+        <button class="pdf-close" id="pdf-close">
+          <i class="fas fa-times"></i>
+        </button>
+        <h2><i class="fas fa-file-pdf"></i> Multi-Image to PDF Converter</h2>
+        <input type="file" id="imageInput" multiple accept="image/*">
+        <br>
+        <button id="generate-pdf-btn">Download PDF</button>
+        <div id="pdf-status"></div>
+        <div class="preview" id="previewContainer"></div>
+      </div>
+    </div>
+    
+    <!-- QR Code Generator Modal -->
+    <div class="qr-modal" id="qr-modal">
+      <div class="qr-modal-content">
+        <button class="qr-close" id="qr-close">
+          <i class="fas fa-times"></i>
+        </button>
+        <h2><i class="fas fa-qrcode"></i> QR Code Generator</h2>
+        
+        <div class="qr-tabs" id="qr-tab-buttons">
+          <div class="qr-tab active" data-type="TEXT">TEXT</div>
+          <div class="qr-tab" data-type="WEBSITE">WEBSITE</div>
+          <div class="qr-tab" data-type="WIFI">WIFI</div>
+          <div class="qr-tab" data-type="PHONE">PHONE</div>
+          <div class="qr-tab" data-type="SMS">SMS</div>
+          <div class="qr-tab" data-type="EMAIL">EMAIL</div>
+          <div class="qr-tab" data-type="GEO">GEO</div>
+          <div class="qr-tab" data-type="CONTACT">CONTACT</div>
+          <div class="qr-tab" data-type="CLIPBOARD">CLIPBOARD</div>
+        </div>
+        
+        <div id="qr-input-area" class="qr-input-group">
+          <!-- Dynamic input fields will be inserted here -->
+          <textarea id="text-content" placeholder="Enter text here..." class="qr-field-input" style="height: 100px;"></textarea>
+        </div>
+        
+        <!-- Logo Upload Section -->
+        <div class="logo-upload-container">
+          <h4>Add Logo to QR Code</h4>
+          <input type="file" id="qr-logo-input" accept="image/*" style="display: none;">
+          <button id="upload-logo-btn">Upload Logo</button>
+          
+          <div class="logo-preview" id="logo-preview">
+            <i class="fas fa-image" style="font-size: 2rem; color: rgba(255,255,255,0.3);"></i>
+          </div>
+          
+          <div class="logo-actions">
+            <button id="remove-logo-btn">Remove Logo</button>
+          </div>
+        </div>
+        
+        <button id="generate-qr-btn">Generate QR</button>
+        <div class="qr-result-container">
+          <div class="qr-image-container">
+            <canvas id="qr-canvas"></canvas>
+          </div>
+        </div>
+        <br />
+        <button id="download-qr-btn">Download QR</button>
+        <div id="qr-status"></div>
+      </div>
+    </div>
+    
+    <!-- Text Encryptor Modal -->
+    <div class="text-encryptor-modal" id="text-encryptor-modal">
+      <div class="text-encryptor-modal-content">
+        <button class="text-encryptor-close" id="text-encryptor-close">
+          <i class="fas fa-times"></i>
+        </button>
+        <h2><i class="fas fa-lock"></i> Text Encryptor</h2>
+        
+        <textarea id="encryptor-input" placeholder="Enter your message here..."></textarea>
+        
+        <div class="text-encryptor-buttons">
+          <button id="encrypt-btn">Encrypt</button>
+          <button id="decrypt-btn">Decrypt</button>
+          <button id="copy-encrypted-btn">Copy</button>
+        </div>
+        
+        <div class="text-encryptor-output" id="encryptor-output">
+          🔐 Output will appear here...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Enhanced PDF Converter functionality
+    function setupPdfConverter() {
+      const pdfModal = document.getElementById('pdf-modal');
+      const pdfCard = document.getElementById('pdf-converter-card');
+      const pdfClose = document.getElementById('pdf-close');
+      const generatePdfBtn = document.getElementById('generate-pdf-btn');
+      const imageInput = document.getElementById('imageInput');
+      const previewContainer = document.getElementById('previewContainer');
+      const pdfStatus = document.getElementById('pdf-status');
+      let imageDataList = [];
+      
+      // Open PDF modal when card is clicked
+      pdfCard.addEventListener('click', function() {
+        pdfModal.classList.add('active');
+        // Reset state
+        imageDataList = [];
+        previewContainer.innerHTML = '';
+        pdfStatus.textContent = '';
+        imageInput.value = '';
+      });
+      
+      // Close PDF modal
+      pdfClose.addEventListener('click', function() {
+        pdfModal.classList.remove('active');
+      });
+      
+      // Handle file input change
+      imageInput.addEventListener('change', function() {
+        imageDataList = [];
+        previewContainer.innerHTML = '';
+        pdfStatus.textContent = '';
+        const files = Array.from(this.files);
+        
+        if (files.length === 0) return;
+        
+        files.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = e => {
+            imageDataList.push(e.target.result);
+            
+            // Preview image
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            previewContainer.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+      
+      // Generate PDF
+      generatePdfBtn.addEventListener('click', async function() {
+        if (imageDataList.length === 0) {
+          pdfStatus.textContent = "Please upload at least one image.";
+          return;
+        }
+        
+        pdfStatus.textContent = "Creating PDF...";
+        this.disabled = true;
+        
+        try {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF();
+          let processed = 0;
+          
+          // Process each image
+          const processImage = (index) => {
+            return new Promise((resolve, reject) => {
+              if (index >= imageDataList.length) {
+                resolve();
+                return;
+              }
+
+              const imgData = imageDataList[index];
+              const img = new Image();
+              img.src = imgData;
+
+              img.onload = () => {
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (img.height * pdfWidth) / img.width;
+
+                if (index > 0) {
+                  pdf.addPage();
+                }
+
+                pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                resolve();
+              };
+
+              img.onerror = reject;
+            });
+          };
+
+          for (let i = 0; i < imageDataList.length; i++) {
+            await processImage(i);
+          }
+          
+          pdf.save('multi-images.pdf');
+          pdfStatus.textContent = "PDF created successfully!";
+          
+          // Show notification
+          const notification = document.getElementById('notification');
+          notification.querySelector('h4').textContent = "PDF Created";
+          notification.querySelector('p').textContent = "Your PDF file has been successfully created and downloaded.";
+          notification.classList.add('show');
+          
+          setTimeout(() => {
+            notification.classList.remove('show');
+          }, 3000);
+        } catch (error) {
+          pdfStatus.textContent = "Error creating PDF: " + error.message;
+        } finally {
+          generatePdfBtn.disabled = false;
+        }
+      });
+    }
+    
+    // Enhanced Text Encryptor functionality
+    function setupTextEncryptor() {
+      const encryptorModal = document.getElementById('text-encryptor-modal');
+      const encryptorCard = document.getElementById('text-encryptor-card');
+      const encryptorClose = document.getElementById('text-encryptor-close');
+      const encryptBtn = document.getElementById('encrypt-btn');
+      const decryptBtn = document.getElementById('decrypt-btn');
+      const copyBtn = document.getElementById('copy-encrypted-btn');
+      const inputText = document.getElementById('encryptor-input');
+      const outputText = document.getElementById('encryptor-output');
+      
+      // Open Text Encryptor modal when card is clicked
+      encryptorCard.addEventListener('click', function() {
+        encryptorModal.classList.add('active');
+        // Reset state
+        inputText.value = '';
+        outputText.textContent = '🔐 Output will appear here...';
+        outputText.style.color = '#0f0';
+      });
+      
+      // Close Text Encryptor modal
+      encryptorClose.addEventListener('click', function() {
+        encryptorModal.classList.remove('active');
+      });
+      
+      // Encrypt function
+      encryptBtn.addEventListener('click', function() {
+        const input = inputText.value;
+        if (!input) {
+          showAlert("Please enter text to encrypt.");
+          return;
+        }
+        try {
+          // Simple encryption using Base64 encoding
+          const encoded = btoa(encodeURIComponent(input));
+          outputText.textContent = "🔐 " + encoded;
+          outputText.style.color = '#0f0';
+        } catch (e) {
+          outputText.textContent = "❌ Error: Invalid characters";
+          outputText.style.color = '#ff375f';
+        }
+      });
+      
+      // Decrypt function
+      decryptBtn.addEventListener('click', function() {
+        const input = inputText.value;
+        if (!input) {
+          showAlert("Please enter encrypted text to decrypt.");
+          return;
+        }
+        try {
+          // Simple decryption from Base64
+          const decoded = decodeURIComponent(atob(input));
+          outputText.textContent = "🔓 " + decoded;
+          outputText.style.color = '#0f0';
+        } catch (e) {
+          outputText.textContent = "❌ Error: Invalid encrypted text";
+          outputText.style.color = '#ff375f';
+        }
+      });
+      
+      // Copy function
+      copyBtn.addEventListener('click', function() {
+        let text = outputText.textContent;
+        
+        // Remove emoji prefix if present
+        if (text.startsWith("🔐 ") || text.startsWith("🔓 ")) {
+          text = text.substring(2);
+        }
+        
+        if (!text || text === "Output will appear here...") {
+          showAlert("Nothing to copy!");
+          return;
+        }
+        
+        // Use Clipboard API if available
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => {
+            showAlert("Copied to clipboard!");
+          }).catch(err => {
+            showAlert("Failed to copy: " + err);
+          });
+        } else {
+          // Fallback for older browsers
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          showAlert("Copied to clipboard!");
+        }
+      });
+      
+      // Helper function to show alerts
+      function showAlert(message) {
+        const notification = document.getElementById('notification');
+        notification.querySelector('h4').textContent = "Text Encryptor";
+        notification.querySelector('p').textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+    }
+    
+    // Enhanced QR Code Generator with WIFI support
+    function setupQRGenerator() {
+      const qrModal = document.getElementById('qr-modal');
+      const qrCard = document.getElementById('qr-generator-card');
+      const wifiQrCard = document.getElementById('wifi-qr-card');
+      const phoneQrCard = document.getElementById('phone-qr-card');
+      const textQrCard = document.getElementById('text-qr-card');
+      const qrClose = document.getElementById('qr-close');
+      const generateQrBtn = document.getElementById('generate-qr-btn');
+      const downloadQrBtn = document.getElementById('download-qr-btn');
+      const qrStatus = document.getElementById('qr-status');
+      const qrCanvas = document.getElementById('qr-canvas');
+      const qrTabs = document.querySelectorAll('.qr-tab');
+      const qrInputArea = document.getElementById('qr-input-area');
+      const uploadLogoBtn = document.getElementById('upload-logo-btn');
+      const removeLogoBtn = document.getElementById('remove-logo-btn');
+      const qrLogoInput = document.getElementById('qr-logo-input');
+      const logoPreview = document.getElementById('logo-preview');
+      
+      let currentTab = 'TEXT';
+      let logoImage = null;
+      let qrInstance = null;
+      
+      // Open QR modal when card is clicked
+      qrCard.addEventListener('click', function() {
+        openQRModal('TEXT');
+      });
+      
+      // Open WIFI QR modal
+      wifiQrCard.addEventListener('click', function() {
+        openQRModal('WIFI');
+      });
+      
+      // Open Phone QR modal
+      phoneQrCard.addEventListener('click', function() {
+        openQRModal('PHONE');
+      });
+      
+      // Open Text QR modal
+      textQrCard.addEventListener('click', function() {
+        openQRModal('TEXT');
+      });
+      
+      // Close QR modal
+      qrClose.addEventListener('click', function() {
+        qrModal.classList.remove('active');
+      });
+      
+      // Tab switching
+      qrTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          currentTab = this.getAttribute('data-type');
+          qrTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          updateInputFields();
+        });
+      });
+      
+      // Logo upload
+      uploadLogoBtn.addEventListener('click', function() {
+        qrLogoInput.click();
+      });
+      
+      qrLogoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          logoImage = new Image();
+          logoImage.src = event.target.result;
+          
+          logoPreview.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = event.target.result;
+          logoPreview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+      
+      // Remove logo
+      removeLogoBtn.addEventListener('click', function() {
+        logoImage = null;
+        logoPreview.innerHTML = '<i class="fas fa-image" style="font-size: 2rem; color: rgba(255,255,255,0.3);"></i>';
+      });
+      
+      // Generate QR code
+      generateQrBtn.addEventListener('click', function() {
+        const content = getContentForType(currentTab);
+        if (!content) {
+          qrStatus.textContent = "Please provide valid input for the QR code.";
+          return;
+        }
+        
+        // Generate QR code
+        qrInstance = new QRious({
+          element: qrCanvas,
+          value: content,
+          size: 300,
+          background: 'white',
+          foreground: 'black'
+        });
+        
+        // Add logo if available
+        if (logoImage) {
+          const ctx = qrCanvas.getContext('2d');
+          const logoSize = qrCanvas.width * 0.2;
+          const x = (qrCanvas.width - logoSize) / 2;
+          const y = (qrCanvas.height - logoSize) / 2;
+          
+          ctx.drawImage(logoImage, x, y, logoSize, logoSize);
+        }
+        
+        qrStatus.textContent = "QR code generated successfully!";
+        downloadQrBtn.style.display = 'inline-block';
+      });
+      
+      // Download QR code
+      downloadQrBtn.addEventListener('click', function() {
+        if (!qrInstance) {
+          qrStatus.textContent = "Please generate a QR code first.";
+          return;
+        }
+        
+        const link = document.createElement('a');
+        link.download = `qr-code-${currentTab.toLowerCase()}.png`;
+        link.href = qrCanvas.toDataURL('image/png');
+        link.click();
+        
+        qrStatus.textContent = "QR code downloaded!";
+      });
+      
+      // Helper functions
+      function openQRModal(type) {
+        qrModal.classList.add('active');
+        currentTab = type;
+        
+        // Update active tab
+        qrTabs.forEach(tab => {
+          tab.classList.remove('active');
+          if (tab.getAttribute('data-type') === type) {
+            tab.classList.add('active');
+          }
+        });
+        
+        updateInputFields();
+        qrStatus.textContent = '';
+        downloadQrBtn.style.display = 'none';
+      }
+      
+      function updateInputFields() {
+        let html = '';
+        
+        switch (currentTab) {
+          case 'TEXT':
+            html = `
+              <textarea id="text-content" placeholder="Enter text here..." class="qr-field-input" style="height: 100px;"></textarea>
+            `;
             break;
-          case '-':
-            result = num1 - num2;
+            
+          case 'WEBSITE':
+            html = `
+              <input type="url" id="website-url" placeholder="https://example.com" class="qr-field-input">
+            `;
             break;
-          case '*':
-            result = num1 * num2;
+            
+          case 'WIFI':
+            html = `
+              <div class="qr-field-group">
+                <div class="qr-field-row">
+                  <label class="qr-field-label">SSID:</label>
+                  <input type="text" class="qr-field-input" id="wifi-ssid" placeholder="Network name">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Encryption:</label>
+                  <select class="qr-field-input" id="wifi-encryption">
+                    <option value="WPA">WPA/WPA2</option>
+                    <option value="WEP">WEP</option>
+                    <option value="nopass">None</option>
+                  </select>
+                </div>
+                <div class="qr-field-row" id="wifi-password-row">
+                  <label class="qr-field-label">Password:</label>
+                  <input type="password" class="qr-field-input" id="wifi-password" placeholder="Password">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Hidden:</label>
+                  <input type="checkbox" class="qr-field-input" id="wifi-hidden">
+                </div>
+              </div>
+            `;
             break;
-          case '/':
-            if (num2 === 0) return "Error: Division by zero";
-            result = num1 / num2;
+            
+          case 'PHONE':
+            html = `
+              <input type="tel" id="phone-number" placeholder="+1 234 567 8900" class="qr-field-input">
+            `;
             break;
-          case '%':
-            result = num1 % num2;
+            
+          case 'SMS':
+            html = `
+              <div class="qr-field-group">
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Number:</label>
+                  <input type="tel" class="qr-field-input" id="sms-number" placeholder="Phone number">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Message:</label>
+                  <input type="text" class="qr-field-input" id="sms-message" placeholder="Message text">
+                </div>
+              </div>
+            `;
             break;
+            
+          case 'EMAIL':
+            html = `
+              <div class="qr-field-group">
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Email:</label>
+                  <input type="email" class="qr-field-input" id="email-address" placeholder="email@example.com">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Subject:</label>
+                  <input type="text" class="qr-field-input" id="email-subject" placeholder="Subject">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Body:</label>
+                  <textarea class="qr-field-input" id="email-body" placeholder="Message body" style="height: 80px;"></textarea>
+                </div>
+              </div>
+            `;
+            break;
+            
+          case 'GEO':
+            html = `
+              <div class="qr-field-group">
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Latitude:</label>
+                  <input type="number" class="qr-field-input" id="geo-lat" placeholder="37.422">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Longitude:</label>
+                  <input type="number" class="qr-field-input" id="geo-lng" placeholder="-122.084">
+                </div>
+              </div>
+            `;
+            break;
+            
+          case 'CONTACT':
+            html = `
+              <div class="qr-field-group">
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Name:</label>
+                  <input type="text" class="qr-field-input" id="contact-name" placeholder="Full name">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Phone:</label>
+                  <input type="tel" class="qr-field-input" id="contact-phone" placeholder="Phone number">
+                </div>
+                <div class="qr-field-row">
+                  <label class="qr-field-label">Email:</label>
+                  <input type="email" class="qr-field-input" id="contact-email" placeholder="email@example.com">
+                </div>
+              </div>
+            `;
+            break;
+            
+          case 'CLIPBOARD':
+            html = `
+              <textarea id="clipboard-content" placeholder="Paste content here or use clipboard" class="qr-field-input" style="height: 100px;"></textarea>
+              <button id="paste-clipboard-btn" class="qr-field-input" style="margin-top: 10px; background: rgba(10, 132, 255, 0.15); color: #0a84ff; border: none; padding: 10px; border-radius: 8px;">Paste from Clipboard</button>
+            `;
+            break;
+        }
+        
+        qrInputArea.innerHTML = html;
+        
+        // Add event listener for clipboard paste button
+        if (currentTab === 'CLIPBOARD') {
+          const pasteBtn = document.getElementById('paste-clipboard-btn');
+          if (pasteBtn) {
+            pasteBtn.addEventListener('click', async function() {
+              try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('clipboard-content').value = text;
+              } catch (err) {
+                qrStatus.textContent = "Failed to access clipboard. Please paste manually.";
+              }
+            });
+          }
+        }
+      }
+      
+      function getContentForType(type) {
+        switch (type) {
+          case 'TEXT':
+            return document.getElementById('text-content')?.value || '';
+            
+          case 'WEBSITE':
+            let url = document.getElementById('website-url')?.value || '';
+            if (url && !url.startsWith('http')) {
+              url = 'https://' + url;
+            }
+            return url;
+            
+          case 'WIFI':
+            const ssid = document.getElementById('wifi-ssid')?.value || '';
+            const encryption = document.getElementById('wifi-encryption')?.value || 'WPA';
+            const password = document.getElementById('wifi-password')?.value || '';
+            const hidden = document.getElementById('wifi-hidden')?.checked ? 'true' : 'false';
+            
+            if (!ssid) return '';
+            
+            return `WIFI:S:${ssid};T:${encryption};P:${password};H:${hidden};;`;
+            
+          case 'PHONE':
+            const phone = document.getElementById('phone-number')?.value || '';
+            return phone ? `tel:${phone}` : '';
+            
+          case 'SMS':
+            const smsNumber = document.getElementById('sms-number')?.value || '';
+            const smsMessage = document.getElementById('sms-message')?.value || '';
+            return smsNumber ? `smsto:${smsNumber}:${smsMessage}` : '';
+            
+          case 'EMAIL':
+            const email = document.getElementById('email-address')?.value || '';
+            const subject = document.getElementById('email-subject')?.value || '';
+            const body = document.getElementById('email-body')?.value || '';
+            return email ? `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}` : '';
+            
+          case 'GEO':
+            const lat = document.getElementById('geo-lat')?.value || '';
+            const lng = document.getElementById('geo-lng')?.value || '';
+            return (lat && lng) ? `geo:${lat},${lng}` : '';
+            
+          case 'CONTACT':
+            const name = document.getElementById('contact-name')?.value || '';
+            const contactPhone = document.getElementById('contact-phone')?.value || '';
+            const contactEmail = document.getElementById('contact-email')?.value || '';
+            
+            if (!name) return '';
+            
+            return `BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+TEL:${contactPhone}
+EMAIL:${contactEmail}
+END:VCARD`;
+            
+          case 'CLIPBOARD':
+            return document.getElementById('clipboard-content')?.value || '';
+            
           default:
-            return "I couldn't understand the calculation";
+            return '';
         }
-        
-        return `${num1} ${operator} ${num2} = ${result}`;
-      } else {
-        // Try to evaluate the expression directly
-        result = eval(expression);
-        return `${expression} = ${result}`;
       }
-    } catch (e) {
-      return "I couldn't perform that calculation. Please try again.";
-    }
-  }
-  
-  // GIF Search Functionality
-  async function searchGifs(query) {
-    if (!query) {
-      output.textContent = "Please specify what GIF you want to search for.";
-      speak("Please tell me what kind of GIF you're looking for.");
-      return;
     }
     
-    output.innerHTML = `Searching for GIFs of ${query}...`;
-    speak(`Searching for GIFs of ${query}`);
-    
-    try {
-      const url = `https://tenor.googleapis.com/v2/search?q=${encodeURIComponent(query)}&key=${tenorApiKey}&limit=8`;
-      const res = await fetch(url);
-      const data = await res.json();
-      
-      if (data.results.length === 0) {
-        output.innerHTML = `No GIFs found for "${query}". Try something else.`;
-        speak(`Sorry, I couldn't find any GIFs for ${query}`);
-        return;
-      }
-      
-      // Show GIF container
-      gifContainer.style.display = "block";
-      cameraContainer.style.display = "none";
-      websiteContainer.style.display = "none";
-      alarmContainer.style.display = "none";
-      
-      // Clear previous results
-      gifGrid.innerHTML = '';
-      
-      // Populate GIF grid
-      data.results.forEach(gif => {
-        const gifUrl = gif.media_formats.gif.url;
-        const gifCard = document.createElement('div');
-        gifCard.className = 'gif-card';
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Show welcome notification after 1 second
+      setTimeout(() => {
+        const notification = document.getElementById('notification');
+        notification.classList.add('show');
         
-        const img = document.createElement('img');
-        img.src = gifUrl;
-        img.alt = `GIF of ${query}`;
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 5000);
         
-        const nameElement = document.createElement('div');
-        nameElement.className = 'gif-name';
-        nameElement.textContent = gif.content_description || query;
-        
-        gifCard.appendChild(img);
-        gifCard.appendChild(nameElement);
-        gifGrid.appendChild(gifCard);
+        const closeBtn = document.getElementById('notification-close');
+        closeBtn.addEventListener('click', function() {
+          notification.classList.remove('show');
+        });
+      }, 1000);
+      
+      // Animate sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach((section, index) => {
+        section.style.animationDelay = (index * 0.2) + 's';
       });
       
-      output.innerHTML = `Found ${data.results.length} GIFs for "${query}".`;
-      speak(`Here are some GIFs for ${query}`);
+      // Back to top functionality
+      const backToTopBtn = document.getElementById('back-to-top');
+      window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+          backToTopBtn.classList.add('show');
+        } else {
+          backToTopBtn.classList.remove('show');
+        }
+      });
       
-    } catch (error) {
-      console.error("GIF search error:", error);
-      output.textContent = "Failed to search for GIFs. Please try again later.";
-      speak("I'm having trouble connecting to the GIF service. Please try again later.");
-    }
-  }
-  
-  // Alarm & Timer Functions
-  startListeningBtn.addEventListener('click', startListeningForAlarm);
-  stopSoundBtn.addEventListener('click', stopSound);
-  
-  // Update clock
-  function updateClock() {
-    const now = new Date();
-    alarmClock.textContent = now.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true
-    });
-  }
-  
-  // Unlock sound for Safari
-  function unlockSound() {
-    alarmSound.play().then(() => {
-      alarmSound.pause();
-      alarmSound.currentTime = 0;
-    }).catch(() => {});
-  }
-  
-  // Start listening for alarm/timer commands
-  function startListeningForAlarm() {
-    unlockSound();
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.start();
-    alarmStatus.innerText = "🎙️ Listening for alarm/timer command...";
-    
-    recognition.onresult = (event) => {
-      const command = event.results[0][0].transcript.toLowerCase();
-      alarmStatus.innerText = `🗣️ You said: "${command}"`;
-      handleAlarmCommand(command);
-    };
-    
-    recognition.onerror = (e) => {
-      alarmStatus.innerText = `❌ Voice error: ${e.error}`;
-    };
-  }
-  
-  // Handle alarm/timer commands
-  function handleAlarmCommand(command) {
-    if (command.includes("set alarm at")) {
-      const match = command.match(/set alarm at (\d{1,2})(?::(\d{2}))?\s*(a\s*m|p\s*m|am|pm)?/);
-      if (match) {
-        let hour = parseInt(match[1]);
-        const minute = parseInt(match[2]) || 0;
-        const rawPeriod = match[3] || "";
-        const period = rawPeriod.replace(/\s+/g, "").toLowerCase();
-        
-        // Convert to 24-hour format
-        if (period === "pm" && hour < 12) hour += 12;
-        if (period === "am" && hour === 12) hour = 0;
-        
-        const now = new Date();
-        const alarmDate = new Date();
-        alarmDate.setHours(hour, minute, 0, 0);
-        
-        // If no AM/PM said, and time is past, set for next 12-hour period
-        if (!period && alarmDate <= now) {
-          alarmDate.setHours(alarmDate.getHours() + 12);
-        }
-        
-        if (alarmDate <= now) {
-          alarmDate.setDate(alarmDate.getDate() + 1);
-        }
-        
-        const diff = alarmDate - now;
-        
-        clearTimeout(alarmTimeout);
-        alarmTimeout = setTimeout(() => {
-          speak("⏰ Alarm ringing now!");
-          alarmSound.play();
-          alarmStatus.innerText += `\n⏰ Alarm ringing!`;
-        }, diff);
-        
-        const alarmTime = formatTime12(alarmDate);
-        speak(`Alarm set for ${alarmTime}`);
-        alarmStatus.innerText += `\n✅ Alarm set for ${alarmTime}`;
-      } else {
-        speak("Sorry, I didn't understand the alarm time.");
-      }
-    }
-    
-    else if (command.includes("start a") && command.includes("minute timer")) {
-      const match = command.match(/start a (\d{1,2}) minute timer/);
-      if (match) {
-        const minutes = parseInt(match[1]);
-        const ms = minutes * 60 * 1000;
-        
-        clearTimeout(timerTimeout);
-        clearInterval(countdownInterval);
-        
-        const now = new Date();
-        timerEndTime = new Date(now.getTime() + ms);
-        
-        countdownInterval = setInterval(updateCountdown, 1000);
-        
-        timerTimeout = setTimeout(() => {
-          clearInterval(countdownInterval);
-          alarmCountdown.innerText = "";
-          speak("⏱️ Timer complete!");
-          alarmSound.play();
-          alarmStatus.innerText += `\n⏱️ Timer finished!`;
-        }, ms);
-        
-        speak(`Timer started for ${minutes} minutes`);
-        alarmStatus.innerText += `\n⏱️ Timer started for ${minutes} minutes.`;
-      }
-    }
-    
-    else if (command.includes("cancel alarm")) {
-      clearTimeout(alarmTimeout);
-      stopSound();
-      speak("Alarm cancelled.");
-      alarmStatus.innerText += `\n❌ Alarm cancelled.`;
-    }
-    
-    else if (command.includes("cancel timer")) {
-      clearTimeout(timerTimeout);
-      clearInterval(countdownInterval);
-      alarmCountdown.innerText = "";
-      stopSound();
-      speak("Timer cancelled.");
-      alarmStatus.innerText += `\n❌ Timer cancelled.`;
-    }
-    
-    else {
-      speak("Sorry, I didn't understand.");
-    }
-  }
-  
-  // Format time in 12-hour format
-  function formatTime12(date) {
-    return date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true
-    });
-  }
-  
-  // Update countdown display
-  function updateCountdown() {
-    const now = new Date();
-    const diff = timerEndTime - now;
-    if (diff <= 0) {
-      alarmCountdown.innerText = "";
-      clearInterval(countdownInterval);
-      return;
-    }
-    
-    const mins = Math.floor(diff / 60000);
-    const secs = Math.floor((diff % 60000) / 1000);
-    alarmCountdown.innerText = `⏳ Time remaining: ${mins}m ${secs}s`;
-  }
-  
-  // Stop alarm sound
-  function stopSound() {
-    alarmSound.pause();
-    alarmSound.currentTime = 0;
-  }
-  
-  // Process voice commands
-  async function processCommand(transcript) {
-    const msg = transcript.toLowerCase();
-    let response = "I'm not sure how to help with that.";
-    
-    // Display user command
-    output.innerHTML = `<strong>You said:</strong> ${transcript}`;
-    
-    // Stop recognition while processing
-    recognition.stop();
-    micWave.style.display = 'none';
-    
-    // Simple command processing
-    if (msg.includes("hello") || msg.includes("hi") || msg.includes("hey")) {
-      response = "Hello! I'm Eva, your Empowered Virtual Assistant. How can I help you today?";
-    } 
-    else if (msg.includes("tumko kisne banaya") || msg.includes("who made you") || 
-             msg.includes("who created you") || msg.includes("tumhara creator kaun hai")) {
-      response = "Mujhe Khushal Sharma ne banaya hai. Wo 19 saal ke hain aur Haryana ke Nangal Sirohi se hain.";
-    }
-    else if (msg.includes("name") || msg.includes("who are you")) {
-      response = "I'm Eva, your Empowered Virtual Assistant. Always at your service!";
-    }
-    // Handle calculator commands
-    else if (msg.includes("calculate") || msg.includes("what is") || 
-             msg.includes("how much is") || msg.includes("compute")) {
-      response = calculateExpression(transcript);
-    }
-    // Handle GIF search commands
-    else if (msg.includes("gif") || msg.includes("find gif") || msg.includes("search gif") ||
-             msg.includes("show gif") || msg.includes("get gif") || msg.includes("gif of")) {
-      // Extract the query
-      let query = transcript.replace(/(find|search|show|get|a|gif|of|for)/gi, '').trim();
-      if (query) {
-        searchGifs(query);
-        return; // We'll handle the response in searchGifs function
-      } else {
-        response = "What kind of GIF would you like me to search for?";
-      }
-    }
-    // Handle "open" commands for websites
-    else if (msg.startsWith("open ") || msg.startsWith("go to ") || msg.startsWith("launch ")) {
-      // Extract website name from command
-      const siteName = msg.replace(/(open|go to|launch)/i, "").trim();
+      backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
       
-      if (siteName) {
-        let found = false;
+      // Search functionality
+      const searchBar = document.getElementById('search-bar');
+      searchBar.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const sections = document.querySelectorAll('.section');
         
-        // Check if it's a predefined website
-        for (const [name, url] of Object.entries(websites)) {
-          if (siteName.includes(name)) {
-            window.open(url, '_blank');
-            response = `Opening ${name}...`;
-            found = true;
-            break;
-          }
+        sections.forEach(section => {
+          const sectionTitle = section.querySelector('h3').textContent.toLowerCase();
+          const icons = section.querySelectorAll('.icon-group');
+          let hasMatch = sectionTitle.includes(searchTerm);
+          
+          icons.forEach(icon => {
+            const iconLabel = icon.querySelector('.socials-labels').textContent.toLowerCase();
+            if (iconLabel.includes(searchTerm)) {
+              hasMatch = true;
+              icon.style.display = 'flex';
+            } else {
+              icon.style.display = searchTerm ? 'none' : 'flex';
+            }
+          });
+          
+          section.style.display = hasMatch || !searchTerm ? 'block' : 'none';
+        });
+      });
+      
+      // Profile modal functionality
+      const profileModal = document.getElementById('profile-modal');
+      const profileContainer = document.getElementById('profile-container');
+      const closeModal = document.getElementById('close-modal');
+      
+      profileContainer.addEventListener('click', function() {
+        profileModal.classList.add('active');
+      });
+      
+      closeModal.addEventListener('click', function() {
+        profileModal.classList.remove('active');
+      });
+      
+      profileModal.addEventListener('click', function(e) {
+        if (e.target === profileModal) {
+          profileModal.classList.remove('active');
         }
+      });
+      
+      // View All functionality
+      document.querySelectorAll('.view-all').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const sectionTitle = this.closest('.section-title-container').querySelector('h3').textContent;
+          const targetPage = document.querySelector('.nav-item[data-target="explore"]');
+          targetPage.click();
+          
+          // Show notification
+          const notification = document.getElementById('notification');
+          notification.querySelector('h4').textContent = `Viewing All ${sectionTitle}`;
+          notification.querySelector('p').textContent = `All items in the ${sectionTitle} category are now visible.`;
+          notification.classList.add('show');
+          
+          setTimeout(() => {
+            notification.classList.remove('show');
+          }, 3000);
+        });
+      });
+      
+      // Bottom navigation functionality
+      const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+      const pages = document.querySelectorAll('.page');
+      const pageTitle = document.getElementById('page-title');
+      
+      navItems.forEach(item => {
+        item.addEventListener('click', function() {
+          // Remove active class from all items
+          navItems.forEach(navItem => navItem.classList.remove('active'));
+          
+          // Add active class to clicked item
+          this.classList.add('active');
+          
+          const target = this.getAttribute('data-target');
+          
+          // Hide all pages
+          pages.forEach(page => {
+            page.classList.remove('active');
+          });
+          
+          // Show the target page
+          document.getElementById(`${target}-page`).classList.add('active');
+          
+          // Update page title
+          pageTitle.textContent = this.querySelector('span').textContent;
+          
+          // Scroll to top
+          window.scrollTo(0, 0);
+        });
+      });
+      
+      // Theme selector functionality
+      const themeOptions = document.querySelectorAll('.theme-option');
+      themeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          themeOptions.forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          
+          const theme = this.getAttribute('data-theme');
+          document.body.className = '';
+          document.body.classList.add(`theme-${theme}`);
+        });
+      });
+      
+      // Dark mode toggle
+      const darkModeToggle = document.getElementById('dark-mode-toggle');
+      darkModeToggle.addEventListener('change', function() {
+        if (this.checked) {
+          document.body.classList.add('dark-theme');
+        } else {
+          document.body.classList.remove('dark-theme');
+        }
+      });
+      
+      // Logout functionality
+      const logoutBtn = document.getElementById('logout-btn');
+      logoutBtn.addEventListener('click', function() {
+        const notification = document.getElementById('notification');
+        notification.querySelector('h4').textContent = "Logout Successful!";
+        notification.querySelector('p').textContent = "You have been successfully logged out.";
+        notification.classList.add('show');
         
-        // Special cases
-        if (!found) {
-          if (siteName.includes("whatsapp")) {
-            window.open("https://web.whatsapp.com", '_blank');
-            response = "Opening WhatsApp...";
-          } else if (siteName.includes("camera")) {
-            openCamera();
-            response = "Opening camera...";
-          } else if (siteName.includes("gallery")) {
-            response = "Gallery is not implemented in this demo";
-          } else if (siteName.includes("eva") || siteName.includes("assistant")) {
-            response = "Eva is activated and ready!";
-          }
-        }
-        
-        // Fallback to Google search if still not found
-        if (!found && !response.includes("Opening")) {
-          window.open(`https://www.google.com/search?q=${encodeURIComponent(siteName)}`, '_blank');
-          response = `I don't know how to open "${siteName}", but I searched it for you`;
-        }
-      } else {
-        response = "Which website or app would you like me to open?";
-      }
-    }
-    else if (msg.includes("camera") || msg.includes("photo")) {
-      if (msg.includes("open") || msg.includes("turn on")) {
-        openCamera();
-        response = "Opening camera...";
-      } 
-      else if (msg.includes("close") || msg.includes("turn off")) {
-        closeCamera();
-        response = "Camera closed";
-      }
-      else if (msg.includes("take") || msg.includes("capture")) {
-        takePhoto();
-        response = "Taking photo...";
-      }
-    }
-    else if (msg.includes("location") || msg.includes("where am i")) {
-      try {
-        const location = await getLocation();
-        response = `Your location: ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`;
-      } catch (e) {
-        response = "Couldn't get location: " + e;
-      }
-    }
-    else if (msg.includes("time") || msg.includes("date")) {
-      const now = new Date();
-      response = `Current time: ${now.toLocaleTimeString()}, Date: ${now.toLocaleDateString()}`;
-    }
-    else if (msg.includes("battery")) {
-      response = await getBatteryStatus();
-    }
-    else if (msg.includes("thank")) {
-      response = "You're welcome! Is there anything else I can help with?";
-    }
-    else if (msg.includes("command") || msg.includes("can you do") || msg.includes("help")) {
-      response = "I can help with: setting alarms, starting timers, opening websites, searching GIFs, opening camera, taking photos, calculations, telling time, checking battery, and more!";
-    }
-    else if (msg.includes("exit") || msg.includes("goodbye")) {
-      response = "Goodbye! Have a great day!";
-      speak(response);
-      setTimeout(() => {
-        output.textContent = "Eva has exited. Refresh the page to restart.";
-      }, 2000);
-      return;
-    }
-    // Handle alarm/timer commands
-    else if (msg.includes("alarm") || msg.includes("timer")) {
-      // Pass command to alarm handler
-      handleAlarmCommand(msg);
-      return;
-    }
-    else {
-      // Send to Gemini for complex responses
-      output.innerHTML += `<br><br><strong>Eva:</strong> Thinking...`;
-      try {
-        response = await getGeminiResponse(transcript);
-      } catch (e) {
-        response = "Sorry, I encountered an error. Please try again.";
-      }
-    }
-    
-    // Display and speak response
-    output.innerHTML = `<strong>You said:</strong> ${transcript}<br><br><strong>Eva:</strong> ${response}`;
-    speak(response);
-    
-    // Restart recognition if mic is not muted
-    if (!micMuted && permissionGranted) {
-      micWave.style.display = 'flex';
-      recognition.start();
-    }
-  }
-  
-  // 3D Avatar
-  const scene = new THREE.Scene();
-  const camera3D = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ 
-    canvas: avatarCanvas, 
-    alpha: true,
-    antialias: true
-  });
-  renderer.setSize(280, 280);
-  renderer.setClearColor(0x000000, 0);
-  
-  // Create glowing sphere avatar
-  const geometry = new THREE.SphereGeometry(1, 32, 32);
-  
-  // Main sphere
-  const material = new THREE.MeshStandardMaterial({ 
-    color: 0x00bcd4,
-    emissive: 0x0088aa,
-    emissiveIntensity: 1.5,
-    metalness: 0.8,
-    roughness: 0.2
-  });
-  const avatar = new THREE.Mesh(geometry, material);
-  scene.add(avatar);
-  
-  // Glow effect
-  const glowGeometry = new THREE.SphereGeometry(1.05, 32, 32);
-  const glowMaterial = new THREE.MeshBasicMaterial({
-    color: 0x00bcd4,
-    transparent: true,
-    opacity: 0.3
-  });
-  const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-  scene.add(glow);
-  
-  // Lights
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-  scene.add(ambientLight);
-  
-  const pointLight = new THREE.PointLight(0x00ffff, 1.5);
-    pointLight.position.set(3, 3, 3);
-  scene.add(pointLight);
-  
-  const pointLight2 = new THREE.PointLight(0xff00ff, 0.5);
-  pointLight2.position.set(-3, -3, -3);
-  scene.add(pointLight2);
-  
-  camera3D.position.z = 3;
-  
-  // Animation
-  function animate() {
-    requestAnimationFrame(animate);
-    
-    const time = Date.now() * 0.001;
-    
-    // Rotate avatar
-    avatar.rotation.x = Math.sin(time * 0.3) * 0.2;
-    avatar.rotation.y = time * 0.5;
-    
-    // Rotate glow
-    glow.rotation.y = time * 0.5;
-    glow.rotation.x = Math.cos(time * 0.2) * 0.2;
-    
-    // Pulsing effect
-    const pulse = Math.sin(time * 2) * 0.05 + 1;
-    avatar.scale.set(pulse, pulse, pulse);
-    glow.scale.set(pulse, pulse, pulse);
-    
-    // Light movement
-    pointLight.position.x = Math.sin(time * 0.7) * 4;
-    pointLight.position.y = Math.cos(time * 0.5) * 4;
-    
-    renderer.render(scene, camera3D);
-  }
-  
-  animate();
-</script>
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      });
+      
+      // Setup enhanced tools
+      setupPdfConverter();
+      setupTextEncryptor();
+      setupQRGenerator();
+    });
+  </script>
 </body>
 </html>
