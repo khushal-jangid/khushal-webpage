@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khushal's Dashboard</title>
+  <title>Khushal's Dashboard · ClodifyHub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <!-- Tailwind + Phosphor icons (for ClodifyHub bento) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <style>
-    /* Apple-inspired global styles */
+    /* ----- original apple-inspired styles ----- */
     * {
       margin: 0;
       padding: 0;
@@ -25,7 +28,6 @@
       position: relative;
     }
     
-    /* Apple-like subtle background */
     body::before {
       content: '';
       position: fixed;
@@ -43,7 +45,7 @@
       pointer-events: none;
     }
     
-    /* Header Styling - Apple style */
+    /* Header Styling */
     header {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
@@ -56,1689 +58,211 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
+    .header-left { display: flex; align-items: center; gap: 20px; }
     
     .profile-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      padding: 8px 16px;
-      border-radius: 50px;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      margin-right: 20px; /* Added spacing */
-    }
-    
-    .profile-container:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-    }
-    
-    .profile-img {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 8px 16px;
+      border-radius: 50px; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08); margin-right: 20px;
       transition: all 0.3s ease;
     }
     
-    .profile-name {
-      font-weight: 500;
-      font-size: 1rem;
-      color: #fff;
-    }
+    .profile-container:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+    .profile-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.15); }
+    .profile-name { font-weight: 500; color: #fff; }
+    .header-center { flex: 1; display: flex; justify-content: center; }
+    .header-right { display: flex; align-items: center; gap: 20px; }
+    header h1 { font-size: 1.6rem; font-weight: 600; color: #fff; letter-spacing: -0.5px; margin: 0 auto; }
     
-    .header-center {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-    }
-    
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    
-    header h1 {
-      font-size: 1.6rem;
-      font-weight: 600;
-      color: #fff;
-      letter-spacing: -0.5px;
-      margin: 0 auto;
-    }
-    
-    /* Search Bar - Apple style */
-    .search-container {
-      margin: 30px auto;
-      max-width: 680px;
-      position: relative;
-      padding: 0 30px;
-    }
-    
-    .search-bar {
-      width: 100%;
-      padding: 18px 60px 18px 30px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      color: #fff;
-      font-size: 1.05rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .search-bar:focus {
-      outline: none;
-      border-color: rgba(10, 132, 255, 0.5);
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
-    }
-    
-    .search-icon {
-      position: absolute;
-      right: 50px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 1.2rem;
-    }
-    
-    /* Main content */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 30px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 30px;
-      position: relative;
-      z-index: 10;
-    }
-    
-    /* Apple-style glass cards */
-    .section {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 28px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.6s ease-out;
-      position: relative;
-      overflow: hidden;
-      min-height: 280px;
-    }
-    
-    .section:hover {
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    
-    .section h3 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      color: #fff;
-    }
-    
-    .section h3 i {
-      color: #0a84ff;
-      transition: all 0.3s ease;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(10, 132, 255, 0.15);
-      border-radius: 10px;
-    }
-    
-    .socials {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-      gap: 24px;
-      justify-items: center;
-    }
-    
-    .icon-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: all 0.3s ease;
-      position: relative;
-      cursor: pointer;
-      width: 90px;
-      -webkit-tap-highlight-color: transparent;
-    }
-    
-    .icon-group:hover {
-      transform: translateY(-5px);
-    }
-    
-    .icon-group img {
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    
-    .icon-group:hover img {
-      background: rgba(10, 132, 255, 0.15);
-      transform: scale(1.05);
-      border-color: rgba(10, 132, 255, 0.3);
-    }
-    
-    .socials-labels {
-      font-size: 0.95rem;
-      margin-top: 14px;
-      font-weight: 500;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.7);
-      transition: all 0.3s ease;
-    }
-    
-    .icon-group:hover .socials-labels {
-      color: #fff;
-    }
-    
-    /* Mod Apps section styling */
-    .mod-apps .icon-group {
-      position: relative;
-    }
-    
-    .mod-apps .icon-group .app-badge {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background: linear-gradient(45deg, #ff375f, #ff2d55);
-      color: white;
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(255, 55, 95, 0.3);
-      animation: badge-pulse 2s infinite ease-in-out;
-    }
-    
-    @keyframes badge-pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    
-    /* AI Tools specific styling */
-    .ai-tools .icon-group img {
-      border-radius: 18px;
-      background: rgba(100, 210, 255, 0.1);
-    }
-    
-    /* Back to Top Button - Apple style */
-    .back-to-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      color: rgba(255, 255, 255, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.3s ease;
-      z-index: 100;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    }
-    
-    .back-to-top.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    .back-to-top:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      transform: translateY(-5px);
-    }
-    
-    /* Notification - Apple style */
-    .notification {
-      position: fixed;
-      top: 30px;
-      right: 30px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      padding: 22px 26px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      max-width: 380px;
-      z-index: 1000;
-      opacity: 0;
-      transform: translateY(-100px);
-      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-      display: flex;
-      align-items: flex-start;
-      gap: 18px;
-    }
-    
-    .notification.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    
-    .notification-icon {
-      font-size: 1.6rem;
-      color: #0a84ff;
-      margin-top: 4px;
-    }
-    
-    .notification-content {
-      flex: 1;
-    }
-    
-    .notification h4 {
-      margin-bottom: 8px;
-      color: #fff;
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-    
-    .notification p {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.5;
-    }
-    
-    .notification-close {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 4px;
-      border-radius: 50%;
-    }
-    
-    .notification-close:hover {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Profile Modal - Apple style */
-    .profile-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(20px);
-    }
-    
-    .profile-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .modal-content {
-      background: rgba(30, 30, 40, 0.8);
-      backdrop-filter: blur(30px);
-      border-radius: 28px;
-      width: 90%;
-      max-width: 480px;
-      padding: 50px;
-      text-align: center;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-      transform: translateY(20px) scale(0.95);
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .profile-modal.active .modal-content {
-      transform: translateY(0) scale(1);
-    }
-    
-    .modal-profile-img {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 30px;
-      border: 3px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 40px rgba(10, 132, 255, 0.3);
-    }
-    
-    .modal-profile-name {
-      font-size: 2.2rem;
-      margin-bottom: 16px;
-      color: #fff;
-      font-weight: 600;
-    }
-    
-    .modal-profile-email {
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 40px;
-      font-size: 1.2rem;
-    }
-    
-    .close-modal {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
-      font-size: 1.4rem;
-      cursor: pointer;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    
-    .close-modal:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    /* Keyframe animations - Optimized */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes stars-twinkle {
-      0% { opacity: 0.2; }
-      50% { opacity: 0.5; }
-      100% { opacity: 0.2; }
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-    
-    /* Apple-style section titles */
-    .section-title-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    
-    .view-all {
-      color: #0a84ff;
-      font-size: 0.95rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .view-all:hover {
-      text-decoration: underline;
-    }
-    
-    /* Apple-style logout button */
     .logout-btn {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1.1rem;
-      cursor: pointer;
-      padding: 10px 16px;
-      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.8); font-size: 1.1rem; cursor: pointer; padding: 10px 16px; border-radius: 50px;
+      transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+    }
+    .logout-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; transform: translateY(-2px); }
+    
+    /* Search Bar */
+    .search-container { margin: 30px auto; max-width: 680px; position: relative; padding: 0 30px; }
+    .search-bar {
+      width: 100%; padding: 18px 60px 18px 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); color: #fff; font-size: 1.05rem;
+      transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .search-bar:focus { outline: none; border-color: rgba(10, 132, 255, 0.5); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 4px rgba(10,132,255,0.15); }
+    .search-icon { position: absolute; right: 50px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); font-size: 1.2rem; }
+    
+    /* Main container */
+    .container {
+      max-width: 1400px; margin: 0 auto; padding: 20px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;
+      position: relative; z-index: 10;
+    }
+    
+    /* Cards */
+    .section {
+      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.6s ease-out; min-height: 280px;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-    
-    .logout-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      transform: translateY(-2px);
+    .section:hover { background: rgba(255, 255, 255, 0.06); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); border-color: rgba(255,255,255,0.15); }
+    .section h3 { 
+      font-size: 1.4rem; font-weight: 600; margin-bottom: 24px; padding-bottom: 16px; 
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; gap: 14px; color: #fff; 
     }
+    .section h3 i { color: #0a84ff; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(10, 132, 255, 0.15); border-radius: 10px; }
     
-    /* COMPACT Apple-style bottom navigation */
+    .socials { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 24px; justify-items: center; }
+    .icon-group { display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; cursor: pointer; width: 90px; }
+    .icon-group:hover { transform: translateY(-5px); }
+    .icon-group img { width: 70px; height: 70px; border-radius: 20px; background: rgba(255,255,255,0.05); padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
+    .icon-group:hover img { background: rgba(10, 132, 255, 0.15); transform: scale(1.05); border-color: rgba(10,132,255,0.3); }
+    .socials-labels { font-size: 0.95rem; margin-top: 14px; color: rgba(255,255,255,0.7); }
+    
+    /* Bottom Navigation */
     .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      justify-content: space-around;
-      padding: 8px 0; /* Reduced padding */
-      z-index: 90;
-      height: 52px; /* Fixed height */
+      position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-around; padding: 8px 0; z-index: 90; height: 52px;
     }
-    
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px; /* Reduced gap */
-      color: rgba(255, 255, 255, 0.7);
-      text-decoration: none;
-      font-size: 0.75rem; /* Smaller font */
+    .nav-item { 
+      display: flex; flex-direction: column; align-items: center; gap: 3px; color: rgba(255,255,255,0.7); 
+      text-decoration: none; font-size: 0.75rem; padding: 6px 12px; cursor: pointer; border-radius: 10px;
       transition: all 0.3s ease;
-      padding: 6px 12px; /* Reduced padding */
-      cursor: pointer;
-      border-radius: 10px;
+    }
+    .nav-item i { font-size: 1.1rem; }
+    .nav-item.active, .nav-item:hover { color: #0a84ff; background: rgba(10, 132, 255, 0.1); }
+    
+    /* Pages */
+    .page { display: none; max-width: 1400px; margin: 0 auto; padding: 20px 30px 80px; }
+    .page.active { display: block; }
+    
+    /* Back to Top */
+    .back-to-top {
+      position: fixed; bottom: 80px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); color: #fff;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      opacity: 0; transform: translateY(20px); transition: all 0.3s ease; z-index: 100;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .back-to-top.show { opacity: 1; transform: translateY(0); }
+    
+    /* Notification */
+    .notification {
+      position: fixed; top: 30px; right: 30px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+      padding: 22px 26px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3); max-width: 380px; z-index: 1000;
+      opacity: 0; transform: translateY(-100px); transition: all 0.5s cubic-bezier(0.68,-0.55,0.27,1.55);
+      display: flex; align-items: flex-start; gap: 18px;
+    }
+    .notification.show { opacity: 1; transform: translateY(0); }
+    .notification-close { background: transparent; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 1.2rem; }
+    
+    /* Profile Modal */
+    .profile-modal {
+      position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center; z-index:2000; opacity:0; visibility:hidden; transition:0.4s;
+    }
+    .profile-modal.active { opacity:1; visibility:visible; }
+    .modal-content {
+      background: rgba(30,30,40,0.9); backdrop-filter: blur(30px); border-radius:28px; padding:40px;
+      max-width:480px; width:90%; text-align: center; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .close-modal {
+      position: absolute; top:20px; right:20px; background:rgba(255,255,255,0.1); border:none; color:#fff;
+      width:44px; height:44px; border-radius:50%; cursor:pointer;
     }
     
-    .nav-item i {
-      font-size: 1.1rem; /* Smaller icons */
-    }
-    
-    .nav-item.active, .nav-item:hover {
-      color: #0a84ff;
-      background: rgba(10, 132, 255, 0.1);
-    }
-    
-    /* New sections styling */
-    .page {
-      display: none;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 30px;
-    }
-    
-    .page.active {
-      display: block;
-    }
-    
+    /* Explore Page */
     .explore-section, .saved-section, .settings-section {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px;
+      margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    
-    .explore-section h3, .saved-section h3, .settings-section h3 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      color: #fff;
-    }
-    
     .explore-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;
     }
-    
     .explore-card {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 20px; text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: all 0.3s ease;
+    }
+    .explore-card:hover { background: rgba(255, 255, 255, 0.06); transform: translateY(-5px); border-color: rgba(10,132,255,0.3); }
+    .explore-card img { width: 60px; height: 60px; margin: 0 auto 15px; border-radius: 16px; background: rgba(255,255,255,0.05); padding: 12px; }
+    
+    /* PDF, QR, Encryptor Modals */
+    .pdf-modal, .qr-modal, .text-encryptor-modal {
+      position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center; z-index:3000; opacity:0; visibility:hidden; transition:0.4s;
+    }
+    .pdf-modal.active, .qr-modal.active, .text-encryptor-modal.active { opacity:1; visibility:visible; }
+    .pdf-modal-content, .qr-modal-content, .text-encryptor-modal-content {
+      background: rgba(30,30,40,0.9); backdrop-filter: blur(30px); border-radius:28px; padding:40px;
+      max-width:600px; width:90%; max-height:90vh; overflow-y:auto; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .pdf-close, .qr-close, .text-encryptor-close {
+      position: absolute; top:20px; right:20px; background:rgba(255,255,255,0.1); border:none; color:#fff;
+      width:40px; height:40px; border-radius:50%; cursor:pointer;
+    }
+    
+    /* ClodifyHub Bento Styles */
+    .glass-card {
+      backdrop-filter: blur(24px) saturate(220%);
+      -webkit-backdrop-filter: blur(24px) saturate(220%);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .bento-card {
+      transform: translateY(0) scale(1);
+      transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.45s ease;
       cursor: pointer;
+      height: 18rem;
     }
-    
-    .explore-card:hover {
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-5px);
-      border-color: rgba(10, 132, 255, 0.3);
+    .bento-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 32px 50px -20px rgba(0, 0, 0, 0.5), inset 0 1px 4px rgba(255,255,255,0.9);
     }
-    
-    .explore-card img {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 15px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 12px;
-      object-fit: contain;
+    .high-color-icon { filter: drop-shadow(0 8px 16px currentColor); transition: all 0.3s; }
+    .bento-card:hover .high-color-icon { filter: drop-shadow(0 12px 24px currentColor); transform: scale(1.08) rotate(1deg); }
+    .float-bg-icon { position: absolute; opacity: 0.2; transition: all 0.5s; }
+    .bento-card:hover .float-bg-icon { opacity: 0.4; transform: rotate(6deg) scale(1.1); }
+    .hover-reveal { opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+    .group:hover .hover-reveal { opacity: 1; transform: translateY(0); }
+    .open-link-icon {
+      position: absolute; top: 1rem; right: 1rem; z-index: 20; opacity: 0; transition: opacity 0.3s;
+      background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); border-radius: 50%;
+      width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
     }
-    
-    .explore-card h4 {
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-    
-    .explore-card p {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.9rem;
-    }
-    
-    /* Empty State Styling */
-    .empty-state {
-      text-align: center;
-      padding: 50px 20px;
-    }
-    
-    .empty-state i {
-      font-size: 4rem;
-      color: rgba(255, 255, 255, 0.2);
-      margin-bottom: 20px;
-    }
-    
-    .empty-state h4 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-      color: rgba(255, 255, 255, 0.8);
-    }
-    
-    .empty-state p {
-      color: rgba(255, 255, 255, 0.5);
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    
-    .settings-option {
-      padding: 18px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    
-    .settings-option:last-child {
-      border-bottom: none;
-    }
-    
-    .option-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    
-    .option-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(10, 132, 255, 0.15);
-      color: #0a84ff;
-    }
-    
-    .option-text h4 {
-      font-size: 1.1rem;
-      margin-bottom: 4px;
-    }
-    
-    .option-text p {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.9rem;
-    }
-    
-    .toggle-switch {
-      position: relative;
+    .group:hover .open-link-icon { opacity: 1; }
+    .three-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1rem; }
+    @media (max-width: 768px) { .three-card-grid { grid-template-columns: 1fr; } }
+    .brand-title {
+      font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;
+      background: linear-gradient(145deg, #4285f4, #0f9d58, #fbbc05);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       display: inline-block;
-      width: 50px;
-      height: 26px;
     }
     
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(255, 255, 255, 0.1);
-      transition: .4s;
-      border-radius: 34px;
-    }
-    
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 4px;
-      bottom: 4px;
-      background-color: rgba(255, 255, 255, 0.7);
-      transition: .4s;
-      border-radius: 50%;
-    }
-    
-    input:checked + .slider {
-      background-color: #0a84ff;
-    }
-    
-    input:checked + .slider:before {
-      transform: translateX(24px);
-      background-color: white;
-    }
-    
-    .theme-selector {
-      display: flex;
-      gap: 15px;
-      margin-top: 10px;
-    }
-    
-    .theme-option {
-      flex: 1;
-      padding: 15px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-    
-    .theme-option:hover, .theme-option.active {
-      border-color: #0a84ff;
-      background: rgba(10, 132, 255, 0.1);
-    }
-    
-    .theme-option.active {
-      border-width: 2px;
-    }
-    
-    .theme-preview {
-      width: 100%;
-      height: 80px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    
-    .theme-dark {
-      background: linear-gradient(135deg, #0d0d14, #0a1120);
-    }
-    
-    .theme-light {
-      background: linear-gradient(135deg, #f5f7fa, #e4e7eb);
-    }
-    
-    .theme-blue {
-      background: linear-gradient(135deg, #0d1d2d, #0a3d62);
-    }
-    
-    .theme-purple {
-      background: linear-gradient(135deg, #1a0d2d, #3d0a62);
-    }
-    
-    .theme-name {
-      font-size: 0.9rem;
-    }
-    
-    /* 404 Animation Styling */
-    .not-found-container {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(#010163 80%, #5294ff 80%);
-      position: relative;
-      overflow: hidden;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .not-found-text {
-      width: 100%;
-      text-align: center;
-      font-family: "Poppins", sans-serif;
-      color: #ffffffcc;
-      z-index: 1;
-      pointer-events: none;
-      padding-top: 40px;
-    }
-    
-    .not-found-text h2 {
-      font-size: 8em;
-      font-weight: 800;
-      letter-spacing: 0.3em;
-      margin: 0;
-      text-shadow: 0 0 15px #ffffff88;
-    }
-    
-    .not-found-text h3 {
-      font-size: 2.5em;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      margin: 0;
-      text-shadow: 0 0 10px #ffffff88;
-    }
-    
-    .not-found-animation {
-      height: 32.87em;
-      width: 21.87em;
-      position: relative;
-      z-index: 2;
-      margin-top: -50px;
-    }
-    
-    .sand {
-      background-color: #fecd64;
-      height: 6.25em;
-      width: 100%;
-      border-radius: 10.93em 10.93em 0 0;
-      position: absolute;
-      top: 26.62em;
-    }
-    
-    .tower {
-      height: 0;
-      width: 7.5em;
-      border-bottom: 18.75em solid #deeefa;
-      border-left: 1.25em solid transparent;
-      border-right: 1.25em solid transparent;
-      position: absolute;
-      left: 5.93em;
-      top: 11.31em;
-    }
-    
-    .tower:before {
-      position: absolute;
-      content: "";
-      top: 11.87em;
-      left: -1em;
-      width: 9.18em;
-      height: 0;
-      border-bottom: 1.56em solid #f94862;
-      border-left: 0.12em solid transparent;
-      border-right: 0.12em solid transparent;
-    }
-    
-    .tower:after {
-      position: absolute;
-      content: "";
-      top: 0.93em;
-      right: -0.18em;
-      height: 0;
-      width: 7.62em;
-      border-bottom: 1.56em solid #f94862;
-      border-left: 0.12em solid transparent;
-      border-right: 0.12em solid transparent;
-    }
-    
-    .pole {
-      height: 3em;
-      width: 0.8em;
-      background-color: #f94862;
-      border-radius: 0.5em 0.5em 0 0;
-      position: absolute;
-      left: 3.2em;
-      bottom: 8em;
-    }
-    
-    .door {
-      width: 3.75em;
-      height: 4.37em;
-      background-color: #1d3260;
-      border-radius: 2.18em 2.18em 0 0;
-      position: absolute;
-      left: 1.87em;
-      top: 14.37em;
-      box-shadow: 0 -9.37em #1d3260;
-    }
-    
-    .light-base {
-      background-color: #f7859a;
-      height: 1em;
-      width: 10.62em;
-      position: absolute;
-      left: -1.56em;
-      bottom: 0;
-    }
-    
-    .light-base:before {
-      position: absolute;
-      content: "";
-      background-color: #f94862;
-      height: 1.25em;
-      width: 7.5em;
-      bottom: 1em;
-      left: 1.56em;
-      right: 0.06em;
-    }
-    
-    .dome {
-      position: absolute;
-      height: 6.25em;
-      width: 7.5em;
-      background: linear-gradient(
-        to bottom,
-        #f94862 3.43em,
-        #5ab7ff 3.43em,
-        #5ab7ff 5.31em,
-        #f94862 5.31em
-      );
-      bottom: 2em;
-      border-radius: 3.75em 3.73em 0 0;
-    }
-    
-    .light {
-      width: 7.5em;
-      border-right: 15.62em solid #fecf2b;
-      border-top: 2.5em solid transparent;
-      border-bottom: 2.5em solid transparent;
-      position: absolute;
-      bottom: 1.5em;
-      left: 0;
-      animation: search 4s infinite;
-    }
-    
-    @keyframes search {
-      50% {
-        transform: translateX(-15.62em) rotateY(180deg);
-      }
-    }
-    
-    .sand-extra {
-      height: 3.12em;
-      width: 4.37em;
-      background-color: #fecd64;
-      border-radius: 50%;
-      position: absolute;
-      bottom: 1.87em;
-      left: 4.06em;
-      box-shadow: 2.5em 0.62em 0 -0.62em #fecd64;
-    }
-    
-    /* PDF Converter Modal */
-    .pdf-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 3000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(20px);
-    }
-    
-    .pdf-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .pdf-modal-content {
-      background: rgba(30, 30, 40, 0.9);
-      backdrop-filter: blur(30px);
-      border-radius: 28px;
-      width: 90%;
-      max-width: 600px;
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-      transform: translateY(20px) scale(0.95);
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .pdf-modal.active .pdf-modal-content {
-      transform: translateY(0) scale(1);
-    }
-    
-    .pdf-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
-      font-size: 1.4rem;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    
-    .pdf-close:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .pdf-modal h2 {
-      font-size: 1.8rem;
-      margin-bottom: 25px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    
-    .pdf-modal input {
-      width: 100%;
-      padding: 15px;
-      margin: 15px 0;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      font-size: 1rem;
-    }
-    
-    .pdf-modal button {
-      background: rgba(10, 132, 255, 0.2);
-      color: #0a84ff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 16px 30px;
-      border-radius: 50px;
-      border: 1px solid rgba(10, 132, 255, 0.3);
-      font-size: 1.1rem;
-      margin: 10px 0;
-    }
-    
-    .pdf-modal button:hover {
-      background: rgba(10, 132, 255, 0.3);
-      transform: translateY(-2px);
-    }
-    
-    .preview {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
-      max-height: 300px;
-      overflow-y: auto;
-      padding: 10px;
-    }
-    
-    .preview img {
-      max-width: 150px;
-      margin: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 5px;
-    }
-    
-    #pdf-status {
-      color: #0a84ff;
-      margin-top: 15px;
-      font-size: 1rem;
-    }
+    /* QR tabs */
+    .qr-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+    .qr-tab { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
+    .qr-tab.active { background: #0a84ff; color: white; }
     
-    /* QR Modal Styling */
-    .qr-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 3000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(20px);
-    }
-    
-    .qr-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .qr-modal-content {
-      background: rgba(30, 30, 40, 0.9);
-      backdrop-filter: blur(30px);
-      border-radius: 28px;
-      width: 90%;
-      max-width: 600px;
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-      transform: translateY(20px) scale(0.95);
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .qr-modal.active .qr-modal-content {
-      transform: translateY(0) scale(1);
-    }
-    
-    .qr-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
-      font-size: 1.4rem;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    
-    .qr-close:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .qr-modal h2 {
-      font-size: 1.8rem;
-      margin-bottom: 25px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    
-    .qr-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .qr-tab {
-      background: #222;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .qr-tab.active {
-      background: #0a84ff;
-      color: #000;
-    }
-    
-    .qr-input-group {
-      margin: 10px 0;
-    }
-    
-    .qr-modal input, 
-    .qr-modal textarea {
-      padding: 16px;
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      font-size: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .qr-modal input:focus,
-    .qr-modal textarea:focus {
-      outline: none;
-      border-color: rgba(10, 132, 255, 0.5);
-      background: rgba(255, 255, 255, 0.08);
-    }
-    
-    .qr-modal button {
-      background: rgba(10, 132, 255, 0.2);
-      color: #0a84ff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 16px 30px;
-      border-radius: 50px;
-      border: 1px solid rgba(10, 132, 255, 0.3);
-      font-size: 1.1rem;
-      margin: 10px 0;
-    }
-    
-    .qr-modal button:hover {
-      background: rgba(10, 132, 255, 0.3);
-      transform: translateY(-2px);
-    }
-    
-    #qr-canvas {
-      margin: 20px auto;
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-      max-width: 100%;
-    }
-    
-    #qr-status {
-      color: #0a84ff;
-      margin-top: 15px;
-      font-size: 1rem;
-    }
-    
-    .qr-result-container {
-      margin: 20px auto;
-      text-align: center;
-    }
-    
-    .qr-image-container {
-      display: inline-block;
-      background: white;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Logo upload container */
-    .logo-upload-container {
-      margin: 15px 0;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      border: 1px dashed rgba(255, 255, 255, 0.1);
-    }
-    
-    .logo-preview {
-      width: 80px;
-      height: 80px;
-      margin: 10px auto;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    
-    .logo-preview img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-    
-    .logo-actions {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    
-    .logo-actions button {
-      padding: 8px 15px;
-      font-size: 0.9rem;
-    }
-    
-    /* Text Encryptor Modal */
-    .text-encryptor-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 3000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s ease;
-      backdrop-filter: blur(20px);
-    }
-    
-    .text-encryptor-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .text-encryptor-modal-content {
-      background: rgba(30, 30, 40, 0.9);
-      backdrop-filter: blur(30px);
-      border-radius: 28px;
-      width: 90%;
-      max-width: 600px;
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-      transform: translateY(20px) scale(0.95);
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .text-encryptor-modal.active .text-encryptor-modal-content {
-      transform: translateY(0) scale(1);
-    }
-    
-    .text-encryptor-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
-      font-size: 1.4rem;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    
-    .text-encryptor-close:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    .text-encryptor-modal h2 {
-      font-size: 1.8rem;
-      margin-bottom: 25px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    
-    .text-encryptor-modal textarea {
-      width: 100%;
-      height: 120px;
-      padding: 15px;
-      margin: 15px 0;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-      color: #0ff;
-      font-size: 1rem;
-      resize: none;
-    }
-    
-    .text-encryptor-modal textarea:focus {
-      outline: none;
-      border-color: rgba(10, 132, 255, 0.5);
-      background: rgba(255, 255, 255, 0.08);
-    }
-    
-    .text-encryptor-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 20px 0;
-    }
-    
-    .text-encryptor-modal button {
-      background: rgba(10, 132, 255, 0.2);
-      color: #0a84ff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 12px 24px;
-      border-radius: 50px;
-      border: 1px solid rgba(10, 132, 255, 0.3);
-      font-size: 1rem;
-    }
-    
-    .text-encryptor-modal button:hover {
-      background: rgba(10, 132, 255, 0.3);
-      transform: translateY(-2px);
-    }
-    
-    .text-encryptor-output {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 20px;
-      text-align: left;
-      word-wrap: break-word;
-      color: #0f0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      min-height: 60px;
-    }
-    
-    /* Custom QR input fields */
-    .qr-field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-    
-    .qr-field-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    
-    .qr-field-label {
-      width: 100px;
-      text-align: right;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.95rem;
-    }
-    
-    .qr-field-input {
-      flex: 1;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      font-size: 0.95rem;
-    }
-    
-    .qr-field-input:focus {
-      outline: none;
-      border-color: rgba(10, 132, 255, 0.5);
-      background: rgba(255, 255, 255, 0.08);
-    }
-    
-    /* RESPONSIVE DESIGN */
-    @media (max-width: 900px) {
-      .container {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        padding: 15px;
-        gap: 20px;
-      }
-      
-      .section {
-        padding: 24px;
-        min-height: 260px;
-      }
-      
-      .icon-group {
-        width: 80px;
-      }
-      
-      .icon-group img {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .search-container {
-        padding: 0 20px;
-      }
-      
-      .explore-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      }
-      
-      .not-found-text h2 {
-        font-size: 6em;
-      }
-      
-      .not-found-text h3 {
-        font-size: 1.8em;
-      }
-      
-      .pdf-modal-content,
-      .qr-modal-content,
-      .text-encryptor-modal-content {
-        padding: 30px 20px;
-      }
-      
-      .qr-field-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-      }
-      
-      .qr-field-label {
-        text-align: left;
-        width: 100%;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      header {
-        padding: 12px 20px;
-      }
-      
-      header h1 {
-        font-size: 1.4rem;
-      }
-      
-      .profile-name {
-        display: none;
-      }
-      
-      .section {
-        padding: 22px;
-      }
-      
-      .socials {
-        gap: 20px;
-      }
-      
-      /* Adjust bottom nav for tablet */
-      .bottom-nav {
-        height: 50px;
-        padding: 7px 0;
-      }
-      
-      .nav-item {
-        padding: 5px 10px;
-      }
-      
-      .explore-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-      
-      .not-found-text h2 {
-        font-size: 4em;
-      }
-      
-      .not-found-text h3 {
-        font-size: 1.5em;
-      }
-      
-      .not-found-animation {
-        transform: scale(0.8);
-      }
-      
-      .pdf-modal h2,
-      .qr-modal h2,
-      .text-encryptor-modal h2 {
-        font-size: 1.5rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .container {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        padding: 10px;
-      }
-      
-      .section {
-        padding: 20px;
-        min-height: 240px;
-      }
-      
-      .icon-group {
-        width: 75px;
-      }
-      
-      .icon-group img {
-        width: 55px;
-        height: 55px;
-      }
-      
-      header h1 {
-        font-size: 1.2rem;
-      }
-      
-      .section h3 {
-        font-size: 1.2rem;
-      }
-      
-      .notification {
-        padding: 18px 22px;
-        right: 15px;
-        top: 15px;
-        max-width: calc(100% - 30px);
-      }
-      
-      .search-container {
-        padding: 0 10px;
-      }
-      
-      .socials {
-        grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
-        gap: 18px;
-      }
-      
-      .modal-content {
-        padding: 40px 30px;
-      }
-      
-      .modal-profile-img {
-        width: 110px;
-        height: 110px;
-      }
-      
-      .modal-profile-name {
-        font-size: 1.8rem;
-      }
-      
-      /* Compact bottom nav for mobile */
-      .bottom-nav {
-        height: 48px;
-        padding: 6px 0;
-      }
-      
-      .nav-item {
-        padding: 4px 8px;
-        font-size: 0.7rem;
-      }
-      
-      .nav-item i {
-        font-size: 1rem;
-      }
-      
-      .explore-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .not-found-text h2 {
-        font-size: 3em;
-      }
-      
-      .not-found-text h3 {
-        font-size: 1.2em;
-      }
-      
-      .not-found-animation {
-        transform: scale(0.7);
-      }
-      
-      .pdf-modal-content,
-      .qr-modal-content,
-      .text-encryptor-modal-content {
-        padding: 25px 15px;
-      }
-      
-      .preview img {
-        max-width: 120px;
-      }
-      
-      .qr-tabs {
-        gap: 5px;
-      }
-      
-      .qr-tab {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-      }
-      
-      .text-encryptor-buttons {
-        flex-direction: column;
-        gap: 10px;
-      }
-    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
   </style>
 </head>
 <body>
-  <!-- Dashboard -->
+  <!-- Main Dashboard -->
   <div id="dashboard-page">
     <header>
       <div class="header-left">
         <div class="profile-container" id="profile-container">  
-          <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="K Logo" class="profile-img">
+          <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="Profile" class="profile-img">
           <span class="profile-name">Khushal</span>
         </div>
       </div>
-      
       <div class="header-center">
         <h1 id="page-title">Dashboard</h1>
       </div>
-      
       <div class="header-right">
         <button class="logout-btn" id="logout-btn">
           <i class="fas fa-sign-out-alt"></i>
@@ -1753,595 +277,296 @@
       <i class="fas fa-search search-icon"></i>
     </div>
 
-    <!-- Home Page -->
+    <!-- HOME PAGE -->
     <div class="page active" id="home-page">
       <div class="container">
+        <!-- Contact Me -->
         <div class="section">
-          <div class="section-title-container">
-            <h3><i class="fas fa-link"></i>Contact Me</h3>
-            <a class="view-all">View All</a>
-          </div>
+          <h3><i class="fas fa-link"></i>Contact Me</h3>
           <div class="socials">
-            <div class="icon-group">
-              <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank">
-                <img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram">
-              </a>
-              <div class="socials-labels">Instagram</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://facebook.com" target="_blank">
-                <img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook">
-              </a>
-              <div class="socials-labels">Facebook</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://github.com/" target="_blank">
-                <img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub">
-              </a>
-              <div class="socials-labels">GitHub</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://twitter.com" target="_blank">
-                <img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter">
-              </a>
-              <div class="socials-labels">Twitter</div>
-            </div>
+            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="IG"><span class="socials-labels">Instagram</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/color/100/facebook-new.png" alt="FB"><span class="socials-labels">Facebook</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/github.png" alt="GH"><span class="socials-labels">GitHub</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/color/100/twitter.png" alt="X"><span class="socials-labels">Twitter</span></div>
           </div>
         </div>
-
+        <!-- PC Mod Apps -->
         <div class="section">
-          <div class="section-title-container">
-            <h3><i class="fas fa-gamepad"></i> PC Mod Apps</h3>
-            <a class="view-all">View All</a>
-          </div>
+          <h3><i class="fas fa-gamepad"></i> PC Mod Apps</h3>
           <div class="socials">
-            <div class="icon-group">
-              <a href="https://se7en.ws/games/?lang=en" target="_blank">
-                <img src="https://img.icons8.com/fluency/100/controller.png" alt="se7en.ws">
-              </a>
-              <div class="socials-labels">Se7en.ws</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://creativeconor.com/" target="_blank">
-                <img src="https://img.icons8.com/fluency/100/epic-games.png" alt="creativeconor">
-              </a>
-              <div class="socials-labels">CreativeConor</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://gamingbeasts.com/" target="_blank">
-                <img src="https://img.icons8.com/color/100/controller.png" alt="gamingbeasts">
-              </a>
-              <div class="socials-labels">GamingBeasts</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://itch.io" target="_blank">
-                <img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch.io">
-              </a>
-              <div class="socials-labels">Itch.io</div>
-            </div>
+            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/controller.png" alt="Se7en"><span class="socials-labels">Se7en.ws</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/epic-games.png" alt="CC"><span class="socials-labels">CreativeConor</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/color/100/controller.png" alt="GB"><span class="socials-labels">GamingBeasts</span></div>
+            <div class="icon-group"><img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch"><span class="socials-labels">Itch.io</span></div>
           </div>
         </div>
-
+        <!-- Online Games -->
         <div class="section">
-          <div class="section-title-container">
-            <h3><i class="fas fa-dice"></i> Online Games</h3>
-            <a class="view-all">View All</a>
-          </div>
+          <h3><i class="fas fa-dice"></i> Online Games</h3>
           <div class="socials">
-            <div class="icon-group">
-              <a href="https://deadshot.io/" target="_blank">
-                <img src="https://image.pngaaa.com/885/1977885-middle.png" alt="DEADSHOT">
-              </a>
-              <div class="socials-labels">DEADSHOT</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://slowroads.io/" target="_blank">
-                <img src="https://img.icons8.com/fluency/100/gaming.png" alt="Slow Road">
-              </a>
-              <div class="socials-labels">Slow Road</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://armedforces.io/" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce">
-              </a>
-              <div class="socials-labels">Armedforce</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://www.miniclip.com" target="_blank">
-                <img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip">
-              </a>
-              <div class="socials-labels">Miniclip</div>
-            </div>
+            <div class="icon-group"><img src="https://image.pngaaa.com/885/1977885-middle.png" alt="Deadshot"><span class="socials-labels">DEADSHOT</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/gaming.png" alt="SlowRoad"><span class="socials-labels">Slow Road</span></div>
+            <div class="icon-group"><img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce"><span class="socials-labels">Armedforce</span></div>
+            <div class="icon-group"><img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip"><span class="socials-labels">Miniclip</span></div>
           </div>
         </div>
-
+        <!-- Movie Sites -->
         <div class="section">
-          <div class="section-title-container">
-            <h3><i class="fas fa-film"></i> Movie Sites</h3>
-            <a class="view-all">View All</a>
-          </div>
+          <h3><i class="fas fa-film"></i> Movie Sites</h3>
           <div class="socials">
-            <div class="icon-group">
-              <a href="https://hdhub4u.gd/" target="_blank">
-                <img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub4u">
-              </a>
-              <div class="socials-labels">HDHub4u</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://popcornmovies.org/" target="_blank">
-                <img src="https://i.pinimg.com/1200x/b0/95/86/b0958635bf6b2a09553a7a438fe56259.jpg" alt="Net mirror">
-              </a>
-              <div class="socials-labels">pop corn</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://katworld.net/" target="_blank">
-                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="PR movie">
-              </a>
-              <div class="socials-labels">KAT MOVIES</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://net20.cc/home" target="_blank">
-                <img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="NET MIRROR">
-              </a>
-              <div class="socials-labels">NET MIRROR</div>
-            </div>
+            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub"><span class="socials-labels">HDHub4u</span></div>
+            <div class="icon-group"><img src="https://i.pinimg.com/1200x/b0/95/86/b0958635bf6b2a09553a7a438fe56259.jpg" alt="Popcorn"><span class="socials-labels">pop corn</span></div>
+            <div class="icon-group"><img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="KAT"><span class="socials-labels">KAT MOVIES</span></div>
+            <div class="icon-group"><img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="NET"><span class="socials-labels">NET MIRROR</span></div>
           </div>
         </div>
-        
-        <!-- Mod Apps Section -->
-        <div class="section mod-apps">
-          <div class="section-title-container">
-            <h3><i class="fas fa-mobile-alt"></i> Mod Apps</h3>
-            <a class="view-all">View All</a>
-          </div>
-          <div class="socials">
-            <div class="icon-group">
-              <a href="https://jarmod.com/" target="_blank">
-                <img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="jarmod">
-              
-              </a>
-              <div class="socials-labels">Jarmod</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://adescargar.online/" target="_blank">
-                <img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar">
-              
-              </a>
-              <div class="socials-labels">Adescargar</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://an1.com/" target="_blank">
-                <img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="desk">
-              
-              </a>
-              <div class="socials-labels">desk</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://jollymod.com/" target="_blank">
-                <img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="jolly mod">
-            
-              </a>
-              <div class="socials-labels">Jolly Mod</div>
-            </div>
-          </div>
-        </div>
-        
+        <!-- Mod Apps -->
         <div class="section">
-          <div class="section-title-container">
-            <h3><i class="fas fa-graduation-cap"></i> Study Resources</h3>
-            <a class="view-all">View All</a>
-          </div>
+          <h3><i class="fas fa-mobile-alt"></i> Mod Apps</h3>
           <div class="socials">
-            <div class="icon-group">
-              <a href="https://www.codewithharry.com/notes" target="_blank">
-                <img src="https://image.pngaaa.com/764/3513764-middle.png" alt="code with Harry">
-              </a>
-              <div class="socials-labels">Code With Harry</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://www.mygreatlearning.com/academy" target="_blank">
-                <img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="My Great learning">
-              </a>
-              <div class="socials-labels">My Great Learning</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://sathee.iitk.ac.in/" target="_blank">
-                <img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE">
-              </a>
-              <div class="socials-labels">SATHEE</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm?usp=drive_link" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive">
-              </a>
-              <div class="socials-labels">Drive</div>
-            </div>
+            <div class="icon-group"><img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="Jarmod"><span class="socials-labels">Jarmod</span></div>
+            <div class="icon-group"><img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar"><span class="socials-labels">Adescargar</span></div>
+            <div class="icon-group"><img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="desk"><span class="socials-labels">desk</span></div>
+            <div class="icon-group"><img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="Jolly"><span class="socials-labels">Jolly Mod</span></div>
           </div>
         </div>
-
-        <!-- AI Tools Section -->
-        <div class="section ai-tools">
-          <div class="section-title-container">
-            <h3><i class="fas fa-robot"></i> AI Tools</h3>
-            <a class="view-all">View All</a>
-          </div>
+        <!-- Study Resources -->
+        <div class="section">
+          <h3><i class="fas fa-graduation-cap"></i> Study Resources</h3>
           <div class="socials">
-            <div class="icon-group">
-              <a href="https://chat.openai.com" target="_blank">
-                <img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT">
-              </a>
-              <div class="socials-labels">ChatGPT</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://ai-search.io/" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/11698/11698467.png" alt="AI-SEARCH">
-              </a>
-              <div class="socials-labels">AI-SEARCH</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://www.aixploria.com/en/" target="_blank">
-                <img src="https://img.icons8.com/color/100/artificial-intelligence.png" alt="AI Exploria">
-              </a>
-              <div class="socials-labels">AI Exploria</div>
-            </div>
-            <div class="icon-group">
-              <a href="https://perplexity.ai" target="_blank">
-                <img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity">
-              </a>
-              <div class="socials-labels">Perplexity</div>
-            </div>
+            <div class="icon-group"><img src="https://image.pngaaa.com/764/3513764-middle.png" alt="CWH"><span class="socials-labels">Code With Harry</span></div>
+            <div class="icon-group"><img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="MGL"><span class="socials-labels">My Great Learning</span></div>
+            <div class="icon-group"><img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE"><span class="socials-labels">SATHEE</span></div>
+            <div class="icon-group"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive"><span class="socials-labels">Drive</span></div>
+          </div>
+        </div>
+        <!-- AI Tools -->
+        <div class="section">
+          <h3><i class="fas fa-robot"></i> AI Tools</h3>
+          <div class="socials">
+            <div class="icon-group"><img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT"><span class="socials-labels">ChatGPT</span></div>
+            <div class="icon-group"><img src="https://cdn-icons-png.flaticon.com/512/11698/11698467.png" alt="AI-SEARCH"><span class="socials-labels">AI-SEARCH</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/color/100/artificial-intelligence.png" alt="AI Exploria"><span class="socials-labels">AI Exploria</span></div>
+            <div class="icon-group"><img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity"><span class="socials-labels">Perplexity</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Explore Page -->
+    <!-- EXPLORE PAGE -->
     <div class="page" id="explore-page">
       <div class="explore-section">
         <h3><i class="fas fa-fire"></i> Trending Apps</h3>
         <div class="explore-grid">
-          <!-- PDF Converter Card -->
-          <div class="explore-card" id="pdf-converter-card">
-            <img src="https://img.icons8.com/color/100/pdf.png" alt="PDF Converter">
-            <h4>Image to PDF</h4>
-            <p>Convert multiple images to PDF</p>
-          </div>
-          
-          <!-- QR Code Generator Card -->
-          <div class="explore-card" id="qr-generator-card">
-            <img src="https://img.icons8.com/color/100/qr-code.png" alt="QR Code Generator">
-            <h4>QR Code Generator</h4>
-            <p>Create QR codes with your logo</p>
-          </div>
-          
-          <!-- Text Encryptor Card -->
-          <div class="explore-card" id="text-encryptor-card">
-            <img src="https://img.icons8.com/fluency/100/lock.png" alt="Text Encryptor">
-            <h4>Text Encryptor</h4>
-            <p>Encrypt and decrypt text securely</p>
-          </div>
-          
-          <!-- WIFI QR Card -->
-          <div class="explore-card" id="wifi-qr-card">
-            <img src="https://img.icons8.com/color/100/wifi.png" alt="WIFI QR">
-            <h4>WIFI QR Code</h4>
-            <p>Create QR code for WIFI login</p>
-          </div>
-          
-          <!-- Phone QR Card -->
-          <div class="explore-card" id="phone-qr-card">
-            <img src="https://img.icons8.com/color/100/phone.png" alt="Phone QR">
-            <h4>Phone QR Code</h4>
-            <p>Create QR code for phone number</p>
-          </div>
-          
-          <!-- Text QR Card -->
-          <div class="explore-card" id="text-qr-card">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Code_Icon.PNG" alt="Text QR">
-            <h4>Text QR Code</h4>
-            <p>Create QR code for plain text</p>
-          </div>
+          <div class="explore-card" id="pdf-converter-card"><img src="https://img.icons8.com/color/100/pdf.png" alt="PDF"><h4>Image to PDF</h4><p>Convert images to PDF</p></div>
+          <div class="explore-card" id="qr-generator-card"><img src="https://img.icons8.com/color/100/qr-code.png" alt="QR"><h4>QR Generator</h4><p>Create QR with logo</p></div>
+          <div class="explore-card" id="text-encryptor-card"><img src="https://img.icons8.com/fluency/100/lock.png" alt="Encrypt"><h4>Text Encryptor</h4><p>Encrypt/decrypt text</p></div>
+          <div class="explore-card" id="wifi-qr-card"><img src="https://img.icons8.com/color/100/wifi.png" alt="WIFI"><h4>WIFI QR</h4><p>Share WiFi login</p></div>
+          <div class="explore-card" id="phone-qr-card"><img src="https://img.icons8.com/color/100/phone.png" alt="Phone"><h4>Phone QR</h4><p>Call via QR</p></div>
+          <div class="explore-card" id="text-qr-card"><img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Code_Icon.PNG" alt="Text"><h4>Text QR</h4><p>Plain text QR</p></div>
         </div>
       </div>
     </div>
 
-    <!-- Saved Page with 404 Animation -->
+    <!-- SAVED PAGE - with ClodifyHub Bento (3 Google Drive cards) -->
     <div class="page" id="saved-page">
-      <div class="saved-section">
-        <div class="not-found-container">
-          <div class="not-found-text">
-            <h2>404</h2>
-            <h3>Sorry! Page Not Found</h3>
-          </div>
-          
-          <div class="not-found-animation">
-            <div class="sand"></div>
-            <div class="tower">
-              <div class="pole"></div>
-              <div class="door"></div>
-              <div class="light-base"></div>
-              <div class="dome"></div>
-              <div class="light"></div>
+      <div class="saved-section" style="background: transparent; padding: 0;">
+        <!-- ClodifyHub Bento -->
+        <div style="max-width: 1200px; margin: 0 auto;">
+          <div class="brand-title">ClodifyHub</div>
+          <div class="three-card-grid">
+            <!-- Card 1: Google Drive -->
+            <div onclick="window.open('https://drive.google.com/drive/u/0/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
+              <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
+              <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4;"></i>
+              <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color: #34A853;"></i>
+              <div class="relative z-10 w-full">
+                <div class="hover-reveal">
+                  <i class="ph-fill ph-google-drive-logo text-4xl mb-3 high-color-icon" style="color: #4285F4;"></i>
+                  <h3 class="text-xl font-semibold text-white">Google Drive</h3>
+                  <p class="text-sm text-white/80"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 15 GB free</p>
+                  <div class="mt-2 flex gap-1"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">docs</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">sheets</span></div>
+                </div>
+              </div>
             </div>
-            <div class="sand-extra"></div>
+            <!-- Card 2: My Folders -->
+            <div onclick="window.open('https://drive.google.com/drive/my-drive', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
+              <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
+              <i class="ph-fill ph-folder-open float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #FBBC05;"></i>
+              <i class="ph-fill ph-folder-simple-plus float-bg-icon text-7xl top-8 left-4 absolute rotate-6" style="color: #4285F4;"></i>
+              <div class="relative z-10 w-full">
+                <div class="hover-reveal">
+                  <i class="ph-fill ph-folders text-4xl mb-3 high-color-icon" style="color: #FBBC05;"></i>
+                  <h3 class="text-xl font-semibold text-white">project hub</h3>
+                  <p class="text-sm text-white/80">design · dev · assets</p>
+                  <div class="mt-2 flex gap-1"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">24 items</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">figma</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- Card 3: Shared + Starred -->
+            <div onclick="window.open('https://drive.google.com/drive/shared-with-me', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
+              <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
+              <i class="ph-fill ph-share-network float-bg-icon text-8xl -top-6 -right-4 absolute rotate-12" style="color: #0F9D58;"></i>
+              <i class="ph-fill ph-star float-bg-icon text-8xl -bottom-8 -left-6 absolute rotate-12" style="color: #FBBC05;"></i>
+              <div class="relative z-10 w-full">
+                <div class="hover-reveal">
+                  <i class="ph-fill ph-share text-4xl mb-3 high-color-icon" style="color: #0F9D58;"></i>
+                  <h3 class="text-xl font-semibold text-white">shared + starred</h3>
+                  <p class="text-sm text-white/80">proposals · research</p>
+                  <div class="mt-2 flex gap-1"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">Q2</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">priority</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Settings Page -->
+    <!-- SETTINGS PAGE -->
     <div class="page" id="settings-page">
       <div class="settings-section">
         <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
-        <div class="settings-option">
-          <div class="option-info">
-            <div class="option-icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="option-text">
-              <h4>Profile Information</h4>
-              <p>Change your name, email, and profile picture</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right"></i>
-        </div>
-        <div class="settings-option">
-          <div class="option-info">
-            <div class="option-icon">
-              <i class="fas fa-shield-alt"></i>
-            </div>
-            <div class="option-text">
-              <h4>Security</h4>
-              <p>Change password and enable two-factor authentication</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right"></i>
-        </div>
-        <div class="settings-option">
-          <div class="option-info">
-            <div class="option-icon">
-              <i class="fas fa-bell"></i>
-            </div>
-            <div class="option-text">
-              <h4>Notifications</h4>
-              <p>Manage notification preferences</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right"></i>
-        </div>
-      </div>
-      
-      <div class="settings-section">
-        <h3><i class="fas fa-paint-brush"></i> Appearance</h3>
-        <div class="settings-option">
-          <div class="option-info">
-            <div class="option-icon">
-              <i class="fas fa-moon"></i>
-            </div>
-            <div class="option-text">
-              <h4>Dark Mode</h4>
-              <p>Enable dark theme for better night viewing</p>
-            </div>
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" checked id="dark-mode-toggle">
-            <span class="slider"></span>
-          </label>
-        </div>
-        <div class="settings-option">
-          <div class="option-info">
-            <div class="option-icon">
-              <i class="fas fa-palette"></i>
-            </div>
-            <div class="option-text">
-              <h4>Theme</h4>
-              <p>Choose your preferred color scheme</p>
-            </div>
+        <div class="settings-option" style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div class="option-info" style="display: flex; gap: 15px;">
+            <div class="option-icon"><i class="fas fa-user"></i></div>
+            <div><h4>Profile Information</h4><p style="color: rgba(255,255,255,0.7);">Change your name, email, and profile picture</p></div>
           </div>
         </div>
-        <div class="theme-selector">
-          <div class="theme-option active" data-theme="dark">
-            <div class="theme-preview theme-dark"></div>
-            <div class="theme-name">Dark</div>
+        <div class="settings-option" style="padding: 15px 0;">
+          <div class="option-info" style="display: flex; gap: 15px;">
+            <div class="option-icon"><i class="fas fa-shield-alt"></i></div>
+            <div><h4>Security</h4><p style="color: rgba(255,255,255,0.7);">Change password and enable two-factor authentication</p></div>
           </div>
-          <div class="theme-option" data-theme="light">
-            <div class="theme-preview theme-light"></div>
-            <div class="theme-name">Light</div>
-          </div>
-          <div class="theme-option" data-theme="blue">
-            <div class="theme-preview theme-blue"></div>
-            <div class="theme-name">Ocean</div>
-          </div>
-          <div class="theme-option" data-theme="purple">
-            <div class="theme-preview theme-purple"></div>
-            <div class="theme-name">Amethyst</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="settings-section">
-        <h3><i class="fas fa-download"></i> Downloads</h3>
-        <div class="settings-option">
-          <div class="option-info">
-            <div class="option-icon">
-              <i class="fas fa-folder"></i>
-            </div>
-            <div class="option-text">
-              <h4>Download Location</h4>
-              <p>Choose where to save downloaded files</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right"></i>
-        </div>
-        <div class="settings-option">
-          <div class="option-info">
-            <div class="option-icon">
-              <i class="fas fa-wifi"></i>
-            </div>
-            <div class="option-text">
-              <h4>Network Settings</h4>
-              <p>Configure download speed and connections</p>
-            </div>
-          </div>
-          <i class="fas fa-chevron-right"></i>
         </div>
       </div>
     </div>
-    
-    <!-- Compact Apple-style bottom navigation -->
+
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
-      <div class="nav-item active" data-target="home">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-      </div>
-      <div class="nav-item" data-target="explore">
-        <i class="fas fa-compass"></i>
-        <span>Explore</span>
-      </div>
-      <div class="nav-item" data-target="saved">
-        <i class="fas fa-bookmark"></i>
-        <span>Saved</span>
-      </div>
-      <div class="nav-item" data-target="settings">
-        <i class="fas fa-cog"></i>
-        <span>Settings</span>
-      </div>
+      <div class="nav-item active" data-target="home"><i class="fas fa-home"></i><span>Home</span></div>
+      <div class="nav-item" data-target="explore"><i class="fas fa-compass"></i><span>Explore</span></div>
+      <div class="nav-item" data-target="saved"><i class="fas fa-bookmark"></i><span>Saved</span></div>
+      <div class="nav-item" data-target="settings"><i class="fas fa-cog"></i><span>Settings</span></div>
     </div>
-    
-    <!-- Back to Top Button -->
-    <button class="back-to-top" id="back-to-top">
-      <i class="fas fa-arrow-up"></i>
-    </button>
-    
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
+
     <!-- Notification -->
     <div class="notification" id="notification">
-      <div class="notification-icon">
-        <i class="fas fa-bell"></i>
-      </div>
+      <div class="notification-icon"><i class="fas fa-bell"></i></div>
       <div class="notification-content">
-        <h4>Welcome to Your Dashboard!</h4>
-        <p>Experience the Apple-inspired interface with enhanced performance.</p>
+        <h4>Welcome!</h4>
+        <p>ClodifyHub is now in your Saved page.</p>
       </div>
-      <button class="notification-close" id="notification-close">
-        <i class="fas fa-times"></i>
-      </button>
+      <button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button>
     </div>
-    
+
     <!-- Profile Modal -->
     <div class="profile-modal" id="profile-modal">
       <div class="modal-content">
-        <button class="close-modal" id="close-modal">
-          <i class="fas fa-times"></i>
-        </button>
-        <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="K Logo" class="modal-profile-img">
-        <h2 class="modal-profile-name">Khushal Jangra</h2>
-        <p class="modal-profile-email">choyal034@gmail.com</p>
-        <div style="margin-top: 30px; display: flex; gap: 15px;">
-          <button class="logout-btn" id="edit-profile-btn">
-            <i class="fas fa-user-edit"></i>
-            <span>Edit Profile</span>
-          </button>
-          <button class="logout-btn" id="settings-btn">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-          </button>
-        </div>
+        <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
+        <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="Profile" style="width:120px; height:120px; border-radius:50%; margin:0 auto 20px;">
+        <h2>Khushal Jangra</h2>
+        <p style="color:rgba(255,255,255,0.7); margin:10px 0 30px;">choyal034@gmail.com</p>
       </div>
     </div>
-    
-    <!-- PDF Converter Modal -->
+
+    <!-- PDF Modal -->
     <div class="pdf-modal" id="pdf-modal">
       <div class="pdf-modal-content">
-        <button class="pdf-close" id="pdf-close">
-          <i class="fas fa-times"></i>
-        </button>
-        <h2><i class="fas fa-file-pdf"></i> Multi-Image to PDF Converter</h2>
-        <input type="file" id="imageInput" multiple accept="image/*">
-        <br>
-        <button id="generate-pdf-btn">Download PDF</button>
-        <div id="pdf-status"></div>
-        <div class="preview" id="previewContainer"></div>
+        <button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button>
+        <h2>Image to PDF Converter</h2>
+        <input type="file" id="imageInput" multiple accept="image/*" style="margin:20px 0; padding:10px;">
+        <button id="generate-pdf-btn" style="background:#0a84ff; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer;">Generate PDF</button>
+        <div id="pdf-status" style="margin-top:15px;"></div>
+        <div id="previewContainer" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;"></div>
       </div>
     </div>
-    
-    <!-- QR Code Generator Modal -->
+
+    <!-- QR Modal -->
     <div class="qr-modal" id="qr-modal">
       <div class="qr-modal-content">
-        <button class="qr-close" id="qr-close">
-          <i class="fas fa-times"></i>
-        </button>
-        <h2><i class="fas fa-qrcode"></i> QR Code Generator</h2>
-        
-        <div class="qr-tabs" id="qr-tab-buttons">
+        <button class="qr-close" id="qr-close"><i class="fas fa-times"></i></button>
+        <h2>QR Code Generator</h2>
+        <div class="qr-tabs">
           <div class="qr-tab active" data-type="TEXT">TEXT</div>
-          <div class="qr-tab" data-type="WEBSITE">WEBSITE</div>
+          <div class="qr-tab" data-type="WEBSITE">URL</div>
           <div class="qr-tab" data-type="WIFI">WIFI</div>
-          <div class="qr-tab" data-type="PHONE">PHONE</div>
-          <div class="qr-tab" data-type="SMS">SMS</div>
-          <div class="qr-tab" data-type="EMAIL">EMAIL</div>
-          <div class="qr-tab" data-type="GEO">GEO</div>
-          <div class="qr-tab" data-type="CONTACT">CONTACT</div>
-          <div class="qr-tab" data-type="CLIPBOARD">CLIPBOARD</div>
         </div>
-        
-        <div id="qr-input-area" class="qr-input-group">
-          <!-- Dynamic input fields will be inserted here -->
-          <textarea id="text-content" placeholder="Enter text here..." class="qr-field-input" style="height: 100px;"></textarea>
+        <div id="qr-input-area">
+          <textarea id="text-content" placeholder="Enter text..." style="width:100%; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;"></textarea>
         </div>
-        
-        <!-- Logo Upload Section -->
-        <div class="logo-upload-container">
-          <h4>Add Logo to QR Code</h4>
-          <input type="file" id="qr-logo-input" accept="image/*" style="display: none;">
-          <button id="upload-logo-btn">Upload Logo</button>
-          
-          <div class="logo-preview" id="logo-preview">
-            <i class="fas fa-image" style="font-size: 2rem; color: rgba(255,255,255,0.3);"></i>
-          </div>
-          
-          <div class="logo-actions">
-            <button id="remove-logo-btn">Remove Logo</button>
-          </div>
-        </div>
-        
-        <button id="generate-qr-btn">Generate QR</button>
-        <div class="qr-result-container">
-          <div class="qr-image-container">
-            <canvas id="qr-canvas"></canvas>
-          </div>
-        </div>
-        <br />
-        <button id="download-qr-btn">Download QR</button>
-        <div id="qr-status"></div>
+        <button id="generate-qr-btn" style="background:#0a84ff; color:white; border:none; padding:12px 24px; border-radius:8px; margin:10px 0; cursor:pointer;">Generate QR</button>
+        <canvas id="qr-canvas" style="margin:15px auto; background:white; padding:10px; border-radius:8px;"></canvas>
+        <button id="download-qr-btn" style="background:#34c759; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer;">Download QR</button>
       </div>
     </div>
-    
+
     <!-- Text Encryptor Modal -->
     <div class="text-encryptor-modal" id="text-encryptor-modal">
       <div class="text-encryptor-modal-content">
-        <button class="text-encryptor-close" id="text-encryptor-close">
-          <i class="fas fa-times"></i>
-        </button>
-        <h2><i class="fas fa-lock"></i> Text Encryptor</h2>
-        
-        <textarea id="encryptor-input" placeholder="Enter your message here..."></textarea>
-        
-        <div class="text-encryptor-buttons">
-          <button id="encrypt-btn">Encrypt</button>
-          <button id="decrypt-btn">Decrypt</button>
-          <button id="copy-encrypted-btn">Copy</button>
+        <button class="text-encryptor-close" id="text-encryptor-close"><i class="fas fa-times"></i></button>
+        <h2>Text Encryptor</h2>
+        <textarea id="encryptor-input" placeholder="Enter message..." style="width:100%; height:100px; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;"></textarea>
+        <div style="display:flex; gap:10px; margin:15px 0;">
+          <button id="encrypt-btn" style="background:#0a84ff; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Encrypt</button>
+          <button id="decrypt-btn" style="background:#ff9f0a; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Decrypt</button>
+          <button id="copy-encrypted-btn" style="background:#34c759; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Copy</button>
         </div>
-        
-        <div class="text-encryptor-output" id="encryptor-output">
-          🔐 Output will appear here...
-        </div>
+        <div id="encryptor-output" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; word-break:break-all;"></div>
       </div>
     </div>
   </div>
 
   <script>
-    // Enhanced PDF Converter functionality
-    function setupPdfConverter() {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navigation
+      const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+      const pages = document.querySelectorAll('.page');
+      const pageTitle = document.getElementById('page-title');
+      
+      navItems.forEach(item => {
+        item.addEventListener('click', function() {
+          navItems.forEach(n => n.classList.remove('active'));
+          this.classList.add('active');
+          const target = this.getAttribute('data-target');
+          pages.forEach(p => p.classList.remove('active'));
+          document.getElementById(`${target}-page`).classList.add('active');
+          pageTitle.textContent = this.querySelector('span').textContent;
+          window.scrollTo(0, 0);
+        });
+      });
+
+      // Back to top
+      const backBtn = document.getElementById('back-to-top');
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) backBtn.classList.add('show');
+        else backBtn.classList.remove('show');
+      });
+      backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      // Profile modal
+      const profileModal = document.getElementById('profile-modal');
+      const profileContainer = document.getElementById('profile-container');
+      const closeModal = document.getElementById('close-modal');
+      
+      profileContainer.addEventListener('click', () => profileModal.classList.add('active'));
+      closeModal.addEventListener('click', () => profileModal.classList.remove('active'));
+      profileModal.addEventListener('click', (e) => { if (e.target === profileModal) profileModal.classList.remove('active'); });
+
+      // Notification
+      const notification = document.getElementById('notification');
+      const notifClose = document.getElementById('notification-close');
+      
+      setTimeout(() => {
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 4000);
+      }, 1000);
+      
+      notifClose.addEventListener('click', () => notification.classList.remove('show'));
+
+      // PDF Converter
       const pdfModal = document.getElementById('pdf-modal');
       const pdfCard = document.getElementById('pdf-converter-card');
       const pdfClose = document.getElementById('pdf-close');
@@ -2349,753 +574,179 @@
       const imageInput = document.getElementById('imageInput');
       const previewContainer = document.getElementById('previewContainer');
       const pdfStatus = document.getElementById('pdf-status');
-      let imageDataList = [];
-      
-      // Open PDF modal when card is clicked
-      pdfCard.addEventListener('click', function() {
-        pdfModal.classList.add('active');
-        // Reset state
-        imageDataList = [];
-        previewContainer.innerHTML = '';
-        pdfStatus.textContent = '';
-        imageInput.value = '';
-      });
-      
-      // Close PDF modal
-      pdfClose.addEventListener('click', function() {
-        pdfModal.classList.remove('active');
-      });
-      
-      // Handle file input change
+      let images = [];
+
+      pdfCard.addEventListener('click', () => pdfModal.classList.add('active'));
+      pdfClose.addEventListener('click', () => pdfModal.classList.remove('active'));
+
       imageInput.addEventListener('change', function() {
-        imageDataList = [];
+        images = [];
         previewContainer.innerHTML = '';
-        pdfStatus.textContent = '';
         const files = Array.from(this.files);
-        
-        if (files.length === 0) return;
-        
         files.forEach(file => {
           const reader = new FileReader();
           reader.onload = e => {
-            imageDataList.push(e.target.result);
-            
-            // Preview image
+            images.push(e.target.result);
             const img = document.createElement('img');
             img.src = e.target.result;
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '8px';
             previewContainer.appendChild(img);
           };
           reader.readAsDataURL(file);
         });
       });
-      
-      // Generate PDF
+
       generatePdfBtn.addEventListener('click', async function() {
-        if (imageDataList.length === 0) {
-          pdfStatus.textContent = "Please upload at least one image.";
+        if (images.length === 0) {
+          pdfStatus.textContent = 'Please select images first.';
           return;
         }
-        
-        pdfStatus.textContent = "Creating PDF...";
-        this.disabled = true;
-        
+        pdfStatus.textContent = 'Generating PDF...';
         try {
           const { jsPDF } = window.jspdf;
           const pdf = new jsPDF();
-          let processed = 0;
-          
-          // Process each image
-          const processImage = (index) => {
-            return new Promise((resolve, reject) => {
-              if (index >= imageDataList.length) {
-                resolve();
-                return;
-              }
-
-              const imgData = imageDataList[index];
-              const img = new Image();
-              img.src = imgData;
-
-              img.onload = () => {
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (img.height * pdfWidth) / img.width;
-
-                if (index > 0) {
-                  pdf.addPage();
-                }
-
-                pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                resolve();
-              };
-
-              img.onerror = reject;
-            });
-          };
-
-          for (let i = 0; i < imageDataList.length; i++) {
-            await processImage(i);
+          for (let i = 0; i < images.length; i++) {
+            if (i > 0) pdf.addPage();
+            const img = new Image();
+            img.src = images[i];
+            await new Promise(resolve => { img.onload = resolve; });
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (img.height * pdfWidth) / img.width;
+            pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
           }
-          
-          pdf.save('multi-images.pdf');
-          pdfStatus.textContent = "PDF created successfully!";
-          
-          // Show notification
-          const notification = document.getElementById('notification');
-          notification.querySelector('h4').textContent = "PDF Created";
-          notification.querySelector('p').textContent = "Your PDF file has been successfully created and downloaded.";
-          notification.classList.add('show');
-          
-          setTimeout(() => {
-            notification.classList.remove('show');
-          }, 3000);
+          pdf.save('converted.pdf');
+          pdfStatus.textContent = 'PDF created successfully!';
         } catch (error) {
-          pdfStatus.textContent = "Error creating PDF: " + error.message;
-        } finally {
-          generatePdfBtn.disabled = false;
+          pdfStatus.textContent = 'Error: ' + error.message;
         }
       });
-    }
-    
-    // Enhanced Text Encryptor functionality
-    function setupTextEncryptor() {
+
+      // QR Generator
+      const qrModal = document.getElementById('qr-modal');
+      const qrCard = document.getElementById('qr-generator-card');
+      const qrClose = document.getElementById('qr-close');
+      const generateQrBtn = document.getElementById('generate-qr-btn');
+      const downloadQrBtn = document.getElementById('download-qr-btn');
+      const qrCanvas = document.getElementById('qr-canvas');
+      const qrTabs = document.querySelectorAll('.qr-tab');
+      const qrInputArea = document.getElementById('qr-input-area');
+      
+      let currentType = 'TEXT';
+      
+      document.querySelectorAll('[id$="-qr-card"]').forEach(card => {
+        card.addEventListener('click', () => qrModal.classList.add('active'));
+      });
+      
+      qrClose.addEventListener('click', () => qrModal.classList.remove('active'));
+      
+      qrTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          qrTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          currentType = this.dataset.type;
+          if (currentType === 'TEXT') {
+            qrInputArea.innerHTML = '<textarea id="text-content" placeholder="Enter text..." style="width:100%; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;"></textarea>';
+          } else if (currentType === 'WEBSITE') {
+            qrInputArea.innerHTML = '<input type="url" id="website-url" placeholder="https://example.com" style="width:100%; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">';
+          } else if (currentType === 'WIFI') {
+            qrInputArea.innerHTML = `
+              <input type="text" id="wifi-ssid" placeholder="Network name" style="width:100%; padding:12px; margin:5px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
+              <input type="password" id="wifi-password" placeholder="Password" style="width:100%; padding:12px; margin:5px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
+              <select id="wifi-encryption" style="width:100%; padding:12px; margin:5px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
+                <option value="WPA">WPA/WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">None</option>
+              </select>
+            `;
+          }
+        });
+      });
+      
+      generateQrBtn.addEventListener('click', function() {
+        let value = '';
+        if (currentType === 'TEXT') value = document.getElementById('text-content')?.value || '';
+        else if (currentType === 'WEBSITE') value = document.getElementById('website-url')?.value || '';
+        else if (currentType === 'WIFI') {
+          const ssid = document.getElementById('wifi-ssid')?.value || '';
+          const pwd = document.getElementById('wifi-password')?.value || '';
+          const enc = document.getElementById('wifi-encryption')?.value || 'WPA';
+          value = `WIFI:S:${ssid};T:${enc};P:${pwd};;`;
+        }
+        
+        if (!value) { alert('Please enter some content'); return; }
+        
+        new QRious({
+          element: qrCanvas,
+          value: value,
+          size: 250,
+          background: 'white',
+          foreground: 'black'
+        });
+      });
+      
+      downloadQrBtn.addEventListener('click', function() {
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = qrCanvas.toDataURL();
+        link.click();
+      });
+
+      // Text Encryptor
       const encryptorModal = document.getElementById('text-encryptor-modal');
       const encryptorCard = document.getElementById('text-encryptor-card');
       const encryptorClose = document.getElementById('text-encryptor-close');
       const encryptBtn = document.getElementById('encrypt-btn');
       const decryptBtn = document.getElementById('decrypt-btn');
       const copyBtn = document.getElementById('copy-encrypted-btn');
-      const inputText = document.getElementById('encryptor-input');
-      const outputText = document.getElementById('encryptor-output');
+      const encryptorInput = document.getElementById('encryptor-input');
+      const encryptorOutput = document.getElementById('encryptor-output');
       
-      // Open Text Encryptor modal when card is clicked
-      encryptorCard.addEventListener('click', function() {
-        encryptorModal.classList.add('active');
-        // Reset state
-        inputText.value = '';
-        outputText.textContent = '🔐 Output will appear here...';
-        outputText.style.color = '#0f0';
-      });
+      encryptorCard.addEventListener('click', () => encryptorModal.classList.add('active'));
+      encryptorClose.addEventListener('click', () => encryptorModal.classList.remove('active'));
       
-      // Close Text Encryptor modal
-      encryptorClose.addEventListener('click', function() {
-        encryptorModal.classList.remove('active');
-      });
-      
-      // Encrypt function
-      encryptBtn.addEventListener('click', function() {
-        const input = inputText.value;
-        if (!input) {
-          showAlert("Please enter text to encrypt.");
-          return;
-        }
+      encryptBtn.addEventListener('click', () => {
         try {
-          // Simple encryption using Base64 encoding
-          const encoded = btoa(encodeURIComponent(input));
-          outputText.textContent = "🔐 " + encoded;
-          outputText.style.color = '#0f0';
+          const encrypted = btoa(encodeURIComponent(encryptorInput.value));
+          encryptorOutput.textContent = encrypted;
         } catch (e) {
-          outputText.textContent = "❌ Error: Invalid characters";
-          outputText.style.color = '#ff375f';
+          encryptorOutput.textContent = 'Error: Invalid input';
         }
       });
       
-      // Decrypt function
-      decryptBtn.addEventListener('click', function() {
-        const input = inputText.value;
-        if (!input) {
-          showAlert("Please enter encrypted text to decrypt.");
-          return;
-        }
+      decryptBtn.addEventListener('click', () => {
         try {
-          // Simple decryption from Base64
-          const decoded = decodeURIComponent(atob(input));
-          outputText.textContent = "🔓 " + decoded;
-          outputText.style.color = '#0f0';
+          const decrypted = decodeURIComponent(atob(encryptorInput.value));
+          encryptorOutput.textContent = decrypted;
         } catch (e) {
-          outputText.textContent = "❌ Error: Invalid encrypted text";
-          outputText.style.color = '#ff375f';
+          encryptorOutput.textContent = 'Error: Invalid encrypted text';
         }
       });
       
-      // Copy function
-      copyBtn.addEventListener('click', function() {
-        let text = outputText.textContent;
-        
-        // Remove emoji prefix if present
-        if (text.startsWith("🔐 ") || text.startsWith("🔓 ")) {
-          text = text.substring(2);
-        }
-        
-        if (!text || text === "Output will appear here...") {
-          showAlert("Nothing to copy!");
-          return;
-        }
-        
-        // Use Clipboard API if available
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(text).then(() => {
-            showAlert("Copied to clipboard!");
-          }).catch(err => {
-            showAlert("Failed to copy: " + err);
-          });
-        } else {
-          // Fallback for older browsers
-          const textarea = document.createElement('textarea');
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-          showAlert("Copied to clipboard!");
-        }
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(encryptorOutput.textContent);
+        alert('Copied!');
       });
-      
-      // Helper function to show alerts
-      function showAlert(message) {
-        const notification = document.getElementById('notification');
-        notification.querySelector('h4').textContent = "Text Encryptor";
-        notification.querySelector('p').textContent = message;
+
+      // Logout
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        notification.querySelector('h4').textContent = 'Logged Out';
+        notification.querySelector('p').textContent = 'See you next time!';
         notification.classList.add('show');
-        
-        setTimeout(() => {
-          notification.classList.remove('show');
-        }, 3000);
-      }
-    }
-    
-    // Enhanced QR Code Generator with WIFI support
-    function setupQRGenerator() {
-      const qrModal = document.getElementById('qr-modal');
-      const qrCard = document.getElementById('qr-generator-card');
-      const wifiQrCard = document.getElementById('wifi-qr-card');
-      const phoneQrCard = document.getElementById('phone-qr-card');
-      const textQrCard = document.getElementById('text-qr-card');
-      const qrClose = document.getElementById('qr-close');
-      const generateQrBtn = document.getElementById('generate-qr-btn');
-      const downloadQrBtn = document.getElementById('download-qr-btn');
-      const qrStatus = document.getElementById('qr-status');
-      const qrCanvas = document.getElementById('qr-canvas');
-      const qrTabs = document.querySelectorAll('.qr-tab');
-      const qrInputArea = document.getElementById('qr-input-area');
-      const uploadLogoBtn = document.getElementById('upload-logo-btn');
-      const removeLogoBtn = document.getElementById('remove-logo-btn');
-      const qrLogoInput = document.getElementById('qr-logo-input');
-      const logoPreview = document.getElementById('logo-preview');
-      
-      let currentTab = 'TEXT';
-      let logoImage = null;
-      let qrInstance = null;
-      
-      // Open QR modal when card is clicked
-      qrCard.addEventListener('click', function() {
-        openQRModal('TEXT');
+        setTimeout(() => notification.classList.remove('show'), 2000);
       });
-      
-      // Open WIFI QR modal
-      wifiQrCard.addEventListener('click', function() {
-        openQRModal('WIFI');
-      });
-      
-      // Open Phone QR modal
-      phoneQrCard.addEventListener('click', function() {
-        openQRModal('PHONE');
-      });
-      
-      // Open Text QR modal
-      textQrCard.addEventListener('click', function() {
-        openQRModal('TEXT');
-      });
-      
-      // Close QR modal
-      qrClose.addEventListener('click', function() {
-        qrModal.classList.remove('active');
-      });
-      
-      // Tab switching
-      qrTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          currentTab = this.getAttribute('data-type');
-          qrTabs.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          updateInputFields();
-        });
-      });
-      
-      // Logo upload
-      uploadLogoBtn.addEventListener('click', function() {
-        qrLogoInput.click();
-      });
-      
-      qrLogoInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          logoImage = new Image();
-          logoImage.src = event.target.result;
-          
-          logoPreview.innerHTML = '';
-          const img = document.createElement('img');
-          img.src = event.target.result;
-          logoPreview.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      });
-      
-      // Remove logo
-      removeLogoBtn.addEventListener('click', function() {
-        logoImage = null;
-        logoPreview.innerHTML = '<i class="fas fa-image" style="font-size: 2rem; color: rgba(255,255,255,0.3);"></i>';
-      });
-      
-      // Generate QR code
-      generateQrBtn.addEventListener('click', function() {
-        const content = getContentForType(currentTab);
-        if (!content) {
-          qrStatus.textContent = "Please provide valid input for the QR code.";
-          return;
-        }
-        
-        // Generate QR code
-        qrInstance = new QRious({
-          element: qrCanvas,
-          value: content,
-          size: 300,
-          background: 'white',
-          foreground: 'black'
-        });
-        
-        // Add logo if available
-        if (logoImage) {
-          const ctx = qrCanvas.getContext('2d');
-          const logoSize = qrCanvas.width * 0.2;
-          const x = (qrCanvas.width - logoSize) / 2;
-          const y = (qrCanvas.height - logoSize) / 2;
-          
-          ctx.drawImage(logoImage, x, y, logoSize, logoSize);
-        }
-        
-        qrStatus.textContent = "QR code generated successfully!";
-        downloadQrBtn.style.display = 'inline-block';
-      });
-      
-      // Download QR code
-      downloadQrBtn.addEventListener('click', function() {
-        if (!qrInstance) {
-          qrStatus.textContent = "Please generate a QR code first.";
-          return;
-        }
-        
-        const link = document.createElement('a');
-        link.download = `qr-code-${currentTab.toLowerCase()}.png`;
-        link.href = qrCanvas.toDataURL('image/png');
-        link.click();
-        
-        qrStatus.textContent = "QR code downloaded!";
-      });
-      
-      // Helper functions
-      function openQRModal(type) {
-        qrModal.classList.add('active');
-        currentTab = type;
-        
-        // Update active tab
-        qrTabs.forEach(tab => {
-          tab.classList.remove('active');
-          if (tab.getAttribute('data-type') === type) {
-            tab.classList.add('active');
-          }
-        });
-        
-        updateInputFields();
-        qrStatus.textContent = '';
-        downloadQrBtn.style.display = 'none';
-      }
-      
-      function updateInputFields() {
-        let html = '';
-        
-        switch (currentTab) {
-          case 'TEXT':
-            html = `
-              <textarea id="text-content" placeholder="Enter text here..." class="qr-field-input" style="height: 100px;"></textarea>
-            `;
-            break;
-            
-          case 'WEBSITE':
-            html = `
-              <input type="url" id="website-url" placeholder="https://example.com" class="qr-field-input">
-            `;
-            break;
-            
-          case 'WIFI':
-            html = `
-              <div class="qr-field-group">
-                <div class="qr-field-row">
-                  <label class="qr-field-label">SSID:</label>
-                  <input type="text" class="qr-field-input" id="wifi-ssid" placeholder="Network name">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Encryption:</label>
-                  <select class="qr-field-input" id="wifi-encryption">
-                    <option value="WPA">WPA/WPA2</option>
-                    <option value="WEP">WEP</option>
-                    <option value="nopass">None</option>
-                  </select>
-                </div>
-                <div class="qr-field-row" id="wifi-password-row">
-                  <label class="qr-field-label">Password:</label>
-                  <input type="password" class="qr-field-input" id="wifi-password" placeholder="Password">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Hidden:</label>
-                  <input type="checkbox" class="qr-field-input" id="wifi-hidden">
-                </div>
-              </div>
-            `;
-            break;
-            
-          case 'PHONE':
-            html = `
-              <input type="tel" id="phone-number" placeholder="+1 234 567 8900" class="qr-field-input">
-            `;
-            break;
-            
-          case 'SMS':
-            html = `
-              <div class="qr-field-group">
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Number:</label>
-                  <input type="tel" class="qr-field-input" id="sms-number" placeholder="Phone number">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Message:</label>
-                  <input type="text" class="qr-field-input" id="sms-message" placeholder="Message text">
-                </div>
-              </div>
-            `;
-            break;
-            
-          case 'EMAIL':
-            html = `
-              <div class="qr-field-group">
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Email:</label>
-                  <input type="email" class="qr-field-input" id="email-address" placeholder="email@example.com">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Subject:</label>
-                  <input type="text" class="qr-field-input" id="email-subject" placeholder="Subject">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Body:</label>
-                  <textarea class="qr-field-input" id="email-body" placeholder="Message body" style="height: 80px;"></textarea>
-                </div>
-              </div>
-            `;
-            break;
-            
-          case 'GEO':
-            html = `
-              <div class="qr-field-group">
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Latitude:</label>
-                  <input type="number" class="qr-field-input" id="geo-lat" placeholder="37.422">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Longitude:</label>
-                  <input type="number" class="qr-field-input" id="geo-lng" placeholder="-122.084">
-                </div>
-              </div>
-            `;
-            break;
-            
-          case 'CONTACT':
-            html = `
-              <div class="qr-field-group">
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Name:</label>
-                  <input type="text" class="qr-field-input" id="contact-name" placeholder="Full name">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Phone:</label>
-                  <input type="tel" class="qr-field-input" id="contact-phone" placeholder="Phone number">
-                </div>
-                <div class="qr-field-row">
-                  <label class="qr-field-label">Email:</label>
-                  <input type="email" class="qr-field-input" id="contact-email" placeholder="email@example.com">
-                </div>
-              </div>
-            `;
-            break;
-            
-          case 'CLIPBOARD':
-            html = `
-              <textarea id="clipboard-content" placeholder="Paste content here or use clipboard" class="qr-field-input" style="height: 100px;"></textarea>
-              <button id="paste-clipboard-btn" class="qr-field-input" style="margin-top: 10px; background: rgba(10, 132, 255, 0.15); color: #0a84ff; border: none; padding: 10px; border-radius: 8px;">Paste from Clipboard</button>
-            `;
-            break;
-        }
-        
-        qrInputArea.innerHTML = html;
-        
-        // Add event listener for clipboard paste button
-        if (currentTab === 'CLIPBOARD') {
-          const pasteBtn = document.getElementById('paste-clipboard-btn');
-          if (pasteBtn) {
-            pasteBtn.addEventListener('click', async function() {
-              try {
-                const text = await navigator.clipboard.readText();
-                document.getElementById('clipboard-content').value = text;
-              } catch (err) {
-                qrStatus.textContent = "Failed to access clipboard. Please paste manually.";
-              }
-            });
-          }
-        }
-      }
-      
-      function getContentForType(type) {
-        switch (type) {
-          case 'TEXT':
-            return document.getElementById('text-content')?.value || '';
-            
-          case 'WEBSITE':
-            let url = document.getElementById('website-url')?.value || '';
-            if (url && !url.startsWith('http')) {
-              url = 'https://' + url;
-            }
-            return url;
-            
-          case 'WIFI':
-            const ssid = document.getElementById('wifi-ssid')?.value || '';
-            const encryption = document.getElementById('wifi-encryption')?.value || 'WPA';
-            const password = document.getElementById('wifi-password')?.value || '';
-            const hidden = document.getElementById('wifi-hidden')?.checked ? 'true' : 'false';
-            
-            if (!ssid) return '';
-            
-            return `WIFI:S:${ssid};T:${encryption};P:${password};H:${hidden};;`;
-            
-          case 'PHONE':
-            const phone = document.getElementById('phone-number')?.value || '';
-            return phone ? `tel:${phone}` : '';
-            
-          case 'SMS':
-            const smsNumber = document.getElementById('sms-number')?.value || '';
-            const smsMessage = document.getElementById('sms-message')?.value || '';
-            return smsNumber ? `smsto:${smsNumber}:${smsMessage}` : '';
-            
-          case 'EMAIL':
-            const email = document.getElementById('email-address')?.value || '';
-            const subject = document.getElementById('email-subject')?.value || '';
-            const body = document.getElementById('email-body')?.value || '';
-            return email ? `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}` : '';
-            
-          case 'GEO':
-            const lat = document.getElementById('geo-lat')?.value || '';
-            const lng = document.getElementById('geo-lng')?.value || '';
-            return (lat && lng) ? `geo:${lat},${lng}` : '';
-            
-          case 'CONTACT':
-            const name = document.getElementById('contact-name')?.value || '';
-            const contactPhone = document.getElementById('contact-phone')?.value || '';
-            const contactEmail = document.getElementById('contact-email')?.value || '';
-            
-            if (!name) return '';
-            
-            return `BEGIN:VCARD
-VERSION:3.0
-FN:${name}
-TEL:${contactPhone}
-EMAIL:${contactEmail}
-END:VCARD`;
-            
-          case 'CLIPBOARD':
-            return document.getElementById('clipboard-content')?.value || '';
-            
-          default:
-            return '';
-        }
-      }
-    }
-    
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      // Show welcome notification after 1 second
-      setTimeout(() => {
-        const notification = document.getElementById('notification');
-        notification.classList.add('show');
-        
-        setTimeout(() => {
-          notification.classList.remove('show');
-        }, 5000);
-        
-        const closeBtn = document.getElementById('notification-close');
-        closeBtn.addEventListener('click', function() {
-          notification.classList.remove('show');
-        });
-      }, 1000);
-      
-      // Animate sections
-      const sections = document.querySelectorAll('.section');
-      sections.forEach((section, index) => {
-        section.style.animationDelay = (index * 0.2) + 's';
-      });
-      
-      // Back to top functionality
-      const backToTopBtn = document.getElementById('back-to-top');
-      window.addEventListener('scroll', function() {
-        if (window.pageYOffset > 300) {
-          backToTopBtn.classList.add('show');
-        } else {
-          backToTopBtn.classList.remove('show');
-        }
-      });
-      
-      backToTopBtn.addEventListener('click', function() {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      });
-      
+
       // Search functionality
       const searchBar = document.getElementById('search-bar');
       searchBar.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const sections = document.querySelectorAll('.section');
-        
-        sections.forEach(section => {
-          const sectionTitle = section.querySelector('h3').textContent.toLowerCase();
-          const icons = section.querySelectorAll('.icon-group');
-          let hasMatch = sectionTitle.includes(searchTerm);
-          
-          icons.forEach(icon => {
-            const iconLabel = icon.querySelector('.socials-labels').textContent.toLowerCase();
-            if (iconLabel.includes(searchTerm)) {
-              hasMatch = true;
-              icon.style.display = 'flex';
-            } else {
-              icon.style.display = searchTerm ? 'none' : 'flex';
-            }
-          });
-          
-          section.style.display = hasMatch || !searchTerm ? 'block' : 'none';
+        const term = this.value.toLowerCase();
+        document.querySelectorAll('.section').forEach(section => {
+          const text = section.textContent.toLowerCase();
+          section.style.display = text.includes(term) ? 'block' : 'none';
         });
       });
-      
-      // Profile modal functionality
-      const profileModal = document.getElementById('profile-modal');
-      const profileContainer = document.getElementById('profile-container');
-      const closeModal = document.getElementById('close-modal');
-      
-      profileContainer.addEventListener('click', function() {
-        profileModal.classList.add('active');
-      });
-      
-      closeModal.addEventListener('click', function() {
-        profileModal.classList.remove('active');
-      });
-      
-      profileModal.addEventListener('click', function(e) {
-        if (e.target === profileModal) {
-          profileModal.classList.remove('active');
-        }
-      });
-      
-      // View All functionality
-      document.querySelectorAll('.view-all').forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          const sectionTitle = this.closest('.section-title-container').querySelector('h3').textContent;
-          const targetPage = document.querySelector('.nav-item[data-target="explore"]');
-          targetPage.click();
-          
-          // Show notification
-          const notification = document.getElementById('notification');
-          notification.querySelector('h4').textContent = `Viewing All ${sectionTitle}`;
-          notification.querySelector('p').textContent = `All items in the ${sectionTitle} category are now visible.`;
-          notification.classList.add('show');
-          
-          setTimeout(() => {
-            notification.classList.remove('show');
-          }, 3000);
-        });
-      });
-      
-      // Bottom navigation functionality
-      const navItems = document.querySelectorAll('.bottom-nav .nav-item');
-      const pages = document.querySelectorAll('.page');
-      const pageTitle = document.getElementById('page-title');
-      
-      navItems.forEach(item => {
-        item.addEventListener('click', function() {
-          // Remove active class from all items
-          navItems.forEach(navItem => navItem.classList.remove('active'));
-          
-          // Add active class to clicked item
-          this.classList.add('active');
-          
-          const target = this.getAttribute('data-target');
-          
-          // Hide all pages
-          pages.forEach(page => {
-            page.classList.remove('active');
-          });
-          
-          // Show the target page
-          document.getElementById(`${target}-page`).classList.add('active');
-          
-          // Update page title
-          pageTitle.textContent = this.querySelector('span').textContent;
-          
-          // Scroll to top
-          window.scrollTo(0, 0);
-        });
-      });
-      
-      // Theme selector functionality
-      const themeOptions = document.querySelectorAll('.theme-option');
-      themeOptions.forEach(option => {
-        option.addEventListener('click', function() {
-          themeOptions.forEach(opt => opt.classList.remove('active'));
-          this.classList.add('active');
-          
-          const theme = this.getAttribute('data-theme');
-          document.body.className = '';
-          document.body.classList.add(`theme-${theme}`);
-        });
-      });
-      
-      // Dark mode toggle
-      const darkModeToggle = document.getElementById('dark-mode-toggle');
-      darkModeToggle.addEventListener('change', function() {
-        if (this.checked) {
-          document.body.classList.add('dark-theme');
-        } else {
-          document.body.classList.remove('dark-theme');
-        }
-      });
-      
-      // Logout functionality
-      const logoutBtn = document.getElementById('logout-btn');
-      logoutBtn.addEventListener('click', function() {
-        const notification = document.getElementById('notification');
-        notification.querySelector('h4').textContent = "Logout Successful!";
-        notification.querySelector('p').textContent = "You have been successfully logged out.";
-        notification.classList.add('show');
-        
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      });
-      
-      // Setup enhanced tools
-      setupPdfConverter();
-      setupTextEncryptor();
-      setupQRGenerator();
     });
   </script>
 </body>
