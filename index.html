@@ -45,10 +45,11 @@
       pointer-events: none;
     }
     
+    /* Header with hamburger, search bar, profile */
     header {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
-      padding: 15px 30px;
+      padding: 10px 25px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       position: sticky;
       top: 0;
@@ -56,75 +57,353 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 15px;
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     }
     
-    .header-left { display: flex; align-items: center; gap: 20px; }
-    
-    .profile-container {
-      display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 8px 16px;
-      border-radius: 50px; background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08); margin-right: 20px;
-      transition: all 0.3s ease;
+    .header-left {
+      display: flex;
+      align-items: center;
     }
     
+    .header-center {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+    
+    /* Hamburger menu */
+    .hamburger {
+      height: 44px;
+      width: 44px;
+      position: relative;
+      cursor: pointer;
+      z-index: 200;
+    }
+    .hamburger .checkbox {
+      position: absolute;
+      opacity: 0;
+      height: 100%;
+      width: 100%;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .line {
+      transition: 0.5s;
+      stroke-width: 6px;
+      stroke: white;
+    }
+    .hamburger svg path {
+      stroke: white;
+    }
+    .lineTop {
+      stroke-dasharray: 40 40;
+      stroke-dashoffset: 25;
+    }
+    .lineBottom {
+      stroke-dasharray: 40 40;
+      stroke-dashoffset: 60;
+    }
+    .lineMid {
+      stroke-dasharray: 40 40;
+    }
+    .hamburger .checkbox:checked + svg .line {
+      stroke: #0a84ff;
+    }
+    .hamburger .checkbox:checked + svg .lineTop {
+      stroke-dashoffset: 0;
+      transform-origin: left;
+      transform: rotateZ(45deg) translate(-7px, -5px);
+    }
+    .hamburger .checkbox:checked + svg .lineMid {
+      stroke-dashoffset: 40;
+    }
+    .hamburger .checkbox:checked + svg .lineBottom {
+      stroke-dashoffset: 0;
+      transform-origin: left;
+      transform: rotateZ(-45deg) translate(-5px, 5px);
+    }
+    
+    /* Search bar inside header */
+    .header-search {
+      width: 100%;
+      position: relative;
+    }
+    .header-search-bar {
+      width: 100%;
+      padding: 12px 45px 12px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      color: #fff;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    .header-search-bar:focus {
+      outline: none;
+      border-color: rgba(10, 132, 255, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 4px rgba(10,132,255,0.15);
+    }
+    .header-search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem;
+    }
+    
+    .profile-container {
+      display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 6px 16px;
+      border-radius: 50px; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
     .profile-container:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
     .profile-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.15); }
     .profile-name { font-weight: 500; color: #fff; }
-    .header-center { flex: 1; display: flex; justify-content: center; }
-    .header-right { display: flex; align-items: center; gap: 20px; }
-    header h1 { font-size: 1.6rem; font-weight: 600; color: #fff; letter-spacing: -0.5px; margin: 0 auto; }
     
-    /* Sign out button removed */
-    
-    .search-container { margin: 30px auto; max-width: 680px; position: relative; padding: 0 30px; }
-    .search-bar {
-      width: 100%; padding: 18px 60px 18px 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); color: #fff; font-size: 1.05rem;
-      transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    /* Sidebar navigation */
+    .sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 260px;
+      height: calc(100vh - 70px);
+      background: rgba(20, 25, 40, 0.95);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 150;
+      padding: 25px 0;
+      border-radius: 0 20px 20px 0;
+      box-shadow: 5px 0 30px rgba(0,0,0,0.3);
     }
-    .search-bar:focus { outline: none; border-color: rgba(10, 132, 255, 0.5); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 4px rgba(10,132,255,0.15); }
-    .search-icon { position: absolute; right: 50px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); font-size: 1.2rem; }
-    
-    .container {
-      max-width: 1400px; margin: 0 auto; padding: 20px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;
-      position: relative; z-index: 10;
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    .sidebar .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 28px;
+      color: rgba(255,255,255,0.8);
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 4px solid transparent;
+    }
+    .sidebar .nav-item:hover {
+      background: rgba(10, 132, 255, 0.15);
+      color: #0a84ff;
+      border-left-color: #0a84ff;
+    }
+    .sidebar .nav-item i {
+      width: 28px;
+      font-size: 1.4rem;
+    }
+    .sidebar .nav-item.active {
+      background: rgba(10, 132, 255, 0.2);
+      color: #0a84ff;
+      border-left-color: #0a84ff;
     }
     
-    .section {
-      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px;
-      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.6s ease-out; min-height: 280px;
-      transition: all 0.3s ease;
+    /* Main content */
+    .page {
+      display: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 30px 80px;
     }
-    .section:hover { background: rgba(255, 255, 255, 0.06); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); border-color: rgba(255,255,255,0.15); }
-    .section h3 { 
-      font-size: 1.4rem; font-weight: 600; margin-bottom: 24px; padding-bottom: 16px; 
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; gap: 14px; color: #fff; 
-    }
-    .section h3 i { color: #0a84ff; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(10, 132, 255, 0.15); border-radius: 10px; }
-    
-    .socials { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 24px; justify-items: center; }
-    .icon-group { display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; cursor: pointer; width: 90px; }
-    .icon-group:hover { transform: translateY(-5px); }
-    .icon-group img { width: 70px; height: 70px; border-radius: 20px; background: rgba(255,255,255,0.05); padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
-    .icon-group:hover img { background: rgba(10, 132, 255, 0.15); transform: scale(1.05); border-color: rgba(10,132,255,0.3); }
-    .socials-labels { font-size: 0.95rem; margin-top: 14px; color: rgba(255,255,255,0.7); }
-    
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-around; padding: 8px 0; z-index: 90; height: 52px;
-    }
-    .nav-item { 
-      display: flex; flex-direction: column; align-items: center; gap: 3px; color: rgba(255,255,255,0.7); 
-      text-decoration: none; font-size: 0.75rem; padding: 6px 12px; cursor: pointer; border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-    .nav-item i { font-size: 1.1rem; }
-    .nav-item.active, .nav-item:hover { color: #0a84ff; background: rgba(10, 132, 255, 0.1); }
-    
-    .page { display: none; max-width: 1400px; margin: 0 auto; padding: 20px 30px 80px; }
     .page.active { display: block; }
+    
+    /* HOME PAGE container */
+    .home-saved-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 20px 0 80px;
+      text-align: center;
+    }
+    
+    /* Google Drive bento card */
+    .glass-card {
+      backdrop-filter: blur(24px) saturate(220%);
+      -webkit-backdrop-filter: blur(24px) saturate(220%);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .bento-card {
+      transform: translateY(0) scale(1);
+      transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.45s ease;
+      cursor: pointer;
+      height: 20rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .bento-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 32px 50px -20px rgba(0, 0, 0, 0.5), inset 0 1px 4px rgba(255,255,255,0.9);
+    }
+    .drive-icon-large {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 10px 20px rgba(66, 133, 244, 0.5));
+      transition: all 0.3s ease;
+    }
+    .bento-card:hover .drive-icon-large {
+      transform: scale(1.1) rotate(2deg);
+    }
+    .hover-reveal { opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+    .group:hover .hover-reveal { opacity: 1; transform: translateY(0); }
+    .open-link-icon {
+      position: absolute; top: 1rem; right: 1rem; z-index: 20; opacity: 0; transition: opacity 0.3s;
+      background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); border-radius: 50%;
+      width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
+    }
+    .group:hover .open-link-icon { opacity: 1; }
+    .single-card-grid { display: grid; grid-template-columns: minmax(300px, 500px); justify-content: center; margin-top: 1rem; }
+    
+    /* Glass social card */
+    .glass-social-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
+    .glass-social-container .glass {
+      position: relative;
+      width: 180px;
+      height: 200px;
+      background: linear-gradient(#fff2, transparent);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 25px rgba(0, 0, 0, 0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.5s;
+      border-radius: 10px;
+      margin: 0 -45px;
+      backdrop-filter: blur(10px);
+      transform: rotate(calc(var(--r) * 1deg));
+      will-change: transform, margin;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .glass-social-container:hover .glass {
+      transform: rotate(0deg);
+      margin: 0 10px;
+    }
+    .glass-social-container .glass::before {
+      content: attr(data-text);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-weight: 400;
+      letter-spacing: 1px;
+      backdrop-filter: blur(2px);
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    .glass-social-container .glass svg {
+      height: 3.2em;
+      width: auto;
+      fill: #fff;
+      opacity: 0.9;
+      transition: transform 0.25s ease;
+    }
+    .glass-social-container .glass:hover svg {
+      transform: scale(1.05);
+      fill: #ffffff;
+    }
+    @media (max-width: 700px) {
+      .glass-social-container .glass { width: 150px; height: 170px; margin: 0 -25px; }
+      .glass-social-container:hover .glass { margin: 0 5px; }
+    }
+    @media (max-width: 480px) {
+      .glass-social-container { flex-direction: column; }
+      .glass-social-container .glass { margin: -20px 0; transform: rotate(calc(var(--r) * 0.5deg)); }
+      .glass-social-container:hover .glass { margin: 10px 0; transform: rotate(0deg); }
+    }
+    .glass-social-container .glass:hover {
+      box-shadow: 0 25px 30px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(255,255,255,0.1);
+    }
+    
+    .brand-title {
+      font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;
+      background: linear-gradient(145deg, #4285f4, #0f9d58, #fbbc05); 
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+    
+    /* explore page tall cards */
+    .tall-card {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 32px 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 420px;
+      transition: all 0.2s ease;
+    }
+    .tall-card.hidden-search {
+      display: none;
+    }
+    .tall-card h3 {
+      font-size:1.5rem; font-weight:600; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:14px; color:#fff;
+    }
+    .tall-card h3 i {
+      color:#0a84ff; width:38px; height:38px; display:flex; align-items:center; justify-content:center; background:rgba(10,132,255,0.2); border-radius:12px; font-size:1.4rem;
+    }
+    .card-icon-group {
+      display:flex; flex-direction:column; align-items:center; cursor:pointer;
+    }
+    .card-icon-group img {
+      width:70px; height:70px; border-radius:20px; background:rgba(255,255,255,0.05); padding:14px;
+    }
+    .card-icon-group span {
+      margin-top:12px; color:rgba(255,255,255,0.8);
+    }
+    
+    /* For search filtering on home page */
+    .home-searchable {
+      transition: all 0.2s ease;
+    }
+    .home-searchable.hidden-search {
+      display: none !important;
+    }
+    
+    .explore-section, .saved-section, .settings-section {
+      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px;
+      margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.08);
+    }
     
     .back-to-top {
       position: fixed; bottom: 80px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
@@ -145,6 +424,7 @@
     .notification.show { opacity: 1; transform: translateY(0); }
     .notification-close { background: transparent; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 1.2rem; }
     
+    /* Profile modal */
     .profile-modal {
       position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px);
       display: flex; align-items: center; justify-content: center; z-index:2000; opacity:0; visibility:hidden; transition:0.4s;
@@ -159,21 +439,11 @@
       position: absolute; top:20px; right:20px; background:rgba(255,255,255,0.1); border:none; color:#fff;
       width:44px; height:44px; border-radius:50%; cursor:pointer;
     }
+    .profile-modal-img {
+      width:120px; height:120px; border-radius:50%; margin:0 auto 20px; object-fit:cover; border:2px solid rgba(255,255,255,0.2);
+    }
     
-    .explore-section, .saved-section, .settings-section {
-      background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px;
-      margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .explore-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;
-    }
-    .explore-card {
-      background: rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 20px; text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: all 0.3s ease;
-    }
-    .explore-card:hover { background: rgba(255, 255, 255, 0.06); transform: translateY(-5px); border-color: rgba(10,132,255,0.3); }
-    .explore-card img { width: 60px; height: 60px; margin: 0 auto 15px; border-radius: 16px; background: rgba(255,255,255,0.05); padding: 12px; }
-    
+    /* modals */
     .pdf-modal, .qr-modal, .text-encryptor-modal {
       position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
       display: flex; align-items: center; justify-content: center; z-index:3000; opacity:0; visibility:hidden; transition:0.4s;
@@ -189,329 +459,212 @@
       width:40px; height:40px; border-radius:50%; cursor:pointer;
     }
     
-    /* ClodifyHub Bento Styles */
-    .glass-card {
-      backdrop-filter: blur(24px) saturate(220%);
-      -webkit-backdrop-filter: blur(24px) saturate(220%);
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    .bento-card {
-      transform: translateY(0) scale(1);
-      transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.45s ease;
-      cursor: pointer;
-      height: 18rem;
-    }
-    .bento-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 32px 50px -20px rgba(0, 0, 0, 0.5), inset 0 1px 4px rgba(255,255,255,0.9);
-    }
-    .high-color-icon { filter: drop-shadow(0 8px 16px currentColor); transition: all 0.3s; }
-    .bento-card:hover .high-color-icon { filter: drop-shadow(0 12px 24px currentColor); transform: scale(1.08) rotate(1deg); }
-    .float-bg-icon { position: absolute; opacity: 0.2; transition: all 0.5s; }
-    .bento-card:hover .float-bg-icon { opacity: 0.4; transform: rotate(6deg) scale(1.1); }
-    .hover-reveal { opacity: 0; transform: translateY(10px); transition: all 0.3s; }
-    .group:hover .hover-reveal { opacity: 1; transform: translateY(0); }
-    .open-link-icon {
-      position: absolute; top: 1rem; right: 1rem; z-index: 20; opacity: 0; transition: opacity 0.3s;
-      background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); border-radius: 50%;
-      width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
-    }
-    .group:hover .open-link-icon { opacity: 1; }
-    .three-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1rem; }
-    @media (max-width: 768px) { .three-card-grid { grid-template-columns: 1fr; } }
-    .brand-title {
-      font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;
-      background: linear-gradient(145deg, #4285f4, #0f9d58, #fbbc05);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      display: inline-block;
-    }
-    
     .qr-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
     .qr-tab { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
     .qr-tab.active { background: #0a84ff; color: white; }
     
-    @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    /* K Loader */
+    .loader-overlay {
+      position: fixed; top:0; left:0; width:100%; height:100%; background: #0d0d14; display: flex; justify-content: center; align-items: center; z-index:9999; transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .loader-overlay.hidden { opacity:0; visibility:hidden; }
+    .absolute { position: absolute; }
+    .inline-block { display: inline-block; }
+    .loader { display: flex; margin:0.25em 0; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); }
+    .dash { animation: dashArray 2s ease-in-out infinite, dashOffset 2s linear infinite; }
+    @keyframes dashArray { 0% { stroke-dasharray:0 1 359 0; } 50% { stroke-dasharray:0 359 1 0; } 100% { stroke-dasharray:359 1 0 0; } }
+    @keyframes dashOffset { 0% { stroke-dashoffset:365; } 100% { stroke-dashoffset:5; } }
+    
+    @media (max-width: 768px) {
+      header { flex-wrap: wrap; }
+      .header-center { order: 3; width: 100%; max-width: 100%; margin-top: 10px; }
+      .profile-name { display: none; }
+    }
   </style>
 </head>
 <body>
-  <div id="dashboard-page">
+  <!-- K Loader -->
+  <div id="loader-overlay" class="loader-overlay">
+    <div class="loader">
+      <svg height="0" width="0" viewBox="0 0 64 64" class="absolute">
+        <defs>
+          <linearGradient gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="b">
+            <stop stop-color="#973BED"></stop><stop stop-color="#007CFF" offset="1"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="128" width="128" class="inline-block">
+        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="12" stroke="url(#b)" d="M 16,4 L 16,60 M 16,32 L 48,4 M 16,32 L 48,60" class="dash" id="k" pathLength="360"></path>
+      </svg>
+    </div>
+  </div>
+
+  <div id="dashboard-page" style="display: none;">
+    <!-- Header with Hamburger, Search, Profile -->
     <header>
       <div class="header-left">
+        <div class="hamburger" id="hamburgerBtn">
+          <input class="checkbox" type="checkbox" id="menuCheckbox" />
+          <svg fill="none" viewBox="0 0 50 50" height="44" width="44">
+            <path class="lineTop line" stroke-linecap="round" stroke-width="4" stroke="white" d="M6 11L44 11"></path>
+            <path stroke-linecap="round" stroke-width="4" stroke="white" d="M6 24H43" class="lineMid line"></path>
+            <path stroke-linecap="round" stroke-width="4" stroke="white" d="M6 37H43" class="lineBottom line"></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="header-search">
+          <input type="text" class="header-search-bar" placeholder="Search everything (e.g., 'drive', 'game', 'ai')..." id="search-bar">
+          <i class="fas fa-search header-search-icon"></i>
+        </div>
+      </div>
+
+      <div class="header-right">
         <div class="profile-container" id="profile-container">  
           <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="Profile" class="profile-img">
           <span class="profile-name">Khushal</span>
         </div>
       </div>
-      <div class="header-center">
-        <h1 id="page-title">Dashboard</h1>
-      </div>
-      <div class="header-right">
-        <!-- Sign out button completely removed -->
-      </div>
     </header>
 
-    <div class="search-container">
-      <input type="text" class="search-bar" placeholder="Search for apps, games, or resources... (type 'drive' to open Saved)" id="search-bar">
-      <i class="fas fa-search search-icon"></i>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+      <div class="nav-item active" data-target="home"><i class="fas fa-home"></i> Home</div>
+      <div class="nav-item" data-target="explore"><i class="fas fa-compass"></i> Explore</div>
+      <div class="nav-item" data-target="saved"><i class="fas fa-bookmark"></i> Saved</div>
+      <div class="nav-item" data-target="settings"><i class="fas fa-cog"></i> Settings</div>
     </div>
 
-    <!-- HOME PAGE - ALL ICONS LINKED -->
+    <!-- HOME PAGE -->
     <div class="page active" id="home-page">
-      <div class="container">
-        <!-- Contact Me - Social Links -->
-        <div class="section">
-          <h3><i class="fas fa-link"></i>Contact Me</h3>
-          <div class="socials">
-            <div class="icon-group" onclick="window.open('https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu', '_blank')">
-              <img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram">
-              <span class="socials-labels">Instagram</span>
+      <div class="home-saved-container">
+        <div class="brand-title home-searchable" id="home-brand">ClodifyHub</div>
+        <!-- Google Drive card -->
+        <div class="single-card-grid home-searchable" id="drive-card-container">
+          <div onclick="window.open('https://drive.google.com', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 glass-card bento-card" id="drive-card">
+            <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" class="drive-icon-large">
+            <div class="relative z-10 w-full text-center">
+              <div class="hover-reveal">
+                <h3 class="text-xl font-semibold text-white">Google Drive</h3>
+                <p class="text-sm text-white/80"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 15 GB free</p>
+                <div class="mt-2 flex gap-1 justify-center"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">docs</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">sheets</span></div>
+              </div>
             </div>
-            <div class="icon-group" onclick="window.open('https://facebook.com', '_blank')">
-              <img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook">
-              <span class="socials-labels">Facebook</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://github.com/', '_blank')">
-              <img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub">
-              <span class="socials-labels">GitHub</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://twitter.com', '_blank')">
-              <img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter">
-              <span class="socials-labels">Twitter</span>
-            </div>
+            <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4; opacity:0.2;"></i>
+            <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color: #34A853; opacity:0.2;"></i>
           </div>
         </div>
 
-        <!-- PC Mod Apps -->
-        <div class="section">
-          <h3><i class="fas fa-gamepad"></i> PC Mod Apps</h3>
-          <div class="socials">
-            <div class="icon-group" onclick="window.open('https://se7en.ws/games/?lang=en', '_blank')">
-              <img src="https://img.icons8.com/fluency/100/controller.png" alt="Se7en.ws">
-              <span class="socials-labels">Se7en.ws</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://creativeconor.com/', '_blank')">
-              <img src="https://img.icons8.com/fluency/100/epic-games.png" alt="CreativeConor">
-              <span class="socials-labels">CreativeConor</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://gamingbeasts.com/', '_blank')">
-              <img src="https://img.icons8.com/color/100/controller.png" alt="GamingBeasts">
-              <span class="socials-labels">GamingBeasts</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://itch.io', '_blank')">
-              <img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch.io">
-              <span class="socials-labels">Itch.io</span>
-            </div>
-          </div>
+        <!-- Glass social card -->
+        <div class="glass-social-container home-searchable" id="social-card-container">
+          <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank" data-text="Instagram" style="--r:-15;" class="glass">
+            <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.9 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+          </a>
+          <a href="https://github.com" target="_blank" data-text="Github" style="--r:5;" class="glass">
+            <svg viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+          </a>
+          <a href="https://www.facebook.com" target="_blank" data-text="Facebook" style="--r:25;" class="glass">
+            <svg viewBox="0 0 512 512"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg>
+          </a>
         </div>
-
-        <!-- Online Games -->
-        <div class="section">
-          <h3><i class="fas fa-dice"></i> Online Games</h3>
-          <div class="socials">
-            <div class="icon-group" onclick="window.open('https://deadshot.io/', '_blank')">
-              <img src="https://image.pngaaa.com/885/1977885-middle.png" alt="DEADSHOT">
-              <span class="socials-labels">DEADSHOT</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://slowroads.io/', '_blank')">
-              <img src="https://img.icons8.com/fluency/100/gaming.png" alt="Slow Road">
-              <span class="socials-labels">Slow Road</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://armedforces.io/', '_blank')">
-              <img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce">
-              <span class="socials-labels">Armedforce</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://www.miniclip.com', '_blank')">
-              <img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip">
-              <span class="socials-labels">Miniclip</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Movie Sites -->
-        <div class="section">
-          <h3><i class="fas fa-film"></i> Movie Sites</h3>
-          <div class="socials">
-            <div class="icon-group" onclick="window.open('https://hdhub4u.gd/', '_blank')">
-              <img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub4u">
-              <span class="socials-labels">HDHub4u</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://popcornmovies.org/', '_blank')">
-              <img src="https://i.pinimg.com/1200x/b0/95/86/b0958635bf6b2a09553a7a438fe56259.jpg" alt="Popcorn">
-              <span class="socials-labels">pop corn</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://katworld.net/', '_blank')">
-              <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="KAT MOVIES">
-              <span class="socials-labels">KAT MOVIES</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://net20.cc/home', '_blank')">
-              <img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="NET MIRROR">
-              <span class="socials-labels">NET MIRROR</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mod Apps -->
-        <div class="section">
-          <h3><i class="fas fa-mobile-alt"></i> Mod Apps</h3>
-          <div class="socials">
-            <div class="icon-group" onclick="window.open('https://jarmod.com/', '_blank')">
-              <img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="Jarmod">
-              <span class="socials-labels">Jarmod</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://adescargar.online/', '_blank')">
-              <img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar">
-              <span class="socials-labels">Adescargar</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://an1.com/', '_blank')">
-              <img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="AN1">
-              <span class="socials-labels">AN1</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://jollymod.com/', '_blank')">
-              <img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="Jolly Mod">
-              <span class="socials-labels">Jolly Mod</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Study Resources -->
-        <div class="section">
-          <h3><i class="fas fa-graduation-cap"></i> Study Resources</h3>
-          <div class="socials">
-            <div class="icon-group" onclick="window.open('https://www.codewithharry.com/notes', '_blank')">
-              <img src="https://image.pngaaa.com/764/3513764-middle.png" alt="Code With Harry">
-              <span class="socials-labels">Code With Harry</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://www.mygreatlearning.com/academy', '_blank')">
-              <img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="My Great Learning">
-              <span class="socials-labels">My Great Learning</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://sathee.iitk.ac.in/', '_blank')">
-              <img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE">
-              <span class="socials-labels">SATHEE</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm?usp=drive_link', '_blank')">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive">
-              <span class="socials-labels">Drive</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- AI Tools -->
-        <div class="section">
-          <h3><i class="fas fa-robot"></i> AI Tools</h3>
-          <div class="socials">
-            <div class="icon-group" onclick="window.open('https://chat.openai.com', '_blank')">
-              <img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT">
-              <span class="socials-labels">ChatGPT</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://ai-search.io/', '_blank')">
-              <img src="https://cdn-icons-png.flaticon.com/512/11698/11698467.png" alt="AI-SEARCH">
-              <span class="socials-labels">AI-SEARCH</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://www.aixploria.com/en/', '_blank')">
-              <img src="https://img.icons8.com/color/100/artificial-intelligence.png" alt="AI Exploria">
-              <span class="socials-labels">AI Exploria</span>
-            </div>
-            <div class="icon-group" onclick="window.open('https://perplexity.ai', '_blank')">
-              <img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity">
-              <span class="socials-labels">Perplexity</span>
-            </div>
-          </div>
-        </div>
+        <p class="mt-16 text-white/50 text-sm home-searchable" id="home-footer">✨ Hover over the cards to see them align</p>
       </div>
     </div>
 
-    <!-- EXPLORE PAGE - Cards open modals -->
+    <!-- EXPLORE PAGE -->
     <div class="page" id="explore-page">
-      <div class="explore-section">
-        <h3><i class="fas fa-fire"></i> Trending Apps</h3>
-        <div class="explore-grid">
-          <div class="explore-card" id="pdf-converter-card">
-            <img src="https://img.icons8.com/color/100/pdf.png" alt="PDF">
-            <h4>Image to PDF</h4>
-            <p>Convert images to PDF</p>
+      <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="explore-grid">
+          <!-- Contact Me Card -->
+          <div class="tall-card" data-search="contact instagram facebook github twitter">
+            <h3><i class="fas fa-link"></i>Contact Me</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
+              <div class="card-icon-group" onclick="window.open('https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu', '_blank')">
+                <img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram"><span>Instagram</span>
+              </div>
+              <div class="card-icon-group" onclick="window.open('https://facebook.com', '_blank')">
+                <img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook"><span>Facebook</span>
+              </div>
+              <div class="card-icon-group" onclick="window.open('https://github.com/', '_blank')">
+                <img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub"><span>GitHub</span>
+              </div>
+              <div class="card-icon-group" onclick="window.open('https://twitter.com', '_blank')">
+                <img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter"><span>Twitter</span>
+              </div>
+            </div>
           </div>
-          <div class="explore-card" id="qr-generator-card">
-            <img src="https://img.icons8.com/color/100/qr-code.png" alt="QR">
-            <h4>QR Generator</h4>
-            <p>Create QR with logo</p>
+          <!-- PC Mod Apps Card -->
+          <div class="tall-card" data-search="pc mod apps se7en creativeconor gamingbeasts itch.io">
+            <h3><i class="fas fa-gamepad"></i>PC Mod Apps</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
+              <div class="card-icon-group" onclick="window.open('https://se7en.ws/games/?lang=en', '_blank')"><img src="https://img.icons8.com/fluency/100/controller.png" alt="Se7en.ws"><span>Se7en.ws</span></div>
+              <div class="card-icon-group" onclick="window.open('https://creativeconor.com/', '_blank')"><img src="https://img.icons8.com/fluency/100/epic-games.png" alt="CreativeConor"><span>CreativeConor</span></div>
+              <div class="card-icon-group" onclick="window.open('https://gamingbeasts.com/', '_blank')"><img src="https://img.icons8.com/color/100/controller.png" alt="GamingBeasts"><span>GamingBeasts</span></div>
+              <div class="card-icon-group" onclick="window.open('https://itch.io', '_blank')"><img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch.io"><span>Itch.io</span></div>
+            </div>
           </div>
-          <div class="explore-card" id="text-encryptor-card">
-            <img src="https://img.icons8.com/fluency/100/lock.png" alt="Encrypt">
-            <h4>Text Encryptor</h4>
-            <p>Encrypt/decrypt text</p>
+          <!-- Online Games Card -->
+          <div class="tall-card" data-search="online games deadshot slowroads armedforce miniclip">
+            <h3><i class="fas fa-dice"></i>Online Games</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
+              <div class="card-icon-group" onclick="window.open('https://deadshot.io/', '_blank')"><img src="https://image.pngaaa.com/885/1977885-middle.png" alt="DEADSHOT"><span>DEADSHOT</span></div>
+              <div class="card-icon-group" onclick="window.open('https://slowroads.io/', '_blank')"><img src="https://img.icons8.com/fluency/100/gaming.png" alt="Slow Road"><span>Slow Road</span></div>
+              <div class="card-icon-group" onclick="window.open('https://armedforces.io/', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce"><span>Armedforce</span></div>
+              <div class="card-icon-group" onclick="window.open('https://www.miniclip.com', '_blank')"><img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip"><span>Miniclip</span></div>
+            </div>
           </div>
-          <div class="explore-card" id="wifi-qr-card">
-            <img src="https://img.icons8.com/color/100/wifi.png" alt="WIFI">
-            <h4>WIFI QR</h4>
-            <p>Share WiFi login</p>
+          <!-- Movie Sites Card -->
+          <div class="tall-card" data-search="movie sites hdhub4u popcorn kat movies net mirror">
+            <h3><i class="fas fa-film"></i>Movie Sites</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
+              <div class="card-icon-group" onclick="window.open('https://hdhub4u.gd/', '_blank')"><img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub4u"><span>HDHub4u</span></div>
+              <div class="card-icon-group" onclick="window.open('https://popcornmovies.org/', '_blank')"><img src="https://i.pinimg.com/1200x/b0/95/86/b0958635bf6b2a09553a7a438fe56259.jpg" alt="Popcorn"><span>pop corn</span></div>
+              <div class="card-icon-group" onclick="window.open('https://katworld.net/', '_blank')"><img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="KAT MOVIES"><span>KAT MOVIES</span></div>
+              <div class="card-icon-group" onclick="window.open('https://net20.cc/home', '_blank')"><img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="NET MIRROR"><span>NET MIRROR</span></div>
+            </div>
           </div>
-          <div class="explore-card" id="phone-qr-card">
-            <img src="https://img.icons8.com/color/100/phone.png" alt="Phone">
-            <h4>Phone QR</h4>
-            <p>Call via QR</p>
+          <!-- Mod Apps Card -->
+          <div class="tall-card" data-search="mod apps jarmod adescargar an1 jollymod">
+            <h3><i class="fas fa-mobile-alt"></i>Mod Apps</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
+              <div class="card-icon-group" onclick="window.open('https://jarmod.com/', '_blank')"><img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="Jarmod"><span>Jarmod</span></div>
+              <div class="card-icon-group" onclick="window.open('https://adescargar.online/', '_blank')"><img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar"><span>Adescargar</span></div>
+              <div class="card-icon-group" onclick="window.open('https://an1.com/', '_blank')"><img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="AN1"><span>AN1</span></div>
+              <div class="card-icon-group" onclick="window.open('https://jollymod.com/', '_blank')"><img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="Jolly Mod"><span>Jolly Mod</span></div>
+            </div>
           </div>
-          <div class="explore-card" id="text-qr-card">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Code_Icon.PNG" alt="Text">
-            <h4>Text QR</h4>
-            <p>Plain text QR</p>
+          <!-- Study Resources Card -->
+          <div class="tall-card" data-search="study resources code with harry my great learning sathee drive">
+            <h3><i class="fas fa-graduation-cap"></i>Study Resources</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
+              <div class="card-icon-group" onclick="window.open('https://www.codewithharry.com/notes', '_blank')"><img src="https://image.pngaaa.com/764/3513764-middle.png" alt="Code With Harry"><span>Code With Harry</span></div>
+              <div class="card-icon-group" onclick="window.open('https://www.mygreatlearning.com/academy', '_blank')"><img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="My Great Learning"><span>My Great Learning</span></div>
+              <div class="card-icon-group" onclick="window.open('https://sathee.iitk.ac.in/', '_blank')"><img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE"><span>SATHEE</span></div>
+              <div class="card-icon-group" onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm?usp=drive_link', '_blank')"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive"><span>Drive</span></div>
+            </div>
+          </div>
+          <!-- AI Tools Card -->
+          <div class="tall-card" data-search="ai tools chatgpt gemini claude perplexity">
+            <h3><i class="fas fa-robot"></i>AI Tools</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
+              <div class="card-icon-group" onclick="window.open('https://chat.openai.com', '_blank')"><img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT"><span>ChatGPT</span></div>
+              <div class="card-icon-group" onclick="window.open('https://gemini.google.com', '_blank')"><img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-gemini-icon.png" alt="Gemini"><span>Gemini</span></div>
+              <div class="card-icon-group" onclick="window.open('https://claude.ai', '_blank')"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZI3m6GFIElfR4o6DKm6bJhPQ88U8k2MkO2A&s" alt="Claude"><span>Claude</span></div>
+              <div class="card-icon-group" onclick="window.open('https://perplexity.ai', '_blank')"><img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity"><span>Perplexity</span></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SAVED PAGE - ClodifyHub Bento (Google Drive cards) -->
+    <!-- SAVED PAGE -->
     <div class="page" id="saved-page">
-      <div class="saved-section" style="background: transparent; padding: 0;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-          <div class="brand-title">ClodifyHub</div>
-          <div class="three-card-grid">
-            <!-- Card 1: Google Drive -->
-            <div onclick="window.open('https://drive.google.com', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
-              <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
-              <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4;"></i>
-              <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color: #34A853;"></i>
-              <div class="relative z-10 w-full">
-                <div class="hover-reveal">
-                  <i class="ph-fill ph-google-drive-logo text-4xl mb-3 high-color-icon" style="color: #4285F4;"></i>
-                  <h3 class="text-xl font-semibold text-white">Google Drive</h3>
-                  <p class="text-sm text-white/80"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 15 GB free</p>
-                  <div class="mt-2 flex gap-1"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">docs</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">sheets</span></div>
-                </div>
-              </div>
-            </div>
-            <!-- Card 2: My Folders -->
-            <div onclick="window.open('https://drive.google.com/drive/my-drive', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
-              <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
-              <i class="ph-fill ph-folder-open float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #FBBC05;"></i>
-              <i class="ph-fill ph-folder-simple-plus float-bg-icon text-7xl top-8 left-4 absolute rotate-6" style="color: #4285F4;"></i>
-              <div class="relative z-10 w-full">
-                <div class="hover-reveal">
-                  <i class="ph-fill ph-folders text-4xl mb-3 high-color-icon" style="color: #FBBC05;"></i>
-                  <h3 class="text-xl font-semibold text-white">project hub</h3>
-                  <p class="text-sm text-white/80">design · dev · assets</p>
-                  <div class="mt-2 flex gap-1"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">24 items</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">figma</span></div>
-                </div>
-              </div>
-            </div>
-            <!-- Card 3: Shared + Starred -->
-            <div onclick="window.open('https://drive.google.com/drive/shared-with-me', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
-              <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
-              <i class="ph-fill ph-share-network float-bg-icon text-8xl -top-6 -right-4 absolute rotate-12" style="color: #0F9D58;"></i>
-              <i class="ph-fill ph-star float-bg-icon text-8xl -bottom-8 -left-6 absolute rotate-12" style="color: #FBBC05;"></i>
-              <div class="relative z-10 w-full">
-                <div class="hover-reveal">
-                  <i class="ph-fill ph-share text-4xl mb-3 high-color-icon" style="color: #0F9D58;"></i>
-                  <h3 class="text-xl font-semibold text-white">shared + starred</h3>
-                  <p class="text-sm text-white/80">proposals · research</p>
-                  <div class="mt-2 flex gap-1"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">Q2</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">priority</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="saved-section" style="text-align:center; padding:60px;">
+        <i class="fas fa-bookmark text-5xl text-white/30 mb-4"></i>
+        <h3 class="text-xl text-white/50">Saved items moved to Home</h3>
+        <p class="text-white/30">Your Google Drive card is now on the Home page.</p>
       </div>
     </div>
 
@@ -519,125 +672,88 @@
     <div class="page" id="settings-page">
       <div class="settings-section">
         <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
-        <div class="settings-option" style="padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-          <div class="option-info" style="display: flex; gap: 15px;">
-            <div class="option-icon"><i class="fas fa-user"></i></div>
-            <div><h4>Profile Information</h4><p style="color: rgba(255,255,255,0.7);">Change your name, email, and profile picture</p></div>
-          </div>
-        </div>
-        <div class="settings-option" style="padding: 15px 0;">
-          <div class="option-info" style="display: flex; gap: 15px;">
-            <div class="option-icon"><i class="fas fa-shield-alt"></i></div>
-            <div><h4>Security</h4><p style="color: rgba(255,255,255,0.7);">Change password and enable two-factor authentication</p></div>
-          </div>
-        </div>
+        <div class="settings-option" style="padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.1);"><div class="option-info" style="display:flex;gap:15px;"><div class="option-icon"><i class="fas fa-user"></i></div><div><h4>Profile Information</h4><p style="color:rgba(255,255,255,0.7);">Change your name, email, and profile picture</p></div></div></div>
+        <div class="settings-option" style="padding:15px 0;"><div class="option-info" style="display:flex;gap:15px;"><div class="option-icon"><i class="fas fa-shield-alt"></i></div><div><h4>Security</h4><p style="color:rgba(255,255,255,0.7);">Change password and enable two-factor authentication</p></div></div></div>
       </div>
     </div>
 
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-      <div class="nav-item active" data-target="home"><i class="fas fa-home"></i><span>Home</span></div>
-      <div class="nav-item" data-target="explore"><i class="fas fa-compass"></i><span>Explore</span></div>
-      <div class="nav-item" data-target="saved"><i class="fas fa-bookmark"></i><span>Saved</span></div>
-      <div class="nav-item" data-target="settings"><i class="fas fa-cog"></i><span>Settings</span></div>
-    </div>
-
-    <!-- Back to Top -->
     <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
-
-    <!-- Notification -->
-    <div class="notification" id="notification">
-      <div class="notification-icon"><i class="fas fa-bell"></i></div>
-      <div class="notification-content">
-        <h4>Welcome!</h4>
-        <p>Type "drive" in search to open Saved section!</p>
-      </div>
-      <button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button>
-    </div>
+    <div class="notification" id="notification"><div class="notification-icon"><i class="fas fa-bell"></i></div><div class="notification-content"><h4>Welcome!</h4><p>Type "drive" in search to open Home!</p></div><button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button></div>
 
     <!-- Profile Modal -->
     <div class="profile-modal" id="profile-modal">
       <div class="modal-content">
         <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
-        <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="Profile" style="width:120px; height:120px; border-radius:50%; margin:0 auto 20px;">
-        <h2>Khushal Jangra</h2>
-        <p style="color:rgba(255,255,255,0.7); margin:10px 0 30px;">choyal034@gmail.com</p>
+        <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="Profile" class="profile-modal-img">
+        <h2 style="font-size:1.8rem; margin-bottom:8px;">Khushal Jangra</h2>
+        <p style="color:rgba(255,255,255,0.7); margin-bottom:10px;">choyal034@gmail.com</p>
       </div>
     </div>
 
-    <!-- PDF Modal -->
-    <div class="pdf-modal" id="pdf-modal">
-      <div class="pdf-modal-content">
-        <button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button>
-        <h2>Image to PDF Converter</h2>
-        <input type="file" id="imageInput" multiple accept="image/*" style="margin:20px 0; padding:10px; width:100%; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
-        <button id="generate-pdf-btn" style="background:#0a84ff; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer;">Generate PDF</button>
-        <div id="pdf-status" style="margin-top:15px;"></div>
-        <div id="previewContainer" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;"></div>
-      </div>
-    </div>
-
-    <!-- QR Modal -->
-    <div class="qr-modal" id="qr-modal">
-      <div class="qr-modal-content">
-        <button class="qr-close" id="qr-close"><i class="fas fa-times"></i></button>
-        <h2>QR Code Generator</h2>
-        <div class="qr-tabs">
-          <div class="qr-tab active" data-type="TEXT">TEXT</div>
-          <div class="qr-tab" data-type="WEBSITE">URL</div>
-          <div class="qr-tab" data-type="WIFI">WIFI</div>
-        </div>
-        <div id="qr-input-area">
-          <textarea id="text-content" placeholder="Enter text..." style="width:100%; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;"></textarea>
-        </div>
-        <button id="generate-qr-btn" style="background:#0a84ff; color:white; border:none; padding:12px 24px; border-radius:8px; margin:10px 0; cursor:pointer;">Generate QR</button>
-        <canvas id="qr-canvas" style="margin:15px auto; background:white; padding:10px; border-radius:8px; display:block;"></canvas>
-        <button id="download-qr-btn" style="background:#34c759; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer;">Download QR</button>
-      </div>
-    </div>
-
-    <!-- Text Encryptor Modal -->
-    <div class="text-encryptor-modal" id="text-encryptor-modal">
-      <div class="text-encryptor-modal-content">
-        <button class="text-encryptor-close" id="text-encryptor-close"><i class="fas fa-times"></i></button>
-        <h2>Text Encryptor</h2>
-        <textarea id="encryptor-input" placeholder="Enter message..." style="width:100%; height:100px; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;"></textarea>
-        <div style="display:flex; gap:10px; margin:15px 0;">
-          <button id="encrypt-btn" style="background:#0a84ff; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Encrypt</button>
-          <button id="decrypt-btn" style="background:#ff9f0a; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Decrypt</button>
-          <button id="copy-encrypted-btn" style="background:#34c759; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">Copy</button>
-        </div>
-        <div id="encryptor-output" style="background:rgba(0,0,0,0.3); padding:15px; border-radius:8px; word-break:break-all;"></div>
-      </div>
-    </div>
+    <!-- Utility Modals (PDF, QR, Encryptor) -->
+    <div class="pdf-modal" id="pdf-modal"><div class="pdf-modal-content"><button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button><h2>Image to PDF</h2><input type="file" id="imageInput" multiple accept="image/*" style="margin:20px0;width:100%;padding:10px;"><button id="generate-pdf-btn" style="background:#0a84ff;color:white;padding:12px;">Generate PDF</button><div id="pdf-status"></div><div id="previewContainer"></div></div></div>
+    <div class="qr-modal" id="qr-modal"><div class="qr-modal-content"><button class="qr-close" id="qr-close"><i class="fas fa-times"></i></button><h2>QR Generator</h2><div class="qr-tabs"><div class="qr-tab active" data-type="TEXT">TEXT</div><div class="qr-tab" data-type="WEBSITE">URL</div><div class="qr-tab" data-type="WIFI">WIFI</div></div><div id="qr-input-area"><textarea id="text-content" placeholder="Enter text..." style="width:100%;padding:12px;"></textarea></div><button id="generate-qr-btn" style="background:#0a84ff;color:white;padding:12px;">Generate QR</button><canvas id="qr-canvas" style="margin:15px auto;background:white;padding:10px;display:block;"></canvas><button id="download-qr-btn" style="background:#34c759;color:white;padding:12px;">Download QR</button></div></div>
+    <div class="text-encryptor-modal" id="text-encryptor-modal"><div class="text-encryptor-modal-content"><button class="text-encryptor-close" id="text-encryptor-close"><i class="fas fa-times"></i></button><h2>Text Encryptor</h2><textarea id="encryptor-input" placeholder="Enter message..." style="width:100%;height:100px;padding:12px;"></textarea><div style="display:flex;gap:10px;"><button id="encrypt-btn" style="background:#0a84ff;color:white;padding:10px;">Encrypt</button><button id="decrypt-btn" style="background:#ff9f0a;color:white;padding:10px;">Decrypt</button><button id="copy-encrypted-btn" style="background:#34c759;color:white;padding:10px;">Copy</button></div><div id="encryptor-output" style="background:rgba(0,0,0,0.3);padding:15px;"></div></div></div>
   </div>
 
   <script>
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('loader-overlay');
+      const dashboard = document.getElementById('dashboard-page');
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        dashboard.style.display = 'block';
+        setTimeout(() => { loader.style.display = 'none'; }, 600);
+      }, 2000);
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
-      // Navigation
-      const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+      const hamburgerCheckbox = document.getElementById('menuCheckbox');
+      const sidebar = document.getElementById('sidebar');
+      const navItems = document.querySelectorAll('.sidebar .nav-item');
       const pages = document.querySelectorAll('.page');
-      const pageTitle = document.getElementById('page-title');
       
+      // Toggle sidebar when hamburger is clicked
+      hamburgerCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+          sidebar.classList.add('open');
+        } else {
+          sidebar.classList.remove('open');
+        }
+      });
+
+      // Navigation from sidebar
       navItems.forEach(item => {
         item.addEventListener('click', function() {
+          const target = this.dataset.target;
+          
           navItems.forEach(n => n.classList.remove('active'));
           this.classList.add('active');
-          const target = this.getAttribute('data-target');
+          
           pages.forEach(p => p.classList.remove('active'));
           document.getElementById(`${target}-page`).classList.add('active');
-          pageTitle.textContent = this.querySelector('span').textContent;
-          window.scrollTo(0, 0);
+          
+          sidebar.classList.remove('open');
+          hamburgerCheckbox.checked = false;
+          
+          window.scrollTo(0,0);
         });
+      });
+
+      // Close sidebar when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!sidebar.contains(e.target) && !hamburgerCheckbox.closest('.hamburger')?.contains(e.target) && sidebar.classList.contains('open')) {
+          sidebar.classList.remove('open');
+          hamburgerCheckbox.checked = false;
+        }
       });
 
       // Back to top
       const backBtn = document.getElementById('back-to-top');
       window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) backBtn.classList.add('show');
-        else backBtn.classList.remove('show');
+        backBtn.classList.toggle('show', window.pageYOffset > 300);
       });
-      backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      backBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
       // Profile modal
       const profileModal = document.getElementById('profile-modal');
@@ -646,7 +762,9 @@
       
       profileContainer.addEventListener('click', () => profileModal.classList.add('active'));
       closeModal.addEventListener('click', () => profileModal.classList.remove('active'));
-      profileModal.addEventListener('click', (e) => { if (e.target === profileModal) profileModal.classList.remove('active'); });
+      profileModal.addEventListener('click', (e) => {
+        if (e.target === profileModal) profileModal.classList.remove('active');
+      });
 
       // Notification
       const notification = document.getElementById('notification');
@@ -659,218 +777,74 @@
       
       notifClose.addEventListener('click', () => notification.classList.remove('show'));
 
-      // PDF Converter
-      const pdfModal = document.getElementById('pdf-modal');
-      const pdfCard = document.getElementById('pdf-converter-card');
-      const pdfClose = document.getElementById('pdf-close');
-      const generatePdfBtn = document.getElementById('generate-pdf-btn');
-      const imageInput = document.getElementById('imageInput');
-      const previewContainer = document.getElementById('previewContainer');
-      const pdfStatus = document.getElementById('pdf-status');
-      let images = [];
-
-      pdfCard.addEventListener('click', () => pdfModal.classList.add('active'));
-      pdfClose.addEventListener('click', () => pdfModal.classList.remove('active'));
-
-      imageInput.addEventListener('change', function() {
-        images = [];
-        previewContainer.innerHTML = '';
-        const files = Array.from(this.files);
-        files.forEach(file => {
-          const reader = new FileReader();
-          reader.onload = e => {
-            images.push(e.target.result);
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.style.width = '100px';
-            img.style.height = '100px';
-            img.style.objectFit = 'cover';
-            img.style.borderRadius = '8px';
-            previewContainer.appendChild(img);
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-
-      generatePdfBtn.addEventListener('click', async function() {
-        if (images.length === 0) {
-          pdfStatus.textContent = 'Please select images first.';
-          return;
-        }
-        pdfStatus.textContent = 'Generating PDF...';
-        try {
-          const { jsPDF } = window.jspdf;
-          const pdf = new jsPDF();
-          for (let i = 0; i < images.length; i++) {
-            if (i > 0) pdf.addPage();
-            const img = new Image();
-            img.src = images[i];
-            await new Promise(resolve => { img.onload = resolve; });
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (img.height * pdfWidth) / img.width;
-            pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-          }
-          pdf.save('converted.pdf');
-          pdfStatus.textContent = 'PDF created successfully!';
-        } catch (error) {
-          pdfStatus.textContent = 'Error: ' + error.message;
-        }
-      });
-
-      // QR Generator
-      const qrModal = document.getElementById('qr-modal');
-      const qrCard = document.getElementById('qr-generator-card');
-      const qrClose = document.getElementById('qr-close');
-      const generateQrBtn = document.getElementById('generate-qr-btn');
-      const downloadQrBtn = document.getElementById('download-qr-btn');
-      const qrCanvas = document.getElementById('qr-canvas');
-      const qrTabs = document.querySelectorAll('.qr-tab');
-      const qrInputArea = document.getElementById('qr-input-area');
-      
-      let currentType = 'TEXT';
-      
-      // Open QR modal from any QR-related card
-      document.querySelectorAll('#qr-generator-card, #wifi-qr-card, #phone-qr-card, #text-qr-card').forEach(card => {
-        card.addEventListener('click', () => qrModal.classList.add('active'));
-      });
-      
-      qrClose.addEventListener('click', () => qrModal.classList.remove('active'));
-      
-      qrTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          qrTabs.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          currentType = this.dataset.type;
-          if (currentType === 'TEXT') {
-            qrInputArea.innerHTML = '<textarea id="text-content" placeholder="Enter text..." style="width:100%; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;"></textarea>';
-          } else if (currentType === 'WEBSITE') {
-            qrInputArea.innerHTML = '<input type="url" id="website-url" placeholder="https://example.com" style="width:100%; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">';
-          } else if (currentType === 'WIFI') {
-            qrInputArea.innerHTML = `
-              <input type="text" id="wifi-ssid" placeholder="Network name" style="width:100%; padding:12px; margin:5px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
-              <input type="password" id="wifi-password" placeholder="Password" style="width:100%; padding:12px; margin:5px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
-              <select id="wifi-encryption" style="width:100%; padding:12px; margin:5px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
-                <option value="WPA">WPA/WPA2</option>
-                <option value="WEP">WEP</option>
-                <option value="nopass">None</option>
-              </select>
-            `;
-          }
-        });
-      });
-      
-      generateQrBtn.addEventListener('click', function() {
-        let value = '';
-        if (currentType === 'TEXT') value = document.getElementById('text-content')?.value || '';
-        else if (currentType === 'WEBSITE') value = document.getElementById('website-url')?.value || '';
-        else if (currentType === 'WIFI') {
-          const ssid = document.getElementById('wifi-ssid')?.value || '';
-          const pwd = document.getElementById('wifi-password')?.value || '';
-          const enc = document.getElementById('wifi-encryption')?.value || 'WPA';
-          value = `WIFI:S:${ssid};T:${enc};P:${pwd};;`;
-        }
-        
-        if (!value) { alert('Please enter some content'); return; }
-        
-        new QRious({
-          element: qrCanvas,
-          value: value,
-          size: 250,
-          background: 'white',
-          foreground: 'black'
-        });
-      });
-      
-      downloadQrBtn.addEventListener('click', function() {
-        const link = document.createElement('a');
-        link.download = 'qrcode.png';
-        link.href = qrCanvas.toDataURL();
-        link.click();
-      });
-
-      // Text Encryptor
-      const encryptorModal = document.getElementById('text-encryptor-modal');
-      const encryptorCard = document.getElementById('text-encryptor-card');
-      const encryptorClose = document.getElementById('text-encryptor-close');
-      const encryptBtn = document.getElementById('encrypt-btn');
-      const decryptBtn = document.getElementById('decrypt-btn');
-      const copyBtn = document.getElementById('copy-encrypted-btn');
-      const encryptorInput = document.getElementById('encryptor-input');
-      const encryptorOutput = document.getElementById('encryptor-output');
-      
-      encryptorCard.addEventListener('click', () => encryptorModal.classList.add('active'));
-      encryptorClose.addEventListener('click', () => encryptorModal.classList.remove('active'));
-      
-      encryptBtn.addEventListener('click', () => {
-        try {
-          const encrypted = btoa(encodeURIComponent(encryptorInput.value));
-          encryptorOutput.textContent = encrypted;
-        } catch (e) {
-          encryptorOutput.textContent = 'Error: Invalid input';
-        }
-      });
-      
-      decryptBtn.addEventListener('click', () => {
-        try {
-          const decrypted = decodeURIComponent(atob(encryptorInput.value));
-          encryptorOutput.textContent = decrypted;
-        } catch (e) {
-          encryptorOutput.textContent = 'Error: Invalid encrypted text';
-        }
-      });
-      
-      copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(encryptorOutput.textContent);
-        alert('Copied!');
-      });
-
-      // SEARCH FUNCTIONALITY - Opens Saved page when typing "drive"
+      // SEARCH FUNCTIONALITY - WORKING VERSION
       const searchBar = document.getElementById('search-bar');
       const navHome = document.querySelector('[data-target="home"]');
-      const navSaved = document.querySelector('[data-target="saved"]');
       
+      // Get all searchable elements
+      const homeSearchables = document.querySelectorAll('.home-searchable');
+      const exploreCards = document.querySelectorAll('#explore-page .tall-card');
+      
+      // Store original content for reset
       searchBar.addEventListener('input', function() {
         const term = this.value.toLowerCase().trim();
         
-        // Special case: if term is exactly "drive", open saved page
+        // Special case: if term is exactly "drive", open home page
         if (term === 'drive') {
-          // Trigger saved page navigation
-          navSaved.click();
-          
-          // Show notification
-          notification.querySelector('h4').textContent = 'Opening Saved';
-          notification.querySelector('p').textContent = 'ClodifyHub Google Drive section';
-          notification.classList.add('show');
-          setTimeout(() => notification.classList.remove('show'), 2000);
-          
-          // Clear search bar after a moment
-          setTimeout(() => {
-            searchBar.value = '';
-          }, 500);
-          
-          return;
-        }
-        
-        // Regular search functionality for home page only if on home page
-        if (document.getElementById('home-page').classList.contains('active')) {
-          document.querySelectorAll('.section').forEach(section => {
-            const text = section.textContent.toLowerCase();
-            section.style.display = text.includes(term) ? 'block' : 'none';
-          });
-        }
-      });
-      
-      // Add keyboard shortcut: Enter with "drive" also works
-      searchBar.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && this.value.toLowerCase().trim() === 'drive') {
-          navSaved.click();
-          notification.querySelector('h4').textContent = 'Opening Saved';
-          notification.querySelector('p').textContent = 'ClodifyHub Google Drive section';
+          navHome.click();
+          notification.querySelector('h4').textContent = 'Opening Home';
+          notification.querySelector('p').textContent = 'ClodifyHub Google Drive';
           notification.classList.add('show');
           setTimeout(() => notification.classList.remove('show'), 2000);
           setTimeout(() => { searchBar.value = ''; }, 500);
+          return;
         }
+        
+        // If search is empty, show everything
+        if (term === '') {
+          // Reset home page
+          homeSearchables.forEach(el => el.classList.remove('hidden-search'));
+          // Reset explore page
+          exploreCards.forEach(card => card.classList.remove('hidden-search'));
+          return;
+        }
+        
+        // Search in home page elements
+        let homeAnyMatch = false;
+        homeSearchables.forEach(el => {
+          const elText = el.textContent.toLowerCase();
+          if (elText.includes(term)) {
+            el.classList.remove('hidden-search');
+            homeAnyMatch = true;
+          } else {
+            el.classList.add('hidden-search');
+          }
+        });
+        
+        // If no home elements match, hide all home elements
+        if (!homeAnyMatch) {
+          homeSearchables.forEach(el => el.classList.add('hidden-search'));
+        }
+        
+        // Search in explore page cards
+        exploreCards.forEach(card => {
+          const cardText = card.textContent.toLowerCase();
+          const searchAttr = card.getAttribute('data-search') || '';
+          if (cardText.includes(term) || searchAttr.toLowerCase().includes(term)) {
+            card.classList.remove('hidden-search');
+          } else {
+            card.classList.add('hidden-search');
+          }
+        });
       });
+
+      // Modal triggers (keep existing)
+      document.getElementById('pdf-converter-card')?.addEventListener('click', () => document.getElementById('pdf-modal').classList.add('active'));
+      document.getElementById('pdf-close')?.addEventListener('click', () => document.getElementById('pdf-modal').classList.remove('active'));
+      document.querySelectorAll('#qr-generator-card, #wifi-qr-card, #phone-qr-card, #text-qr-card').forEach(c => c?.addEventListener('click', () => document.getElementById('qr-modal').classList.add('active')));
+      document.getElementById('qr-close')?.addEventListener('click', () => document.getElementById('qr-modal').classList.remove('active'));
+      document.getElementById('text-encryptor-card')?.addEventListener('click', () => document.getElementById('text-encryptor-modal').classList.add('active'));
+      document.getElementById('text-encryptor-close')?.addEventListener('click', () => document.getElementById('text-encryptor-modal').classList.remove('active'));
     });
   </script>
 </body>
