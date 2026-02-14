@@ -8,11 +8,11 @@
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-  <!-- Tailwind + Phosphor icons (for ClodifyHub bento) -->
+  <!-- Tailwind + Phosphor icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <style>
-    /* ----- original apple-inspired styles ----- */
+    /* Apple-inspired styles */
     * {
       margin: 0;
       padding: 0;
@@ -45,7 +45,6 @@
       pointer-events: none;
     }
     
-    /* Header Styling */
     header {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
@@ -83,7 +82,6 @@
     }
     .logout-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; transform: translateY(-2px); }
     
-    /* Search Bar */
     .search-container { margin: 30px auto; max-width: 680px; position: relative; padding: 0 30px; }
     .search-bar {
       width: 100%; padding: 18px 60px 18px 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08);
@@ -93,13 +91,11 @@
     .search-bar:focus { outline: none; border-color: rgba(10, 132, 255, 0.5); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 0 4px rgba(10,132,255,0.15); }
     .search-icon { position: absolute; right: 50px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); font-size: 1.2rem; }
     
-    /* Main container */
     .container {
       max-width: 1400px; margin: 0 auto; padding: 20px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px;
       position: relative; z-index: 10;
     }
     
-    /* Cards */
     .section {
       background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px;
       border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -120,7 +116,6 @@
     .icon-group:hover img { background: rgba(10, 132, 255, 0.15); transform: scale(1.05); border-color: rgba(10,132,255,0.3); }
     .socials-labels { font-size: 0.95rem; margin-top: 14px; color: rgba(255,255,255,0.7); }
     
-    /* Bottom Navigation */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
       border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-around; padding: 8px 0; z-index: 90; height: 52px;
@@ -133,11 +128,9 @@
     .nav-item i { font-size: 1.1rem; }
     .nav-item.active, .nav-item:hover { color: #0a84ff; background: rgba(10, 132, 255, 0.1); }
     
-    /* Pages */
     .page { display: none; max-width: 1400px; margin: 0 auto; padding: 20px 30px 80px; }
     .page.active { display: block; }
     
-    /* Back to Top */
     .back-to-top {
       position: fixed; bottom: 80px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
       background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); color: #fff;
@@ -147,7 +140,6 @@
     }
     .back-to-top.show { opacity: 1; transform: translateY(0); }
     
-    /* Notification */
     .notification {
       position: fixed; top: 30px; right: 30px; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
       padding: 22px 26px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08);
@@ -158,7 +150,6 @@
     .notification.show { opacity: 1; transform: translateY(0); }
     .notification-close { background: transparent; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 1.2rem; }
     
-    /* Profile Modal */
     .profile-modal {
       position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px);
       display: flex; align-items: center; justify-content: center; z-index:2000; opacity:0; visibility:hidden; transition:0.4s;
@@ -167,13 +158,13 @@
     .modal-content {
       background: rgba(30,30,40,0.9); backdrop-filter: blur(30px); border-radius:28px; padding:40px;
       max-width:480px; width:90%; text-align: center; border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
     }
     .close-modal {
       position: absolute; top:20px; right:20px; background:rgba(255,255,255,0.1); border:none; color:#fff;
       width:44px; height:44px; border-radius:50%; cursor:pointer;
     }
     
-    /* Explore Page */
     .explore-section, .saved-section, .settings-section {
       background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border-radius: 20px; padding: 28px;
       margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.08);
@@ -188,7 +179,6 @@
     .explore-card:hover { background: rgba(255, 255, 255, 0.06); transform: translateY(-5px); border-color: rgba(10,132,255,0.3); }
     .explore-card img { width: 60px; height: 60px; margin: 0 auto 15px; border-radius: 16px; background: rgba(255,255,255,0.05); padding: 12px; }
     
-    /* PDF, QR, Encryptor Modals */
     .pdf-modal, .qr-modal, .text-encryptor-modal {
       position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
       display: flex; align-items: center; justify-content: center; z-index:3000; opacity:0; visibility:hidden; transition:0.4s;
@@ -197,6 +187,7 @@
     .pdf-modal-content, .qr-modal-content, .text-encryptor-modal-content {
       background: rgba(30,30,40,0.9); backdrop-filter: blur(30px); border-radius:28px; padding:40px;
       max-width:600px; width:90%; max-height:90vh; overflow-y:auto; border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
     }
     .pdf-close, .qr-close, .text-encryptor-close {
       position: absolute; top:20px; right:20px; background:rgba(255,255,255,0.1); border:none; color:#fff;
@@ -242,7 +233,6 @@
       display: inline-block;
     }
     
-    /* QR tabs */
     .qr-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
     .qr-tab { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
     .qr-tab.active { background: #0a84ff; color: white; }
@@ -251,7 +241,6 @@
   </style>
 </head>
 <body>
-  <!-- Main Dashboard -->
   <div id="dashboard-page">
     <header>
       <div class="header-left">
@@ -271,112 +260,224 @@
       </div>
     </header>
 
-    <!-- Search Bar -->
     <div class="search-container">
       <input type="text" class="search-bar" placeholder="Search for apps, games, or resources..." id="search-bar">
       <i class="fas fa-search search-icon"></i>
     </div>
 
-    <!-- HOME PAGE -->
+    <!-- HOME PAGE - ALL ICONS LINKED -->
     <div class="page active" id="home-page">
       <div class="container">
-        <!-- Contact Me -->
+        <!-- Contact Me - Social Links -->
         <div class="section">
           <h3><i class="fas fa-link"></i>Contact Me</h3>
           <div class="socials">
-            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="IG"><span class="socials-labels">Instagram</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/color/100/facebook-new.png" alt="FB"><span class="socials-labels">Facebook</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/github.png" alt="GH"><span class="socials-labels">GitHub</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/color/100/twitter.png" alt="X"><span class="socials-labels">Twitter</span></div>
+            <div class="icon-group" onclick="window.open('https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu', '_blank')">
+              <img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram">
+              <span class="socials-labels">Instagram</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://facebook.com', '_blank')">
+              <img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook">
+              <span class="socials-labels">Facebook</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://github.com/', '_blank')">
+              <img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub">
+              <span class="socials-labels">GitHub</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://twitter.com', '_blank')">
+              <img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter">
+              <span class="socials-labels">Twitter</span>
+            </div>
           </div>
         </div>
+
         <!-- PC Mod Apps -->
         <div class="section">
           <h3><i class="fas fa-gamepad"></i> PC Mod Apps</h3>
           <div class="socials">
-            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/controller.png" alt="Se7en"><span class="socials-labels">Se7en.ws</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/epic-games.png" alt="CC"><span class="socials-labels">CreativeConor</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/color/100/controller.png" alt="GB"><span class="socials-labels">GamingBeasts</span></div>
-            <div class="icon-group"><img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch"><span class="socials-labels">Itch.io</span></div>
+            <div class="icon-group" onclick="window.open('https://se7en.ws/games/?lang=en', '_blank')">
+              <img src="https://img.icons8.com/fluency/100/controller.png" alt="Se7en.ws">
+              <span class="socials-labels">Se7en.ws</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://creativeconor.com/', '_blank')">
+              <img src="https://img.icons8.com/fluency/100/epic-games.png" alt="CreativeConor">
+              <span class="socials-labels">CreativeConor</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://gamingbeasts.com/', '_blank')">
+              <img src="https://img.icons8.com/color/100/controller.png" alt="GamingBeasts">
+              <span class="socials-labels">GamingBeasts</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://itch.io', '_blank')">
+              <img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch.io">
+              <span class="socials-labels">Itch.io</span>
+            </div>
           </div>
         </div>
+
         <!-- Online Games -->
         <div class="section">
           <h3><i class="fas fa-dice"></i> Online Games</h3>
           <div class="socials">
-            <div class="icon-group"><img src="https://image.pngaaa.com/885/1977885-middle.png" alt="Deadshot"><span class="socials-labels">DEADSHOT</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/gaming.png" alt="SlowRoad"><span class="socials-labels">Slow Road</span></div>
-            <div class="icon-group"><img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce"><span class="socials-labels">Armedforce</span></div>
-            <div class="icon-group"><img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip"><span class="socials-labels">Miniclip</span></div>
+            <div class="icon-group" onclick="window.open('https://deadshot.io/', '_blank')">
+              <img src="https://image.pngaaa.com/885/1977885-middle.png" alt="DEADSHOT">
+              <span class="socials-labels">DEADSHOT</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://slowroads.io/', '_blank')">
+              <img src="https://img.icons8.com/fluency/100/gaming.png" alt="Slow Road">
+              <span class="socials-labels">Slow Road</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://armedforces.io/', '_blank')">
+              <img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce">
+              <span class="socials-labels">Armedforce</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://www.miniclip.com', '_blank')">
+              <img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip">
+              <span class="socials-labels">Miniclip</span>
+            </div>
           </div>
         </div>
+
         <!-- Movie Sites -->
         <div class="section">
           <h3><i class="fas fa-film"></i> Movie Sites</h3>
           <div class="socials">
-            <div class="icon-group"><img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub"><span class="socials-labels">HDHub4u</span></div>
-            <div class="icon-group"><img src="https://i.pinimg.com/1200x/b0/95/86/b0958635bf6b2a09553a7a438fe56259.jpg" alt="Popcorn"><span class="socials-labels">pop corn</span></div>
-            <div class="icon-group"><img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="KAT"><span class="socials-labels">KAT MOVIES</span></div>
-            <div class="icon-group"><img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="NET"><span class="socials-labels">NET MIRROR</span></div>
+            <div class="icon-group" onclick="window.open('https://hdhub4u.gd/', '_blank')">
+              <img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub4u">
+              <span class="socials-labels">HDHub4u</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://popcornmovies.org/', '_blank')">
+              <img src="https://i.pinimg.com/1200x/b0/95/86/b0958635bf6b2a09553a7a438fe56259.jpg" alt="Popcorn">
+              <span class="socials-labels">pop corn</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://katworld.net/', '_blank')">
+              <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="KAT MOVIES">
+              <span class="socials-labels">KAT MOVIES</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://net20.cc/home', '_blank')">
+              <img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="NET MIRROR">
+              <span class="socials-labels">NET MIRROR</span>
+            </div>
           </div>
         </div>
+
         <!-- Mod Apps -->
         <div class="section">
           <h3><i class="fas fa-mobile-alt"></i> Mod Apps</h3>
           <div class="socials">
-            <div class="icon-group"><img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="Jarmod"><span class="socials-labels">Jarmod</span></div>
-            <div class="icon-group"><img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar"><span class="socials-labels">Adescargar</span></div>
-            <div class="icon-group"><img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="desk"><span class="socials-labels">desk</span></div>
-            <div class="icon-group"><img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="Jolly"><span class="socials-labels">Jolly Mod</span></div>
+            <div class="icon-group" onclick="window.open('https://jarmod.com/', '_blank')">
+              <img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="Jarmod">
+              <span class="socials-labels">Jarmod</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://adescargar.online/', '_blank')">
+              <img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar">
+              <span class="socials-labels">Adescargar</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://an1.com/', '_blank')">
+              <img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="AN1">
+              <span class="socials-labels">AN1</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://jollymod.com/', '_blank')">
+              <img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="Jolly Mod">
+              <span class="socials-labels">Jolly Mod</span>
+            </div>
           </div>
         </div>
+
         <!-- Study Resources -->
         <div class="section">
           <h3><i class="fas fa-graduation-cap"></i> Study Resources</h3>
           <div class="socials">
-            <div class="icon-group"><img src="https://image.pngaaa.com/764/3513764-middle.png" alt="CWH"><span class="socials-labels">Code With Harry</span></div>
-            <div class="icon-group"><img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="MGL"><span class="socials-labels">My Great Learning</span></div>
-            <div class="icon-group"><img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE"><span class="socials-labels">SATHEE</span></div>
-            <div class="icon-group"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive"><span class="socials-labels">Drive</span></div>
+            <div class="icon-group" onclick="window.open('https://www.codewithharry.com/notes', '_blank')">
+              <img src="https://image.pngaaa.com/764/3513764-middle.png" alt="Code With Harry">
+              <span class="socials-labels">Code With Harry</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://www.mygreatlearning.com/academy', '_blank')">
+              <img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="My Great Learning">
+              <span class="socials-labels">My Great Learning</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://sathee.iitk.ac.in/', '_blank')">
+              <img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE">
+              <span class="socials-labels">SATHEE</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm?usp=drive_link', '_blank')">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive">
+              <span class="socials-labels">Drive</span>
+            </div>
           </div>
         </div>
+
         <!-- AI Tools -->
         <div class="section">
           <h3><i class="fas fa-robot"></i> AI Tools</h3>
           <div class="socials">
-            <div class="icon-group"><img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT"><span class="socials-labels">ChatGPT</span></div>
-            <div class="icon-group"><img src="https://cdn-icons-png.flaticon.com/512/11698/11698467.png" alt="AI-SEARCH"><span class="socials-labels">AI-SEARCH</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/color/100/artificial-intelligence.png" alt="AI Exploria"><span class="socials-labels">AI Exploria</span></div>
-            <div class="icon-group"><img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity"><span class="socials-labels">Perplexity</span></div>
+            <div class="icon-group" onclick="window.open('https://chat.openai.com', '_blank')">
+              <img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT">
+              <span class="socials-labels">ChatGPT</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://ai-search.io/', '_blank')">
+              <img src="https://cdn-icons-png.flaticon.com/512/11698/11698467.png" alt="AI-SEARCH">
+              <span class="socials-labels">AI-SEARCH</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://www.aixploria.com/en/', '_blank')">
+              <img src="https://img.icons8.com/color/100/artificial-intelligence.png" alt="AI Exploria">
+              <span class="socials-labels">AI Exploria</span>
+            </div>
+            <div class="icon-group" onclick="window.open('https://perplexity.ai', '_blank')">
+              <img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity">
+              <span class="socials-labels">Perplexity</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- EXPLORE PAGE -->
+    <!-- EXPLORE PAGE - Cards open modals -->
     <div class="page" id="explore-page">
       <div class="explore-section">
         <h3><i class="fas fa-fire"></i> Trending Apps</h3>
         <div class="explore-grid">
-          <div class="explore-card" id="pdf-converter-card"><img src="https://img.icons8.com/color/100/pdf.png" alt="PDF"><h4>Image to PDF</h4><p>Convert images to PDF</p></div>
-          <div class="explore-card" id="qr-generator-card"><img src="https://img.icons8.com/color/100/qr-code.png" alt="QR"><h4>QR Generator</h4><p>Create QR with logo</p></div>
-          <div class="explore-card" id="text-encryptor-card"><img src="https://img.icons8.com/fluency/100/lock.png" alt="Encrypt"><h4>Text Encryptor</h4><p>Encrypt/decrypt text</p></div>
-          <div class="explore-card" id="wifi-qr-card"><img src="https://img.icons8.com/color/100/wifi.png" alt="WIFI"><h4>WIFI QR</h4><p>Share WiFi login</p></div>
-          <div class="explore-card" id="phone-qr-card"><img src="https://img.icons8.com/color/100/phone.png" alt="Phone"><h4>Phone QR</h4><p>Call via QR</p></div>
-          <div class="explore-card" id="text-qr-card"><img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Code_Icon.PNG" alt="Text"><h4>Text QR</h4><p>Plain text QR</p></div>
+          <div class="explore-card" id="pdf-converter-card">
+            <img src="https://img.icons8.com/color/100/pdf.png" alt="PDF">
+            <h4>Image to PDF</h4>
+            <p>Convert images to PDF</p>
+          </div>
+          <div class="explore-card" id="qr-generator-card">
+            <img src="https://img.icons8.com/color/100/qr-code.png" alt="QR">
+            <h4>QR Generator</h4>
+            <p>Create QR with logo</p>
+          </div>
+          <div class="explore-card" id="text-encryptor-card">
+            <img src="https://img.icons8.com/fluency/100/lock.png" alt="Encrypt">
+            <h4>Text Encryptor</h4>
+            <p>Encrypt/decrypt text</p>
+          </div>
+          <div class="explore-card" id="wifi-qr-card">
+            <img src="https://img.icons8.com/color/100/wifi.png" alt="WIFI">
+            <h4>WIFI QR</h4>
+            <p>Share WiFi login</p>
+          </div>
+          <div class="explore-card" id="phone-qr-card">
+            <img src="https://img.icons8.com/color/100/phone.png" alt="Phone">
+            <h4>Phone QR</h4>
+            <p>Call via QR</p>
+          </div>
+          <div class="explore-card" id="text-qr-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Code_Icon.PNG" alt="Text">
+            <h4>Text QR</h4>
+            <p>Plain text QR</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- SAVED PAGE - with ClodifyHub Bento (3 Google Drive cards) -->
+    <!-- SAVED PAGE - ClodifyHub Bento (Google Drive cards) -->
     <div class="page" id="saved-page">
       <div class="saved-section" style="background: transparent; padding: 0;">
-        <!-- ClodifyHub Bento -->
         <div style="max-width: 1200px; margin: 0 auto;">
           <div class="brand-title">ClodifyHub</div>
           <div class="three-card-grid">
             <!-- Card 1: Google Drive -->
-            <div onclick="window.open('https://drive.google.com/drive/u/0/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
+            <div onclick="window.open('https://drive.google.com', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
               <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
               <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4;"></i>
               <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color: #34A853;"></i>
@@ -457,7 +558,7 @@
       <div class="notification-icon"><i class="fas fa-bell"></i></div>
       <div class="notification-content">
         <h4>Welcome!</h4>
-        <p>ClodifyHub is now in your Saved page.</p>
+        <p>All app icons are now linked. Click any icon to open!</p>
       </div>
       <button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button>
     </div>
@@ -477,7 +578,7 @@
       <div class="pdf-modal-content">
         <button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button>
         <h2>Image to PDF Converter</h2>
-        <input type="file" id="imageInput" multiple accept="image/*" style="margin:20px 0; padding:10px;">
+        <input type="file" id="imageInput" multiple accept="image/*" style="margin:20px 0; padding:10px; width:100%; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;">
         <button id="generate-pdf-btn" style="background:#0a84ff; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer;">Generate PDF</button>
         <div id="pdf-status" style="margin-top:15px;"></div>
         <div id="previewContainer" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;"></div>
@@ -498,7 +599,7 @@
           <textarea id="text-content" placeholder="Enter text..." style="width:100%; padding:12px; margin:15px 0; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px;"></textarea>
         </div>
         <button id="generate-qr-btn" style="background:#0a84ff; color:white; border:none; padding:12px 24px; border-radius:8px; margin:10px 0; cursor:pointer;">Generate QR</button>
-        <canvas id="qr-canvas" style="margin:15px auto; background:white; padding:10px; border-radius:8px;"></canvas>
+        <canvas id="qr-canvas" style="margin:15px auto; background:white; padding:10px; border-radius:8px; display:block;"></canvas>
         <button id="download-qr-btn" style="background:#34c759; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer;">Download QR</button>
       </div>
     </div>
@@ -636,7 +737,8 @@
       
       let currentType = 'TEXT';
       
-      document.querySelectorAll('[id$="-qr-card"]').forEach(card => {
+      // Open QR modal from any QR-related card
+      document.querySelectorAll('#qr-generator-card, #wifi-qr-card, #phone-qr-card, #text-qr-card').forEach(card => {
         card.addEventListener('click', () => qrModal.classList.add('active'));
       });
       
