@@ -75,12 +75,7 @@
     .header-right { display: flex; align-items: center; gap: 20px; }
     header h1 { font-size: 1.6rem; font-weight: 600; color: #fff; letter-spacing: -0.5px; margin: 0 auto; }
     
-    .logout-btn {
-      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.8); font-size: 1.1rem; cursor: pointer; padding: 10px 16px; border-radius: 50px;
-      transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
-    }
-    .logout-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; transform: translateY(-2px); }
+    /* Sign out button removed */
     
     .search-container { margin: 30px auto; max-width: 680px; position: relative; padding: 0 30px; }
     .search-bar {
@@ -253,15 +248,12 @@
         <h1 id="page-title">Dashboard</h1>
       </div>
       <div class="header-right">
-        <button class="logout-btn" id="logout-btn">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Sign Out</span>
-        </button>
+        <!-- Sign out button completely removed -->
       </div>
     </header>
 
     <div class="search-container">
-      <input type="text" class="search-bar" placeholder="Search for apps, games, or resources..." id="search-bar">
+      <input type="text" class="search-bar" placeholder="Search for apps, games, or resources... (type 'drive' to open Saved)" id="search-bar">
       <i class="fas fa-search search-icon"></i>
     </div>
 
@@ -399,9 +391,9 @@
               <img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE">
               <span class="socials-labels">SATHEE</span>
             </div>
-            <div class="icon-group" onclick="window.open('https://www.google.com/', '_blank')">
-              <img src="https://androidworld.nl/wp-content/uploads/2025/05/google-logo.jpg" alt="Google">
-              <span class="socials-labels">GOOGLE</span>
+            <div class="icon-group" onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm?usp=drive_link', '_blank')">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive">
+              <span class="socials-labels">Drive</span>
             </div>
           </div>
         </div>
@@ -477,7 +469,7 @@
           <div class="brand-title">ClodifyHub</div>
           <div class="three-card-grid">
             <!-- Card 1: Google Drive -->
-            <div onclick="window.open('https://drive.google.com/drive/u/0/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
+            <div onclick="window.open('https://drive.google.com', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
               <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
               <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4;"></i>
               <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color: #34A853;"></i>
@@ -485,13 +477,13 @@
                 <div class="hover-reveal">
                   <i class="ph-fill ph-google-drive-logo text-4xl mb-3 high-color-icon" style="color: #4285F4;"></i>
                   <h3 class="text-xl font-semibold text-white">Google Drive</h3>
-                  <p class="text-sm text-white/80"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 2 TB free</p>
+                  <p class="text-sm text-white/80"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 15 GB free</p>
                   <div class="mt-2 flex gap-1"><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">docs</span><span class="text-xs bg-white/20 px-2 py-0.5 rounded-full">sheets</span></div>
                 </div>
               </div>
             </div>
             <!-- Card 2: My Folders -->
-            <div onclick="window.open('https://drive.google.com/drive/u/0/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
+            <div onclick="window.open('https://drive.google.com/drive/my-drive', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
               <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
               <i class="ph-fill ph-folder-open float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #FBBC05;"></i>
               <i class="ph-fill ph-folder-simple-plus float-bg-icon text-7xl top-8 left-4 absolute rotate-6" style="color: #4285F4;"></i>
@@ -505,7 +497,7 @@
               </div>
             </div>
             <!-- Card 3: Shared + Starred -->
-            <div onclick="window.open('https://drive.google.com/drive/u/0/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
+            <div onclick="window.open('https://drive.google.com/drive/shared-with-me', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 flex flex-col justify-end glass-card bento-card">
               <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
               <i class="ph-fill ph-share-network float-bg-icon text-8xl -top-6 -right-4 absolute rotate-12" style="color: #0F9D58;"></i>
               <i class="ph-fill ph-star float-bg-icon text-8xl -bottom-8 -left-6 absolute rotate-12" style="color: #FBBC05;"></i>
@@ -558,7 +550,7 @@
       <div class="notification-icon"><i class="fas fa-bell"></i></div>
       <div class="notification-content">
         <h4>Welcome!</h4>
-        <p>All app icons are now linked. Click any icon to open!</p>
+        <p>Type "drive" in search to open Saved section!</p>
       </div>
       <button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button>
     </div>
@@ -832,22 +824,52 @@
         alert('Copied!');
       });
 
-      // Logout
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        notification.querySelector('h4').textContent = 'Logged Out';
-        notification.querySelector('p').textContent = 'See you next time!';
-        notification.classList.add('show');
-        setTimeout(() => notification.classList.remove('show'), 2000);
-      });
-
-      // Search functionality
+      // SEARCH FUNCTIONALITY - Opens Saved page when typing "drive"
       const searchBar = document.getElementById('search-bar');
+      const navHome = document.querySelector('[data-target="home"]');
+      const navSaved = document.querySelector('[data-target="saved"]');
+      
       searchBar.addEventListener('input', function() {
-        const term = this.value.toLowerCase();
-        document.querySelectorAll('.section').forEach(section => {
-          const text = section.textContent.toLowerCase();
-          section.style.display = text.includes(term) ? 'block' : 'none';
-        });
+        const term = this.value.toLowerCase().trim();
+        
+        // Special case: if term is exactly "drive", open saved page
+        if (term === 'drive') {
+          // Trigger saved page navigation
+          navSaved.click();
+          
+          // Show notification
+          notification.querySelector('h4').textContent = 'Opening Saved';
+          notification.querySelector('p').textContent = 'ClodifyHub Google Drive section';
+          notification.classList.add('show');
+          setTimeout(() => notification.classList.remove('show'), 2000);
+          
+          // Clear search bar after a moment
+          setTimeout(() => {
+            searchBar.value = '';
+          }, 500);
+          
+          return;
+        }
+        
+        // Regular search functionality for home page only if on home page
+        if (document.getElementById('home-page').classList.contains('active')) {
+          document.querySelectorAll('.section').forEach(section => {
+            const text = section.textContent.toLowerCase();
+            section.style.display = text.includes(term) ? 'block' : 'none';
+          });
+        }
+      });
+      
+      // Add keyboard shortcut: Enter with "drive" also works
+      searchBar.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && this.value.toLowerCase().trim() === 'drive') {
+          navSaved.click();
+          notification.querySelector('h4').textContent = 'Opening Saved';
+          notification.querySelector('p').textContent = 'ClodifyHub Google Drive section';
+          notification.classList.add('show');
+          setTimeout(() => notification.classList.remove('show'), 2000);
+          setTimeout(() => { searchBar.value = ''; }, 500);
+        }
       });
     });
   </script>
