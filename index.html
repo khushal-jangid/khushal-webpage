@@ -238,7 +238,74 @@
       width: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;
     }
     .group:hover .open-link-icon { opacity: 1; }
-    .single-card-grid { display: grid; grid-template-columns: minmax(300px, 500px); justify-content: center; margin-top: 1rem; }
+    
+    /* card grid — now with two cards side by side */
+    .double-card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem auto;
+    }
+    .double-card-grid > * {
+      flex: 0 1 400px; /* each card around 400px wide, wraps on small screens */
+      min-width: 300px;
+    }
+    
+    /* custom style for RPS card – matches dark glass aesthetic */
+    .rps-card {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(24px) saturate(220%);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 1.5rem;
+      padding: 2rem 1.5rem;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), box-shadow 0.45s ease;
+      box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5), inset 0 1px 3px rgba(255,255,255,0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      height: 20rem;
+      justify-content: center;
+    }
+    .rps-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 32px 50px -20px rgba(0, 0, 0, 0.8), inset 0 1px 4px rgba(255,255,255,0.9);
+      border-color: #60a5fa;
+    }
+    .rps-emblem {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 12px #38bdf8);
+    }
+    .rps-card h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 0.3rem 0;
+    }
+    .rps-sub {
+      background: #2d3b4fcc;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      color: #b9d0f0;
+      font-size: 1rem;
+      border: 1px solid #4f658a;
+      margin: 0.8rem 0 0.5rem;
+    }
+    .rps-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1f2a3c;
+      padding: 0.3rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid #4b5d7a;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      margin-top: 0.8rem;
+    }
     
     /* Glass social card */
     .glass-social-container {
@@ -490,8 +557,10 @@
       <div class="page active" id="home-page">
         <div class="home-saved-container">
           <div class="brand-title home-searchable" id="home-brand">ClodifyHub</div>
-          <!-- Google Drive card -->
-          <div class="single-card-grid home-searchable" id="drive-card-container">
+          
+          <!-- Two cards side by side: Google Drive + RPS Result card -->
+          <div class="double-card-grid home-searchable" id="double-card-row">
+            <!-- Google Drive card (identical to original) -->
             <div onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 glass-card bento-card" id="drive-card">
               <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
               <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" class="drive-icon-large">
@@ -504,6 +573,19 @@
               </div>
               <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4; opacity:0.2;"></i>
               <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color: #34A853; opacity:0.2;"></i>
+            </div>
+
+            <!-- RPS Result card – integrated from second file, with proper link and name "RPS RESULT Mahendragarh" -->
+            <div onclick="window.open('https://igu1.ucanapply.com/result-details', '_blank')" class="rps-card group" id="rps-card">
+              <div class="open-link-icon" style="position: absolute; top:1rem; right:1rem; opacity:0;" class="group-hover:opacity-100"><i class="ph-bold ph-arrow-square-out"></i></div>
+              <div class="rps-emblem">🏛️</div>
+              <h3>RPS RESULT</h3>
+              <div class="rps-sub">Mahendragarh</div>
+              <div class="rps-footer">
+                <span>🔗</span> click to check results
+              </div>
+              <i class="ph-fill ph-building-office float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color:#38bdf8; opacity:0.2;"></i>
+              <i class="ph-fill ph-student float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color:#60a5fa; opacity:0.2;"></i>
             </div>
           </div>
 
@@ -523,8 +605,9 @@
         </div>
       </div>
 
-      <!-- EXPLORE PAGE -->
+      <!-- EXPLORE PAGE (unchanged) -->
       <div class="page" id="explore-page">
+        <!-- ... content exactly as original ... -->
         <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="explore-grid">
             <!-- Contact Me Card -->
@@ -609,7 +692,7 @@
         </div>
       </div>
 
-      <!-- SAVED PAGE -->
+      <!-- SAVED PAGE (unchanged) -->
       <div class="page" id="saved-page">
         <div class="saved-section" style="text-align:center; padding:60px;">
           <i class="fas fa-bookmark text-5xl text-white/30 mb-4"></i>
@@ -618,7 +701,7 @@
         </div>
       </div>
 
-      <!-- SETTINGS PAGE -->
+      <!-- SETTINGS PAGE (unchanged) -->
       <div class="page" id="settings-page">
         <div class="settings-section">
           <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
@@ -640,7 +723,7 @@
         </div>
       </div>
 
-      <!-- Utility Modals (PDF, QR, Encryptor) -->
+      <!-- Utility Modals (PDF, QR, Encryptor) unchanged -->
       <div class="pdf-modal" id="pdf-modal"><div class="pdf-modal-content"><button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button><h2>Image to PDF</h2><input type="file" id="imageInput" multiple accept="image/*" style="margin:20px0;width:100%;padding:10px;"><button id="generate-pdf-btn" style="background:#0a84ff;color:white;padding:12px;">Generate PDF</button><div id="pdf-status"></div><div id="previewContainer"></div></div></div>
       <div class="qr-modal" id="qr-modal"><div class="qr-modal-content"><button class="qr-close" id="qr-close"><i class="fas fa-times"></i></button><h2>QR Generator</h2><div class="qr-tabs"><div class="qr-tab active" data-type="TEXT">TEXT</div><div class="qr-tab" data-type="WEBSITE">URL</div><div class="qr-tab" data-type="WIFI">WIFI</div></div><div id="qr-input-area"><textarea id="text-content" placeholder="Enter text..." style="width:100%;padding:12px;"></textarea></div><button id="generate-qr-btn" style="background:#0a84ff;color:white;padding:12px;">Generate QR</button><canvas id="qr-canvas" style="margin:15px auto;background:white;padding:10px;display:block;"></canvas><button id="download-qr-btn" style="background:#34c759;color:white;padding:12px;">Download QR</button></div></div>
       <div class="text-encryptor-modal" id="text-encryptor-modal"><div class="text-encryptor-modal-content"><button class="text-encryptor-close" id="text-encryptor-close"><i class="fas fa-times"></i></button><h2>Text Encryptor</h2><textarea id="encryptor-input" placeholder="Enter message..." style="width:100%;height:100px;padding:12px;"></textarea><div style="display:flex;gap:10px;"><button id="encrypt-btn" style="background:#0a84ff;color:white;padding:10px;">Encrypt</button><button id="decrypt-btn" style="background:#ff9f0a;color:white;padding:10px;">Decrypt</button><button id="copy-encrypted-btn" style="background:#34c759;color:white;padding:10px;">Copy</button></div><div id="encryptor-output" style="background:rgba(0,0,0,0.3);padding:15px;"></div></div></div>
