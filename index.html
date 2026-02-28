@@ -499,6 +499,92 @@
     /* floating icons opacity reduced in white mode */
     .ph-fill.float-bg-icon { opacity: 0.1; color: #333; }
     .group .ph-fill { opacity: 0.1; }
+    
+    /* Animation hub styles for saved page */
+    .animation-hub {
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 26px -8px rgba(0,0,0,0.04);
+      text-align: center;
+    }
+    
+    .animation-hub h3 {
+      color: #1e1e2f;
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .animation-hub h3 i {
+      color: #0a84ff;
+      background: rgba(10,132,255,0.1);
+      padding: 10px;
+      border-radius: 50%;
+    }
+    
+    .animation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    
+    .animation-link {
+      text-decoration: none;
+      background: linear-gradient(145deg, #f8f9fa, #ffffff);
+      padding: 25px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #333;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+    
+    .animation-link:hover {
+      transform: translateY(-6px) scale(1.02);
+      background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+      color: white;
+      box-shadow: 0 15px 30px -8px rgba(10,132,255,0.3);
+    }
+    
+    .animation-link .emoji {
+      font-size: 3rem;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+    
+    .animation-link:hover .emoji {
+      transform: scale(1.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .animation-link span {
+      font-size: 1.2rem;
+    }
+    
+    .coming-soon {
+      background: rgba(255,255,255,0.8);
+      cursor: default;
+      opacity: 0.8;
+    }
+    
+    .coming-soon:hover {
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      transform: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
   </style>
 </head>
 <body>
@@ -698,8 +784,44 @@
         </div>
       </div>
 
-      <!-- SAVED PAGE -->
+      <!-- SAVED PAGE with Animation Hub -->
       <div class="page" id="saved-page">
+        <div class="animation-hub">
+          <h3><i class="fas fa-star"></i> My Animation Collection <i class="fas fa-star"></i></h3>
+          
+          <div class="animation-grid">
+            <a href="https://unnecessary-yellow-7jmltagrxr.edgeone.app/" target="_blank" class="animation-link">
+              <span class="emoji">🌸</span>
+              <span>Flower Animation</span>
+            </a>
+            
+            <a href="dog.html" target="_blank" class="animation-link">
+              <span class="emoji">🐶</span>
+              <span>Dog Animation</span>
+            </a>
+            
+            <a href="bee.html" target="_blank" class="animation-link">
+              <span class="emoji">🐝</span>
+              <span>Bee Animation</span>
+            </a>
+            
+            <a href="spider.html" target="_blank" class="animation-link">
+              <span class="emoji">🕷️</span>
+              <span>Spider Clock</span>
+            </a>
+            
+            <a href="#" class="animation-link coming-soon" onclick="return false;">
+              <span class="emoji">🌈</span>
+              <span>Coming Soon</span>
+            </a>
+            
+            <a href="#" class="animation-link coming-soon" onclick="return false;">
+              <span class="emoji">🔥</span>
+              <span>Coming Soon</span>
+            </a>
+          </div>
+        </div>
+
         <div class="saved-section" style="text-align:center; padding:60px;">
           <i class="fas fa-bookmark text-5xl text-black/20 mb-4"></i>
           <h3 class="text-xl text-black/50">Saved items moved to Home</h3>
