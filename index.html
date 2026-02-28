@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khushal's Dashboard · ClodifyHub · file manager (add only)</title>
+  <title>Khushal's Dashboard · ClodifyHub · clean white</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -12,7 +12,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <style>
-    /* Modern white / light grey background */
+    /* Modern white / light grey background, refined shadows, clean typography */
     * {
       margin: 0;
       padding: 0;
@@ -21,13 +21,13 @@
     }
     
     body {
-      background-color: #f5f7fb;
+      background-color: #f5f7fb;  /* modern soft white-grey */
       color: #1e1e2f;
       min-height: 100vh;
       overflow-x: hidden;
     }
     
-    /* reptile canvas faint */
+    /* reptile canvas transformed into very light, barely-there pattern, pointer-events: none */
     #reptile-canvas {
       display: block;
       position: fixed;
@@ -38,22 +38,24 @@
       z-index: 0;
       pointer-events: none;
       background: transparent;
-      opacity: 0.15;
+      opacity: 0.15;  /* extremely faint, gives a subtle organic texture */
     }
     
+    /* all content above canvas, now with light background readability */
     .above-canvas {
       position: relative;
       z-index: 10;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background: transparent;
+      background: transparent;  /* let canvas whisper through */
     }
     
-    /* Header */
+    /* Header – clean white, slight shadow */
     header {
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       padding: 10px 25px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       position: sticky;
@@ -66,17 +68,32 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
     }
     
-    .header-left, .header-right { display: flex; align-items: center; }
+    .header-left { display: flex; align-items: center; }
     .header-center { flex: 1; max-width: 600px; margin: 0 auto; }
+    .header-right { display: flex; align-items: center; }
     
-    /* Hamburger */
+    /* Hamburger – dark lines for white bg */
     .hamburger {
-      height: 44px; width: 44px; position: relative; cursor: pointer; z-index: 200;
+      height: 44px;
+      width: 44px;
+      position: relative;
+      cursor: pointer;
+      z-index: 200;
     }
     .hamburger .checkbox {
-      position: absolute; opacity: 0; height: 100%; width: 100%; cursor: pointer; z-index: 10;
+      position: absolute;
+      opacity: 0;
+      height: 100%;
+      width: 100%;
+      cursor: pointer;
+      z-index: 10;
     }
-    .line { transition: 0.5s; stroke-width: 6px; stroke: #1e1e2f; }
+    .line {
+      transition: 0.5s;
+      stroke-width: 6px;
+      stroke: #1e1e2f;  /* dark */
+    }
+    .hamburger svg path { stroke: #1e1e2f; }
     .lineTop { stroke-dasharray: 40 40; stroke-dashoffset: 25; }
     .lineBottom { stroke-dasharray: 40 40; stroke-dashoffset: 60; }
     .lineMid { stroke-dasharray: 40 40; }
@@ -85,348 +102,372 @@
     .hamburger .checkbox:checked + svg .lineMid { stroke-dashoffset: 40; }
     .hamburger .checkbox:checked + svg .lineBottom { stroke-dashoffset: 0; transform-origin: left; transform: rotateZ(-45deg) translate(-5px, 5px); }
     
-    /* Search bar */
+    /* Search bar – light mode */
     .header-search { width: 100%; position: relative; }
     .header-search-bar {
-      width: 100%; padding: 12px 45px 12px 20px; border-radius: 40px; border: 1px solid rgba(0,0,0,0.08);
-      background: white; color: #1e1e2f; font-size: 0.95rem; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      width: 100%;
+      padding: 12px 45px 12px 20px;
+      border-radius: 40px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: white;
+      color: #1e1e2f;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
-    .header-search-bar:focus { outline: none; border-color: #0a84ff; box-shadow: 0 0 0 4px rgba(10,132,255,0.15); }
-    .header-search-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: #8e8e98; }
+    .header-search-bar:focus {
+      outline: none;
+      border-color: #0a84ff;
+      box-shadow: 0 0 0 4px rgba(10,132,255,0.15);
+    }
+    .header-search-icon {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8e8e98;
+      font-size: 1rem;
+    }
     
     .profile-container {
       display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 6px 18px;
-      border-radius: 40px; background: white; border: 1px solid rgba(0,0,0,0.06);
-      transition: all 0.2s ease; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      border-radius: 40px;
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
     .profile-container:hover { background: #f0f2f5; transform: translateY(-1px); }
     .profile-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(0,0,0,0.1); }
     .profile-name { font-weight: 500; color: #1e1e2f; }
     
-    /* Sidebar */
+    /* Sidebar – clean white glass */
     .sidebar {
-      position: fixed; top: 70px; left: 0; width: 260px; height: calc(100vh - 70px);
-      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(0,0,0,0.06); transform: translateX(-100%);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 150; padding: 25px 0;
-      border-radius: 0 24px 24px 0; box-shadow: 6px 0 30px rgba(0,0,0,0.04);
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 260px;
+      height: calc(100vh - 70px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(0, 0, 0, 0.06);
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 150;
+      padding: 25px 0;
+      border-radius: 0 24px 24px 0;
+      box-shadow: 6px 0 30px rgba(0, 0, 0, 0.04);
     }
     .sidebar.open { transform: translateX(0); }
     .sidebar .nav-item {
-      display: flex; align-items: center; gap: 18px; padding: 16px 28px; color: #2c2c3a;
-      font-size: 1.2rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 28px;
+      color: #2c2c3a;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
       border-left: 4px solid transparent;
     }
     .sidebar .nav-item:hover {
-      background: rgba(10,132,255,0.06); color: #0a84ff; border-left-color: #0a84ff;
+      background: rgba(10, 132, 255, 0.06);
+      color: #0a84ff;
+      border-left-color: #0a84ff;
     }
     .sidebar .nav-item i { width: 28px; font-size: 1.4rem; color: #5f5f73; }
     .sidebar .nav-item:hover i { color: #0a84ff; }
     .sidebar .nav-item.active {
-      background: rgba(10,132,255,0.1); color: #0a84ff; border-left-color: #0a84ff;
+      background: rgba(10, 132, 255, 0.1);
+      color: #0a84ff;
+      border-left-color: #0a84ff;
     }
     .sidebar .nav-item.active i { color: #0a84ff; }
     
-    .page { display: none; max-width: 1400px; margin: 0 auto; padding: 20px 30px 80px; }
+    /* Main pages */
+    .page {
+      display: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px 30px 80px;
+    }
     .page.active { display: block; }
     
-    /* Home cards */
-    .glass-card { background: white; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02); border: none; }
-    .bento-card {
-      transform: translateY(0) scale(1); transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer; height: 20rem; display: flex; flex-direction: column; justify-content: center;
-      align-items: center; border-radius: 2rem; background: white; position: relative;
+    /* modern white cards with subtle shadows */
+    .glass-card {
+      background: white;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0,0,0,0.02);
+      border: none;
     }
-    .bento-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 25px 40px -14px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.02); }
-    .drive-icon-large { width: 100px; height: 100px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 4px 8px rgba(66,133,244,0.2)); }
-    .hover-reveal { opacity: 1 !important; transform: translateY(0) !important; }
-    .hover-reveal h3 { font-size: 1.5rem; font-weight: 600; color: #111; margin-bottom: 0.25rem; }
+    .bento-card {
+      transform: translateY(0) scale(1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      height: 20rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 2rem;
+      background: white;
+      position: relative;
+    }
+    .bento-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.02);
+    }
+    .drive-icon-large {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 8px rgba(66, 133, 244, 0.2));
+    }
+    /* make title always visible */
+    .hover-reveal { 
+      opacity: 1 !important; 
+      transform: translateY(0) !important; 
+    }
+    .hover-reveal h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 0.25rem;
+    }
+    .group:hover .hover-reveal { opacity: 1; transform: translateY(0); } /* keep visible anyway */
     .open-link-icon {
       position: absolute; top: 1rem; right: 1rem; z-index: 20; opacity: 0; transition: opacity 0.2s;
       background: rgba(255,255,255,0.9); backdrop-filter: blur(4px); border-radius: 50%;
       width: 2.2rem; height: 2.2rem; display: flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(0,0,0,0.04); color: #1e1e2f;
+      border: 1px solid rgba(0,0,0,0.04);
+      color: #1e1e2f;
     }
     .group:hover .open-link-icon { opacity: 1; }
     
-    .double-card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin: 2rem auto; }
-    .double-card-grid > * { flex: 0 1 400px; min-width: 300px; }
-    
-    /* RPS card */
-    .rps-card {
-      background: white; border-radius: 2rem; padding: 2rem 1.5rem; cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02);
-      display: flex; flex-direction: column; align-items: center; text-align: center;
-      height: 20rem; justify-content: center; position: relative;
+    /* double card grid */
+    .double-card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem auto;
     }
-    .rps-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 25px 40px -14px rgba(0,0,0,0.12); }
-    .rps-emblem { font-size: 4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 6px 8px #b0d4ff); }
-    .rps-card h3 { font-size: 1.8rem; font-weight: 700; color: #111; margin: 0.3rem 0; }
-    .rps-sub { background: #f0f4fe; padding: 0.2rem 1.2rem; border-radius: 40px; color: #1e4f8a; font-size: 1rem; border: none; margin: 0.8rem 0 0.5rem; }
-    .rps-footer { display: flex; align-items: center; gap: 8px; background: #f2f2f7; padding: 0.3rem 1.2rem; border-radius: 50px; border: none; color: #3b3b4d; font-size: 0.9rem; margin-top: 0.8rem; }
+    .double-card-grid > * {
+      flex: 0 1 400px;
+      min-width: 300px;
+    }
     
-    /* social glass */
+    /* RPS card white edition */
+    .rps-card {
+      background: white;
+      border-radius: 2rem;
+      padding: 2rem 1.5rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      height: 20rem;
+      justify-content: center;
+      position: relative;
+    }
+    .rps-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.12);
+      border-color: transparent;
+    }
+    .rps-emblem { font-size: 4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 6px 8px #b0d4ff); }
+    .rps-card h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #111;
+      margin: 0.3rem 0;
+    }
+    .rps-sub {
+      background: #f0f4fe;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      color: #1e4f8a;
+      font-size: 1rem;
+      border: none;
+      margin: 0.8rem 0 0.5rem;
+    }
+    .rps-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f2f2f7;
+      padding: 0.3rem 1.2rem;
+      border-radius: 50px;
+      border: none;
+      color: #3b3b4d;
+      font-size: 0.9rem;
+      margin-top: 0.8rem;
+    }
+    
+    /* social glass container – white edition */
     .glass-social-container {
-      position: relative; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
-      padding: 2rem 1rem; margin-top: 3rem;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
     }
     .glass-social-container .glass {
-      position: relative; width: 180px; height: 200px; background: white; border: 1px solid rgba(0,0,0,0.04);
-      box-shadow: 0 15px 30px -12px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center;
-      transition: 0.4s; border-radius: 20px; margin: 0 -45px; backdrop-filter: blur(10px);
-      transform: rotate(calc(var(--r) * 1deg)); will-change: transform, margin; cursor: pointer;
-      text-decoration: none; color: inherit;
+      position: relative;
+      width: 180px;
+      height: 200px;
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.4s;
+      border-radius: 20px;
+      margin: 0 -45px;
+      backdrop-filter: blur(10px);
+      transform: rotate(calc(var(--r) * 1deg));
+      will-change: transform, margin;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
     }
     .glass-social-container:hover .glass { transform: rotate(0deg); margin: 0 10px; }
     .glass-social-container .glass::before {
-      content: attr(data-text); position: absolute; bottom: 0; width: 100%; height: 40px;
-      background: #f5f7fb; display: flex; justify-content: center; align-items: center; color: #2a2a38;
-      font-weight: 400; letter-spacing: 1px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
-      border-top: 1px solid rgba(0,0,0,0.04); text-transform: uppercase; font-size: 0.85rem;
+      content: attr(data-text);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      background: #f5f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #2a2a38;
+      font-weight: 400;
+      letter-spacing: 1px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      border-top: 1px solid rgba(0,0,0,0.04);
+      text-transform: uppercase;
+      font-size: 0.85rem;
     }
-    .glass-social-container .glass svg { height: 3.5em; width: auto; fill: #2c2c3a; opacity: 0.8; transition: transform 0.25s ease; }
+    .glass-social-container .glass svg {
+      height: 3.5em;
+      width: auto;
+      fill: #2c2c3a;
+      opacity: 0.8;
+      transition: transform 0.25s ease;
+    }
     .glass-social-container .glass:hover svg { transform: scale(1.05); fill: #0a84ff; }
+    @media (max-width: 700px) {
+      .glass-social-container .glass { width: 150px; height: 170px; margin: 0 -25px; }
+      .glass-social-container:hover .glass { margin: 0 5px; }
+    }
+    @media (max-width: 480px) {
+      .glass-social-container { flex-direction: column; }
+      .glass-social-container .glass { margin: -20px 0; transform: rotate(calc(var(--r) * 0.5deg)); }
+      .glass-social-container:hover .glass { margin: 10px 0; transform: rotate(0deg); }
+    }
     
     .brand-title {
-      font-size: 2.8rem; font-weight: 700; margin-bottom: 0.5rem; color: #111;
+      font-size: 2.8rem; font-weight: 700; margin-bottom: 0.5rem;
+      color: #111;
       background: linear-gradient(145deg, #0a66c2, #0f9d58, #fbbc05);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
     }
     
-    /* explore tall cards */
+    /* explore tall cards white */
     .tall-card {
-      background: white; border-radius: 28px; padding: 32px 24px;
-      box-shadow: 0 8px 28px -8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.02);
-      min-height: 420px; transition: all 0.2s;
+      background: white;
+      border-radius: 28px;
+      padding: 32px 24px;
+      box-shadow: 0 8px 28px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0,0,0,0.02);
+      min-height: 420px;
+      transition: all 0.2s;
     }
     .tall-card.hidden-search { display: none; }
     .tall-card h3 {
-      font-size:1.5rem; font-weight:600; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid rgba(0,0,0,0.05);
-      display:flex; align-items:center; gap:14px; color:#111;
+      font-size:1.5rem; font-weight:600; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; color:#111;
     }
-    .tall-card h3 i { color:#0a84ff; width:38px; height:38px; display:flex; align-items:center; justify-content:center; background:rgba(10,132,255,0.1); border-radius:12px; font-size:1.4rem; }
-    .card-icon-group { display:flex; flex-direction:column; align-items:center; cursor:pointer; }
-    .card-icon-group img { width:70px; height:70px; border-radius:20px; background:rgba(0,0,0,0.02); padding:14px; }
+    .tall-card h3 i {
+      color:#0a84ff; width:38px; height:38px; display:flex; align-items:center; justify-content:center; background:rgba(10,132,255,0.1); border-radius:12px; font-size:1.4rem;
+    }
+    .card-icon-group {
+      display:flex; flex-direction:column; align-items:center; cursor:pointer;
+    }
+    .card-icon-group img {
+      width:70px; height:70px; border-radius:20px; background:rgba(0,0,0,0.02); padding:14px;
+    }
     .card-icon-group span { margin-top:12px; color:#2c2c3a; }
     
     .home-searchable { transition: all 0.2s ease; }
     .home-searchable.hidden-search { display: none !important; }
     
-    /* === SAVED PAGE – PROFESSIONAL FILE MANAGER (add only, no remove) === */
-    .saved-section {
-      background: white; border-radius: 28px; padding: 0;
+    .explore-section, .saved-section, .settings-section {
+      background: white; border-radius: 28px; padding: 28px;
       margin-bottom: 30px; box-shadow: 0 8px 26px -8px rgba(0,0,0,0.04);
-      overflow: hidden;
     }
-    .file-manager-grid {
-      display: flex;
-      flex-direction: row;
-      min-height: 550px;
-    }
-    /* sidebar file list */
-    .file-sidebar {
-      width: 320px;
-      background: #f9fafc;
-      border-right: 1px solid rgba(0,0,0,0.04);
-      display: flex;
-      flex-direction: column;
-      padding: 20px 0;
-    }
-    .file-sidebar-header {
-      padding: 0 16px 16px;
-      font-weight: 600;
-      color: #1e1e2f;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .file-actions {
-      display: flex;
-      gap: 8px;
-    }
-    .file-actions button {
-      background: transparent;
-      border: none;
-      color: #0a84ff;
-      font-size: 1.2rem;
-      cursor: pointer;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    .file-actions button:hover {
-      background: rgba(10,132,255,0.1);
-    }
-    .file-search {
-      margin: 16px 16px 8px;
-      position: relative;
-    }
-    .file-search input {
-      width: 100%;
-      padding: 10px 16px 10px 36px;
-      border-radius: 40px;
-      border: 1px solid rgba(0,0,0,0.06);
-      background: white;
-      font-size: 0.9rem;
-    }
-    .file-search i {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #8e8e98;
-      font-size: 0.9rem;
-    }
-    .file-list {
-      flex: 1;
-      overflow-y: auto;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .file-list li {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      margin: 2px 8px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: #2c2c3a;
-      position: relative;
-    }
-    .file-list li:hover {
-      background: rgba(10,132,255,0.06);
-      transform: translateX(4px);
-    }
-    .file-list li.active {
-      background: rgba(10,132,255,0.12);
-      color: #0a84ff;
-      font-weight: 500;
-    }
-    .file-list li i:first-child {
-      width: 24px;
-      font-size: 1.2rem;
-      color: #5f5f73;
-    }
-    .file-list li.active i:first-child { color: #0a84ff; }
-    .file-list .file-name {
-      flex: 1;
-      font-size: 0.95rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .file-list .file-size {
-      font-size: 0.8rem;
-      color: #8e8e98;
-    }
-    /* NO remove button – as requested */
-    /* preview panel */
-    .file-preview {
-      flex: 1;
-      padding: 24px 28px;
-      background: white;
-      display: flex;
-      flex-direction: column;
-    }
-    .preview-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .preview-header h2 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #111;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .download-btn {
-      background: #0a84ff;
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 40px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 6px 14px rgba(10,132,255,0.2);
-    }
-    .download-btn:hover {
-      background: #0066d9;
-      transform: scale(1.02);
-    }
-    .iframe-preview {
-      background: #f2f4f8;
-      border-radius: 24px;
-      flex: 1;
-      overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.04);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
-    }
-    .iframe-preview iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: white;
-    }
+    .saved-section i, .settings-section h3 { color: #1e1e2f; }
     
     .back-to-top {
       position: fixed; bottom: 80px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
-      background: white; color: #1e1e2f; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; opacity: 0; transform: translateY(20px); transition: all 0.3s ease; z-index: 100;
+      background: white; color: #1e1e2f;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      opacity: 0; transform: translateY(20px); transition: all 0.3s ease; z-index: 100;
       border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 6px 16px rgba(0,0,0,0.04);
     }
     .back-to-top.show { opacity: 1; transform: translateY(0); }
     
     .notification {
-      position: fixed; top: 30px; right: 30px; background: white; padding: 22px 26px; border-radius: 24px;
-      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2); max-width: 380px; z-index: 1000;
+      position: fixed; top: 30px; right: 30px; background: white;
+      padding: 22px 26px; border-radius: 24px; border: none; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
+      max-width: 380px; z-index: 1000;
       opacity: 0; transform: translateY(-100px); transition: all 0.5s cubic-bezier(0.68,-0.55,0.27,1.55);
-      display: flex; align-items: flex-start; gap: 18px; color:#1e1e2f;
+      display: flex; align-items: flex-start; gap: 18px;
+      color:#1e1e2f;
     }
     .notification.show { opacity: 1; transform: translateY(0); }
     .notification-close { background: transparent; border: none; color: #8e8e98; cursor: pointer; font-size: 1.2rem; }
     
-    /* Profile modal */
+    /* Profile modal white */
     .profile-modal {
       position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px);
       display: flex; align-items: center; justify-content: center; z-index:2000; opacity:0; visibility:hidden; transition:0.3s;
     }
     .profile-modal.active { opacity:1; visibility:visible; }
     .modal-content {
-      background: white; border-radius:28px; padding:40px; max-width:480px; width:90%; text-align: center;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.1); position: relative;
+      background: white; border-radius:28px; padding:40px;
+      max-width:480px; width:90%; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+      position: relative;
     }
     .close-modal {
       position: absolute; top:20px; right:20px; background:#f0f0f0; border:none; color:#111;
       width:44px; height:44px; border-radius:50%; cursor:pointer;
     }
-    .profile-modal-img { width:120px; height:120px; border-radius:50%; margin:0 auto 20px; object-fit:cover; border:2px solid rgba(0,0,0,0.05); }
+    .profile-modal-img {
+      width:120px; height:120px; border-radius:50%; margin:0 auto 20px; object-fit:cover; border:2px solid rgba(0,0,0,0.05);
+    }
     
-    /* PDF, QR modals */
+    /* PDF, QR, encryptor modals white */
     .pdf-modal, .qr-modal, .text-encryptor-modal {
       position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px);
       display: flex; align-items: center; justify-content: center; z-index:3000; opacity:0; visibility:hidden; transition:0.3s;
     }
     .pdf-modal.active, .qr-modal.active, .text-encryptor-modal.active { opacity:1; visibility:visible; }
     .pdf-modal-content, .qr-modal-content, .text-encryptor-modal-content {
-      background: white; border-radius:28px; padding:40px; max-width:600px; width:90%; max-height:90vh; overflow-y:auto;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.1); position: relative;
+      background: white; border-radius:28px; padding:40px;
+      max-width:600px; width:90%; max-height:90vh; overflow-y:auto; box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+      position: relative;
     }
     .pdf-close, .qr-close, .text-encryptor-close {
       position: absolute; top:20px; right:20px; background:#f0f0f0; border:none; color:#111;
@@ -437,14 +478,14 @@
     .qr-tab { background: #f0f0f5; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.9rem; color:#111; }
     .qr-tab.active { background: #0a84ff; color: white; }
     
-    /* K loader */
+    /* K loader light version */
     .loader-overlay {
-      position: fixed; top:0; left:0; width:100%; height:100%; background: #f5f7fb;
-      display: flex; justify-content: center; align-items: center; z-index:9999;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
+      position: fixed; top:0; left:0; width:100%; height:100%; background: #f5f7fb; display: flex; justify-content: center; align-items: center; z-index:9999; transition: opacity 0.5s ease, visibility 0.5s ease;
     }
     .loader-overlay.hidden { opacity:0; visibility:hidden; }
-    .loader { display: flex; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); }
+    .absolute { position: absolute; }
+    .inline-block { display: inline-block; }
+    .loader { display: flex; margin:0.25em 0; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); }
     .dash { animation: dashArray 2s ease-in-out infinite, dashOffset 2s linear infinite; }
     @keyframes dashArray { 0% { stroke-dasharray:0 1 359 0; } 50% { stroke-dasharray:0 359 1 0; } 100% { stroke-dasharray:359 1 0 0; } }
     @keyframes dashOffset { 0% { stroke-dashoffset:365; } 100% { stroke-dashoffset:5; } }
@@ -453,46 +494,55 @@
       header { flex-wrap: wrap; }
       .header-center { order: 3; width: 100%; max-width: 100%; margin-top: 10px; }
       .profile-name { display: none; }
-      .file-manager-grid { flex-direction: column; }
-      .file-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.04); }
     }
+    
+    /* floating icons opacity reduced in white mode */
     .ph-fill.float-bg-icon { opacity: 0.1; color: #333; }
+    .group .ph-fill { opacity: 0.1; }
   </style>
 </head>
 <body>
+  <!-- faint reptile canvas (still subtle) -->
   <canvas id="reptile-canvas"></canvas>
 
   <div class="above-canvas">
-    <!-- K Loader -->
+    <!-- K Loader (light) -->
     <div id="loader-overlay" class="loader-overlay">
       <div class="loader">
         <svg height="0" width="0" viewBox="0 0 64 64" class="absolute">
-          <defs><linearGradient id="b" y2="2" x2="0" y1="62" x1="0"><stop stop-color="#2f5be7"/><stop stop-color="#0a84ff" offset="1"/></linearGradient></defs>
+          <defs>
+            <linearGradient gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="b">
+              <stop stop-color="#2f5be7"></stop><stop stop-color="#0a84ff" offset="1"></stop>
+            </linearGradient>
+          </defs>
         </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="128" width="128">
-          <path stroke="url(#b)" d="M16 4v56M16 32l32-28M16 32l32 28" class="dash" stroke-width="12" pathLength="360"/>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="128" width="128" class="inline-block">
+          <path stroke-linejoin="round" stroke-linecap="round" stroke-width="12" stroke="url(#b)" d="M 16,4 L 16,60 M 16,32 L 48,4 M 16,32 L 48,60" class="dash" id="k" pathLength="360"></path>
         </svg>
       </div>
     </div>
 
     <div id="dashboard-page" style="display: none;">
+      <!-- Header with Hamburger, Search, Profile -->
       <header>
         <div class="header-left">
           <div class="hamburger" id="hamburgerBtn">
             <input class="checkbox" type="checkbox" id="menuCheckbox" />
             <svg fill="none" viewBox="0 0 50 50" height="44" width="44">
-              <path class="lineTop line" stroke="currentColor" d="M6 11L44 11" stroke-width="4"/>
-              <path class="lineMid line" stroke="currentColor" d="M6 24H43" stroke-width="4"/>
-              <path class="lineBottom line" stroke="currentColor" d="M6 37H43" stroke-width="4"/>
+              <path class="lineTop line" stroke-linecap="round" stroke-width="4" stroke="currentColor" d="M6 11L44 11"></path>
+              <path stroke-linecap="round" stroke-width="4" stroke="currentColor" d="M6 24H43" class="lineMid line"></path>
+              <path stroke-linecap="round" stroke-width="4" stroke="currentColor" d="M6 37H43" class="lineBottom line"></path>
             </svg>
           </div>
         </div>
+
         <div class="header-center">
           <div class="header-search">
             <input type="text" class="header-search-bar" placeholder="Search everything (e.g., 'drive', 'game', 'ai')..." id="search-bar">
             <i class="fas fa-search header-search-icon"></i>
           </div>
         </div>
+
         <div class="header-right">
           <div class="profile-container" id="profile-container">  
             <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="Profile" class="profile-img">
@@ -501,7 +551,7 @@
         </div>
       </header>
 
-      <!-- Sidebar -->
+      <!-- Sidebar Navigation (white) -->
       <div class="sidebar" id="sidebar">
         <div class="nav-item active" data-target="home"><i class="fas fa-home"></i> Home</div>
         <div class="nav-item" data-target="explore"><i class="fas fa-compass"></i> Explore</div>
@@ -509,50 +559,63 @@
         <div class="nav-item" data-target="settings"><i class="fas fa-cog"></i> Settings</div>
       </div>
 
-      <!-- HOME PAGE (Google Drive name visible) -->
+      <!-- HOME PAGE -->
       <div class="page active" id="home-page">
         <div class="home-saved-container">
-          <div class="brand-title home-searchable">ClodifyHub</div>
-          <div class="double-card-grid home-searchable">
-            <!-- Google Drive card -->
+          <div class="brand-title home-searchable" id="home-brand">ClodifyHub</div>
+          
+          <!-- Two cards side by side: Google Drive + RPS Result -->
+          <div class="double-card-grid home-searchable" id="double-card-row">
+            <!-- Google Drive card (white) – name always visible -->
             <div onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 glass-card bento-card" id="drive-card">
               <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
               <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" class="drive-icon-large">
               <div class="relative z-10 w-full text-center">
-                <div class="hover-reveal">
+                <!-- permanently visible title and details -->
+                <div class="hover-reveal" style="opacity:1; transform:none;">
                   <h3 class="text-2xl font-semibold text-[#111] mb-1">Google Drive</h3>
                   <p class="text-sm text-[#4b4b5c]"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 15 GB free</p>
                   <div class="mt-2 flex gap-1 justify-center"><span class="text-xs bg-black/5 px-2 py-0.5 rounded-full text-[#333]">docs</span><span class="text-xs bg-black/5 px-2 py-0.5 rounded-full text-[#333]">sheets</span></div>
                 </div>
               </div>
-              <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color:#4285F4; opacity:0.1;"></i>
-              <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color:#34A853; opacity:0.1;"></i>
+              <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4; opacity:0.1;"></i>
+              <i class="ph-fill ph-cloud-check float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color: #34A853; opacity:0.1;"></i>
             </div>
-            <!-- RPS card -->
+
+            <!-- RPS RESULT card white -->
             <div onclick="window.open('https://igu1.ucanapply.com/result-details', '_blank')" class="rps-card group" id="rps-card">
-              <div class="open-link-icon" style="position: absolute; top:1rem; right:1rem; opacity:0;"><i class="ph-bold ph-arrow-square-out"></i></div>
+              <div class="open-link-icon" style="position: absolute; top:1rem; right:1rem; opacity:0;" class="group-hover:opacity-100"><i class="ph-bold ph-arrow-square-out"></i></div>
               <div class="rps-emblem">🏛️</div>
               <h3>RPS RESULT</h3>
               <div class="rps-sub">Mahendragarh</div>
-              <div class="rps-footer"><span>🔗</span> click to check results</div>
+              <div class="rps-footer">
+                <span>🔗</span> click to check results
+              </div>
               <i class="ph-fill ph-building-office float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color:#38bdf8; opacity:0.1;"></i>
               <i class="ph-fill ph-student float-bg-icon text-7xl top-4 left-2 absolute -rotate-12" style="color:#60a5fa; opacity:0.1;"></i>
             </div>
           </div>
-          <!-- social cards -->
-          <div class="glass-social-container home-searchable">
-            <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank" data-text="Instagram" style="--r:-15;" class="glass"><svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.9 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
-            <a href="https://github.com" target="_blank" data-text="Github" style="--r:5;" class="glass"><svg viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></a>
-            <a href="https://www.facebook.com" target="_blank" data-text="Facebook" style="--r:25;" class="glass"><svg viewBox="0 0 512 512"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a>
+
+          <!-- Glass social card white variant -->
+          <div class="glass-social-container home-searchable" id="social-card-container">
+            <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank" data-text="Instagram" style="--r:-15;" class="glass">
+              <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.9 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+            </a>
+            <a href="https://github.com" target="_blank" data-text="Github" style="--r:5;" class="glass">
+              <svg viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+            </a>
+            <a href="https://www.facebook.com" target="_blank" data-text="Facebook" style="--r:25;" class="glass">
+              <svg viewBox="0 0 512 512"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg>
+            </a>
           </div>
-          <p class="mt-16 text-black/40 text-sm home-searchable">✨ Hover over the cards to see them align</p>
+          <p class="mt-16 text-black/40 text-sm home-searchable" id="home-footer">✨ Hover over the cards to see them align</p>
         </div>
       </div>
 
-      <!-- EXPLORE PAGE (simplified placeholder – identical content) -->
+      <!-- EXPLORE PAGE (white but content same) -->
       <div class="page" id="explore-page">
         <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="explore-grid">
             <!-- Contact Me Card -->
             <div class="tall-card" data-search="contact instagram facebook github twitter">
               <h3><i class="fas fa-link"></i>Contact Me</h3>
@@ -635,35 +698,12 @@
         </div>
       </div>
 
-      <!-- SAVED PAGE – PROFESSIONAL FILE MANAGER (add only, no remove) -->
+      <!-- SAVED PAGE -->
       <div class="page" id="saved-page">
-        <div class="saved-section">
-          <div class="file-manager-grid">
-            <div class="file-sidebar">
-              <div class="file-sidebar-header">
-                <span><i class="fas fa-folder-open" style="color:#0a84ff;"></i> My Files</span>
-                <div class="file-actions">
-                  <button id="addFileBtn" title="Add new file (PDF)"><i class="fas fa-plus"></i></button>
-                </div>
-              </div>
-              <div class="file-search">
-                <i class="fas fa-search"></i>
-                <input type="text" id="fileSearchInput" placeholder="Filter files...">
-              </div>
-              <ul class="file-list" id="fileList">
-                <!-- dynamically managed via JS -->
-              </ul>
-            </div>
-            <div class="file-preview" id="filePreviewPanel">
-              <div class="preview-header">
-                <h2 id="previewTitle"><i class="fas fa-file"></i> Select a file</h2>
-                <button class="download-btn" id="downloadBtn"><i class="fas fa-download"></i> Download</button>
-              </div>
-              <div class="iframe-preview" id="iframeContainer">
-                <iframe id="previewIframe" src="" title="file preview"></iframe>
-              </div>
-            </div>
-          </div>
+        <div class="saved-section" style="text-align:center; padding:60px;">
+          <i class="fas fa-bookmark text-5xl text-black/20 mb-4"></i>
+          <h3 class="text-xl text-black/50">Saved items moved to Home</h3>
+          <p class="text-black/30">Your Google Drive card is now on the Home page.</p>
         </div>
       </div>
 
@@ -679,7 +719,7 @@
       <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
       <div class="notification" id="notification"><div class="notification-icon"><i class="fas fa-bell"></i></div><div class="notification-content"><h4>Welcome!</h4><p>Type "drive" in search to open Home!</p></div><button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button></div>
 
-      <!-- Profile Modal -->
+      <!-- Profile Modal white -->
       <div class="profile-modal" id="profile-modal">
         <div class="modal-content">
           <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
@@ -689,36 +729,236 @@
         </div>
       </div>
 
-      <!-- Utility modals -->
+      <!-- Utility Modals unchanged but backgrounds white -->
       <div class="pdf-modal" id="pdf-modal"><div class="pdf-modal-content"><button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button><h2>Image to PDF</h2><input type="file" id="imageInput" multiple accept="image/*" style="margin:20px0;width:100%;padding:10px;"><button id="generate-pdf-btn" style="background:#0a84ff;color:white;padding:12px;">Generate PDF</button><div id="pdf-status"></div><div id="previewContainer"></div></div></div>
       <div class="qr-modal" id="qr-modal"><div class="qr-modal-content"><button class="qr-close" id="qr-close"><i class="fas fa-times"></i></button><h2>QR Generator</h2><div class="qr-tabs"><div class="qr-tab active" data-type="TEXT">TEXT</div><div class="qr-tab" data-type="WEBSITE">URL</div><div class="qr-tab" data-type="WIFI">WIFI</div></div><div id="qr-input-area"><textarea id="text-content" placeholder="Enter text..." style="width:100%;padding:12px;"></textarea></div><button id="generate-qr-btn" style="background:#0a84ff;color:white;padding:12px;">Generate QR</button><canvas id="qr-canvas" style="margin:15px auto;background:white;padding:10px;display:block;"></canvas><button id="download-qr-btn" style="background:#34c759;color:white;padding:12px;">Download QR</button></div></div>
       <div class="text-encryptor-modal" id="text-encryptor-modal"><div class="text-encryptor-modal-content"><button class="text-encryptor-close" id="text-encryptor-close"><i class="fas fa-times"></i></button><h2>Text Encryptor</h2><textarea id="encryptor-input" placeholder="Enter message..." style="width:100%;height:100px;padding:12px;"></textarea><div style="display:flex;gap:10px;"><button id="encrypt-btn" style="background:#0a84ff;color:white;padding:10px;">Encrypt</button><button id="decrypt-btn" style="background:#ff9f0a;color:white;padding:10px;">Decrypt</button><button id="copy-encrypted-btn" style="background:#34c759;color:white;padding:10px;">Copy</button></div><div id="encryptor-output" style="background:#f2f2f7;padding:15px;"></div></div></div>
-    </div>
-  </div>
+    </div> <!-- dashboard-page -->
+  </div> <!-- above-canvas -->
 
   <script>
-    (function() {
-      // Minimal reptile background
+    // === REPTILE CURSOR BACKGROUND (unchanged, but now light) ===
+    (function reptileBackground() {
+      var Input = { keys: [], mouse: { left: false, right: false, middle: false, x: 0, y: 0 } };
+      for (var i = 0; i < 230; i++) Input.keys.push(false);
+      
+      document.addEventListener("mousemove", function(event) {
+        Input.mouse.x = event.clientX;
+        Input.mouse.y = event.clientY;
+      });
+      
       const canvas = document.getElementById('reptile-canvas');
-      const ctx = canvas.getContext('2d');
-      function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-      resizeCanvas(); window.addEventListener('resize', resizeCanvas);
-      let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-      document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-      function animate() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = 'rgba(80,80,120,0.12)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(mouse.x-20, mouse.y-20);
-        ctx.lineTo(mouse.x, mouse.y);
-        ctx.stroke();
-        requestAnimationFrame(animate);
+      canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+      
+      let ctx = canvas.getContext('2d');
+      
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
       }
-      animate();
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      // Segment class (same)
+      var segmentCount = 0;
+      class Segment {
+        constructor(parent, size, angle, range, stiffness) {
+          segmentCount++;
+          this.isSegment = true;
+          this.parent = parent;
+          if (typeof parent.children == "object") parent.children.push(this);
+          this.children = [];
+          this.size = size;
+          this.relAngle = angle;
+          this.defAngle = angle;
+          this.absAngle = parent.absAngle + angle;
+          this.range = range;
+          this.stiffness = stiffness;
+          this.updateRelative(false, true);
+        }
+        updateRelative(iter, flex) {
+          this.relAngle = this.relAngle - 2 * Math.PI * Math.floor((this.relAngle - this.defAngle) / 2 / Math.PI + 1/2);
+          if (flex) {
+            this.relAngle = Math.min(this.defAngle + this.range/2, Math.max(this.defAngle - this.range/2, (this.relAngle - this.defAngle) / this.stiffness + this.defAngle));
+          }
+          this.absAngle = this.parent.absAngle + this.relAngle;
+          this.x = this.parent.x + Math.cos(this.absAngle) * this.size;
+          this.y = this.parent.y + Math.sin(this.absAngle) * this.size;
+          if (iter) { for (var i = 0; i < this.children.length; i++) this.children[i].updateRelative(iter, flex); }
+        }
+        draw(iter) {
+          ctx.beginPath(); ctx.moveTo(this.parent.x, this.parent.y); ctx.lineTo(this.x, this.y); ctx.stroke();
+          if (iter) { for (var i = 0; i < this.children.length; i++) this.children[i].draw(true); }
+        }
+        follow(iter) {
+          var x = this.parent.x, y = this.parent.y;
+          var dist = ((this.x - x) ** 2 + (this.y - y) ** 2) ** 0.5;
+          this.x = x + this.size * (this.x - x) / dist;
+          this.y = y + this.size * (this.y - y) / dist;
+          this.absAngle = Math.atan2(this.y - y, this.x - x);
+          this.relAngle = this.absAngle - this.parent.absAngle;
+          this.updateRelative(false, true);
+          if (iter) { for (var i = 0; i < this.children.length; i++) this.children[i].follow(true); }
+        }
+      }
+      
+      class LimbSystem {
+        constructor(end, length, speed, creature) {
+          this.end = end; this.length = Math.max(1, length); this.creature = creature; this.speed = speed;
+          creature.systems.push(this);
+          this.nodes = []; var node = end;
+          for (var i = 0; i < length; i++) { this.nodes.unshift(node); node = node.parent; if (!node.isSegment) { this.length = i + 1; break; } }
+          this.hip = this.nodes[0].parent;
+        }
+        moveTo(x, y) {
+          this.nodes[0].updateRelative(true, true);
+          var dist = ((x - this.end.x) ** 2 + (y - this.end.y) ** 2) ** 0.5;
+          var len = Math.max(0, dist - this.speed);
+          for (var i = this.nodes.length - 1; i >= 0; i--) {
+            var node = this.nodes[i];
+            var ang = Math.atan2(node.y - y, node.x - x);
+            node.x = x + len * Math.cos(ang); node.y = y + len * Math.sin(ang);
+            x = node.x; y = node.y; len = node.size;
+          }
+          for (var i = 0; i < this.nodes.length; i++) {
+            var node = this.nodes[i];
+            node.absAngle = Math.atan2(node.y - node.parent.y, node.x - node.parent.x);
+            node.relAngle = node.absAngle - node.parent.absAngle;
+            for (var ii = 0; ii < node.children.length; ii++) {
+              var childNode = node.children[ii];
+              if (!this.nodes.includes(childNode)) childNode.updateRelative(true, false);
+            }
+          }
+        }
+        update() { this.moveTo(Input.mouse.x, Input.mouse.y); }
+      }
+      
+      class LegSystem extends LimbSystem {
+        constructor(end, length, speed, creature) {
+          super(end, length, speed, creature);
+          this.goalX = end.x; this.goalY = end.y; this.step = 0; this.forwardness = 0;
+          this.reach = 0.9 * ((this.end.x - this.hip.x) ** 2 + (this.end.y - this.hip.y) ** 2) ** 0.5;
+          var relAngle = this.creature.absAngle - Math.atan2(this.end.y - this.hip.y, this.end.x - this.hip.x);
+          relAngle -= 2 * Math.PI * Math.floor(relAngle / 2 / Math.PI + 1/2);
+          this.swing = -relAngle + (2 * (relAngle < 0) - 1) * Math.PI / 2;
+          this.swingOffset = this.creature.absAngle - this.hip.absAngle;
+        }
+        update(x, y) {
+          this.moveTo(this.goalX, this.goalY);
+          if (this.step == 0) {
+            var dist = ((this.end.x - this.goalX) ** 2 + (this.end.y - this.goalY) ** 2) ** 0.5;
+            if (dist > 1) {
+              this.step = 1;
+              this.goalX = this.hip.x + this.reach * Math.cos(this.swing + this.hip.absAngle + this.swingOffset) + (2 * Math.random() - 1) * this.reach / 2;
+              this.goalY = this.hip.y + this.reach * Math.sin(this.swing + this.hip.absAngle + this.swingOffset) + (2 * Math.random() - 1) * this.reach / 2;
+            }
+          } else if (this.step == 1) {
+            var theta = Math.atan2(this.end.y - this.hip.y, this.end.x - this.hip.x) - this.hip.absAngle;
+            var dist = ((this.end.x - this.hip.x) ** 2 + (this.end.y - this.hip.y) ** 2) ** 0.5;
+            var forwardness2 = dist * Math.cos(theta);
+            var dF = this.forwardness - forwardness2;
+            this.forwardness = forwardness2;
+            if (dF * dF < 1) { this.step = 0; this.goalX = this.hip.x + (this.end.x - this.hip.x); this.goalY = this.hip.y + (this.end.y - this.hip.y); }
+          }
+        }
+      }
+      
+      class Creature {
+        constructor(x, y, angle, fAccel, fFric, fRes, fThresh, rAccel, rFric, rRes, rThresh) {
+          this.x = x; this.y = y; this.absAngle = angle; this.fSpeed = 0; this.fAccel = fAccel; this.fFric = fFric; this.fRes = fRes; this.fThresh = fThresh;
+          this.rSpeed = 0; this.rAccel = rAccel; this.rFric = rFric; this.rRes = rRes; this.rThresh = rThresh;
+          this.children = []; this.systems = [];
+        }
+        follow(x, y) {
+          var dist = ((this.x - x) ** 2 + (this.y - y) ** 2) ** 0.5;
+          var angle = Math.atan2(y - this.y, x - this.x);
+          var accel = this.fAccel;
+          if (this.systems.length > 0) {
+            var sum = 0; for (var i = 0; i < this.systems.length; i++) sum += this.systems[i].step == 0;
+            accel *= sum / this.systems.length;
+          }
+          this.fSpeed += accel * (dist > this.fThresh);
+          this.fSpeed *= 1 - this.fRes;
+          this.speed = Math.max(0, this.fSpeed - this.fFric);
+          var dif = this.absAngle - angle;
+          dif -= 2 * Math.PI * Math.floor(dif / (2 * Math.PI) + 1/2);
+          if (Math.abs(dif) > this.rThresh && dist > this.fThresh) { this.rSpeed -= this.rAccel * (2 * (dif > 0) - 1); }
+          this.rSpeed *= 1 - this.rRes;
+          if (Math.abs(this.rSpeed) > this.rFric) { this.rSpeed -= this.rFric * (2 * (this.rSpeed > 0) - 1); } else { this.rSpeed = 0; }
+          this.absAngle += this.rSpeed;
+          this.absAngle -= 2 * Math.PI * Math.floor(this.absAngle / (2 * Math.PI) + 1/2);
+          this.x += this.speed * Math.cos(this.absAngle);
+          this.y += this.speed * Math.sin(this.absAngle);
+          this.absAngle += Math.PI;
+          for (var i = 0; i < this.children.length; i++) this.children[i].follow(true, true);
+          for (var i = 0; i < this.systems.length; i++) this.systems[i].update(x, y);
+          this.absAngle -= Math.PI;
+          this.draw(true);
+        }
+        draw(iter) {
+          var r = 4;
+          ctx.beginPath(); ctx.arc(this.x, this.y, r, Math.PI/4 + this.absAngle, 7*Math.PI/4 + this.absAngle);
+          ctx.moveTo(this.x + r * Math.cos(7*Math.PI/4 + this.absAngle), this.y + r * Math.sin(7*Math.PI/4 + this.absAngle));
+          ctx.lineTo(this.x + r * Math.cos(this.absAngle) * 2 ** 0.5, this.y + r * Math.sin(this.absAngle) * 2 ** 0.5);
+          ctx.lineTo(this.x + r * Math.cos(Math.PI/4 + this.absAngle), this.y + r * Math.sin(Math.PI/4 + this.absAngle));
+          ctx.stroke();
+          if (iter) { for (var i = 0; i < this.children.length; i++) this.children[i].draw(true); }
+        }
+      }
+      
+      function setupLizard(size, legs, tail) {
+        var s = size;
+        critter = new Creature(window.innerWidth/2, window.innerHeight/2, 0, s*10, s*2, 0.5, 16, 0.5, 0.085, 0.5, 0.3);
+        var spinal = critter;
+        for (var i = 0; i < 6; i++) {
+          spinal = new Segment(spinal, s*4, 0, 3.1415*2/3, 1.1);
+          for (var ii = -1; ii <= 1; ii += 2) {
+            var node = new Segment(spinal, s*3, ii, 0.1, 2);
+            for (var iii = 0; iii < 3; iii++) node = new Segment(node, s*0.1, -ii*0.1, 0.1, 2);
+          }
+        }
+        for (var i = 0; i < legs; i++) {
+          if (i > 0) {
+            for (var ii = 0; ii < 6; ii++) {
+              spinal = new Segment(spinal, s*4, 0, 1.571, 1.5);
+              for (var iii = -1; iii <= 1; iii += 2) {
+                var node = new Segment(spinal, s*3, iii*1.571, 0.1, 1.5);
+                for (var iv = 0; iv < 3; iv++) node = new Segment(node, s*3, -iii*0.3, 0.1, 2);
+              }
+            }
+          }
+          for (var ii = -1; ii <= 1; ii += 2) {
+            var node = new Segment(spinal, s*12, ii*0.785, 0, 8);
+            node = new Segment(node, s*16, -ii*0.785, 6.28, 1);
+            node = new Segment(node, s*16, ii*1.571, 3.1415, 2);
+            for (var iii = 0; iii < 4; iii++) new Segment(node, s*4, (iii/3-0.5)*1.571, 0.1, 4);
+            new LegSystem(node, 3, s*12, critter);
+          }
+        }
+        for (var i = 0; i < tail; i++) {
+          spinal = new Segment(spinal, s*4, 0, 3.1415*2/3, 1.1);
+          for (var ii = -1; ii <= 1; ii += 2) {
+            var node = new Segment(spinal, s*3, ii, 0.1, 2);
+            for (var iii = 0; iii < 3; iii++) node = new Segment(node, s*3 * (tail-i)/tail, -ii*0.1, 0.1, 2);
+          }
+        }
+      }
+      
+      var critter;
+      var legNum = Math.floor(1 + Math.random() * 12);
+      setupLizard(8 / Math.sqrt(legNum), legNum, Math.floor(4 + Math.random() * legNum * 8));
+      
+      function animateReptile() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "rgba(80, 80, 120, 0.18)"; // softer grey for light bg
+        ctx.lineWidth = 1.2;
+        critter.follow(Input.mouse.x, Input.mouse.y);
+        requestAnimationFrame(animateReptile);
+      }
+      animateReptile();
     })();
-
-    // Dashboard & File Manager
+    
+    // === DASHBOARD UI CODE (unchanged) ===
     window.addEventListener('load', function() {
       const loader = document.getElementById('loader-overlay');
       const dashboard = document.getElementById('dashboard-page');
@@ -730,7 +970,6 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-      // sidebar nav etc.
       const hamburgerCheckbox = document.getElementById('menuCheckbox');
       const sidebar = document.getElementById('sidebar');
       const navItems = document.querySelectorAll('.sidebar .nav-item');
@@ -758,12 +997,10 @@
         }
       });
 
-      // back to top
       const backBtn = document.getElementById('back-to-top');
       window.addEventListener('scroll', () => backBtn.classList.toggle('show', window.pageYOffset > 300));
       backBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
 
-      // profile modal
       const profileModal = document.getElementById('profile-modal');
       const profileContainer = document.getElementById('profile-container');
       const closeModal = document.getElementById('close-modal');
@@ -771,13 +1008,11 @@
       closeModal.addEventListener('click', () => profileModal.classList.remove('active'));
       profileModal.addEventListener('click', (e) => { if (e.target === profileModal) profileModal.classList.remove('active'); });
 
-      // notification
       const notification = document.getElementById('notification');
       const notifClose = document.getElementById('notification-close');
       setTimeout(() => { notification.classList.add('show'); setTimeout(() => notification.classList.remove('show'), 4000); }, 1000);
       notifClose.addEventListener('click', () => notification.classList.remove('show'));
 
-      // search bar (global)
       const searchBar = document.getElementById('search-bar');
       const navHome = document.querySelector('[data-target="home"]');
       const homeSearchables = document.querySelectorAll('.home-searchable');
@@ -811,101 +1046,7 @@
           (cardText.includes(term) || searchAttr.toLowerCase().includes(term)) ? card.classList.remove('hidden-search') : card.classList.add('hidden-search');
         });
       });
-
-      // ---------- FILE MANAGER (ADD ONLY, NO REMOVE) ----------
-      const fileListEl = document.getElementById('fileList');
-      const previewIframe = document.getElementById('previewIframe');
-      const previewTitle = document.getElementById('previewTitle');
-      const downloadBtn = document.getElementById('downloadBtn');
-      const fileSearch = document.getElementById('fileSearchInput');
-      const addFileBtn = document.getElementById('addFileBtn');
-
-      // Initial files – cannot be removed by user
-      let files = [
-        { name: 'Project report.pdf', type: 'pdf', size: '2.4 MB', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf' },
-        { name: 'Presentation.pptx', type: 'pptx', size: '4.1 MB', url: 'https://view.officeapps.live.com/op/embed.aspx?src=https://www.example.com/dummy.pptx' },
-        { name: 'Data sheet.xlsx', type: 'xlsx', size: '1.8 MB', url: 'https://view.officeapps.live.com/op/embed.aspx?src=https://www.example.com/dummy.xlsx' },
-        { name: 'Image preview.png', type: 'image', size: '0.5 MB', url: 'https://via.placeholder.com/800x600.png?text=Sample+Image' },
-        { name: 'Document.txt', type: 'text', size: '0.1 MB', url: 'https://www.w3.org/TR/PNG/iso_8859-1.txt' }
-      ];
-
-      function iconForType(type) {
-        if (type === 'pdf') return ['fa-file-pdf', '#e74c3c'];
-        if (type === 'pptx') return ['fa-file-powerpoint', '#d35400'];
-        if (type === 'xlsx') return ['fa-file-excel', '#27ae60'];
-        if (type === 'image') return ['fa-file-image', '#f39c12'];
-        if (type === 'text') return ['fa-file-alt', '#3498db'];
-        return ['fa-file', '#8e8e98'];
-      }
-
-      function renderFileList(filter = '') {
-        fileListEl.innerHTML = '';
-        const filtered = files.filter(f => f.name.toLowerCase().includes(filter.toLowerCase()));
-        filtered.forEach((f, idx) => {
-          const [icon, color] = iconForType(f.type);
-          const li = document.createElement('li');
-          li.setAttribute('data-index', idx);
-          li.setAttribute('data-name', f.name);
-          li.setAttribute('data-url', f.url);
-          li.setAttribute('data-type', f.type);
-          li.innerHTML = `
-            <i class="fas ${icon}" style="color:${color};"></i>
-            <span class="file-name">${f.name}</span>
-            <span class="file-size">${f.size}</span>
-          `; // NO remove button
-          li.addEventListener('click', () => {
-            document.querySelectorAll('#fileList li').forEach(l => l.classList.remove('active'));
-            li.classList.add('active');
-            updatePreview(f);
-          });
-          fileListEl.appendChild(li);
-        });
-        // activate first if any
-        if (filtered.length > 0) {
-          const first = document.querySelector('#fileList li');
-          if (first) {
-            first.classList.add('active');
-            updatePreview(filtered[0]);
-          }
-        } else {
-          previewIframe.src = '';
-          previewTitle.innerHTML = `<i class="fas fa-file"></i> No files`;
-          downloadBtn.onclick = null;
-        }
-      }
-
-      function updatePreview(file) {
-        if (!file) return;
-        const [icon, color] = iconForType(file.type);
-        previewTitle.innerHTML = `<i class="fas ${icon}" style="color:${color};"></i> ${file.name}`;
-        previewIframe.src = file.url;
-        downloadBtn.onclick = () => {
-          const a = document.createElement('a');
-          a.href = file.url;
-          a.download = file.name;
-          a.click();
-        };
-      }
-
-      // Add new PDF file (can add, but never remove)
-      addFileBtn.addEventListener('click', () => {
-        const newName = prompt('Enter file name (must end with .pdf):', 'new_document.pdf');
-        if (!newName) return;
-        const newUrl = prompt('Enter PDF URL (must be a valid PDF link):', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-        if (!newUrl) return;
-        files.push({ name: newName, type: 'pdf', size: '? MB', url: newUrl });
-        renderFileList(fileSearch.value);
-      });
-
-      // Search filter
-      fileSearch.addEventListener('input', (e) => {
-        renderFileList(e.target.value);
-      });
-
-      // initial render
-      renderFileList();
-
-      // modal close listeners
+      
       document.getElementById('pdf-close')?.addEventListener('click', () => document.getElementById('pdf-modal').classList.remove('active'));
       document.getElementById('qr-close')?.addEventListener('click', () => document.getElementById('qr-modal').classList.remove('active'));
       document.getElementById('text-encryptor-close')?.addEventListener('click', () => document.getElementById('text-encryptor-modal').classList.remove('active'));
