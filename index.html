@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khushal's Dashboard · ClodifyHub · clean white</title>
+  <title>Khushal's Dashboard · Chat Card (black title + IP 1234) · ClodifyHub</title>
+  <!-- Font Awesome 6 (free) for main dashboard, plus 5 for chat card (compatible) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
@@ -585,6 +587,97 @@
       transform: none;
       box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
+
+    /* ===== UPDATED CHAT APP CARD (black title + IP 1234) ===== */
+    .chat-card-new {
+      width: 260px;
+      height: 300px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+      color: white;
+      text-decoration: none;
+      padding: 30px;
+      transition: 0.4s;
+      transform-style: preserve-3d;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .chat-card-new:hover {
+      transform: rotateY(10deg) rotateX(10deg) scale(1.05);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .chat-card-new .icon {
+      font-size: 70px;
+      margin-bottom: 10px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* BLACK title */
+    .chat-card-new .title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #000000;  /* BLACK */
+    }
+
+    .chat-card-new .desc {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 8px;
+      color: white;
+    }
+
+    /* IP badge – clean pill */
+    .ip-badge {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.25);
+      margin-top: 12px;
+      color: white;
+      letter-spacing: 1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .ip-badge i {
+      font-size: 1rem;
+      color: #aaddff;
+    }
+
+    .chat-card-new .glow {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, #00f2ff, transparent);
+      filter: blur(50px);
+      top: -50px;
+      left: -50px;
+      z-index: -1;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -645,19 +738,18 @@
         <div class="nav-item" data-target="settings"><i class="fas fa-cog"></i> Settings</div>
       </div>
 
-      <!-- HOME PAGE -->
+      <!-- HOME PAGE (contains original + updated chat card) -->
       <div class="page active" id="home-page">
         <div class="home-saved-container">
           <div class="brand-title home-searchable" id="home-brand">WELCOME</div>
           
-          <!-- Two cards side by side: Google Drive + RPS Result -->
+          <!-- Two cards side by side: Google Drive + RPS Result (unchanged) -->
           <div class="double-card-grid home-searchable" id="double-card-row">
             <!-- Google Drive card (white) – name always visible -->
             <div onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 glass-card bento-card" id="drive-card">
               <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
               <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" class="drive-icon-large">
               <div class="relative z-10 w-full text-center">
-                <!-- permanently visible title and details -->
                 <div class="hover-reveal" style="opacity:1; transform:none;">
                   <h3 class="text-2xl font-semibold text-[#111] mb-1">Google Drive</h3>
                   <p class="text-sm text-[#4b4b5c]"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 15 GB free</p>
@@ -682,7 +774,20 @@
             </div>
           </div>
 
-          <!-- Glass social card white variant -->
+          <!-- UPDATED CHAT CARD with BLACK title and IP 1234 badge -->
+          <div class="home-searchable" style="display: flex; justify-content: center; margin: 2rem auto;">
+            <a href="https://yourchatapp.com" class="chat-card-new" target="_blank" rel="noopener noreferrer">
+              <div class="glow"></div>
+              <div class="icon">💬</div>
+              <div class="title">Chat App</div>
+              <div class="ip-badge">
+                <i class="fas fa-network-wired"></i> IP 1234
+              </div>
+              <div class="desc">Start chatting with friends instantly</div>
+            </a>
+          </div>
+
+          <!-- Glass social card white variant (unchanged) -->
           <div class="glass-social-container home-searchable" id="social-card-container">
             <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank" data-text="Instagram" style="--r:-15;" class="glass">
               <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.9 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
@@ -698,7 +803,7 @@
         </div>
       </div>
 
-      <!-- EXPLORE PAGE (white but content same) -->
+      <!-- EXPLORE PAGE (unchanged, content preserved) -->
       <div class="page" id="explore-page">
         <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="explore-grid">
@@ -706,18 +811,10 @@
             <div class="tall-card" data-search="contact instagram facebook github twitter">
               <h3><i class="fas fa-link"></i>Contact Me</h3>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;">
-                <div class="card-icon-group" onclick="window.open('https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu', '_blank')">
-                  <img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram"><span>Instagram</span>
-                </div>
-                <div class="card-icon-group" onclick="window.open('https://facebook.com', '_blank')">
-                  <img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook"><span>Facebook</span>
-                </div>
-                <div class="card-icon-group" onclick="window.open('https://github.com/', '_blank')">
-                  <img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub"><span>GitHub</span>
-                </div>
-                <div class="card-icon-group" onclick="window.open('https://twitter.com', '_blank')">
-                  <img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter"><span>Twitter</span>
-                </div>
+                <div class="card-icon-group" onclick="window.open('https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu', '_blank')"><img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram"><span>Instagram</span></div>
+                <div class="card-icon-group" onclick="window.open('https://facebook.com', '_blank')"><img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook"><span>Facebook</span></div>
+                <div class="card-icon-group" onclick="window.open('https://github.com/', '_blank')"><img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub"><span>GitHub</span></div>
+                <div class="card-icon-group" onclick="window.open('https://twitter.com', '_blank')"><img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter"><span>Twitter</span></div>
               </div>
             </div>
             <!-- PC Mod Apps Card -->
@@ -784,69 +881,26 @@
         </div>
       </div>
 
-      <!-- SAVED PAGE with Animation Hub -->
+      <!-- SAVED PAGE (unchanged) -->
       <div class="page" id="saved-page">
         <div class="animation-hub">
           <h3><i class="fas fa-star"></i> My Animation Collection <i class="fas fa-star"></i></h3>
-          
           <div class="animation-grid">
-            <a href="https://unnecessary-yellow-7jmltagrxr.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">🌸</span>
-              <span>Flower Animation</span>
-            </a>
-            
-            <a href="https://optimistic-cyan-tqiobg9qqd.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">🐶</span>
-              <span>HUSKY Dog Animation</span>
-            </a>
-            
-            <a href="https://involved-orange-llkveovsrr.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">💡</span>
-              <span>BULB Animation</span>
-            </a>
-            
-            <a href="https://wasteful-salmon-xjxzwhonei.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">🕷️</span>
-              <span>Spider Clock Animation </span>
-            </a>
-            
-            <a href="https://noisy-jade-whcr3x5dpz.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">❤️</span>
-              <span>DO YOU LOVE ME Animation</span>
-            </a>
-            
-            <a href="https://objective-lime-5nxm6egxqu.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">💕</span>
-              <span>I LOVE YOU Animation</span>
-            </a>
-            
-            <a href="https://silly-bronze-y0s4gwncpq.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">🪷</span>
-              <span>FLOWER Animation 2</span>
-            </a>
-
-          <a href="https://bare-lavender-tv85hqfv3z.edgeone.app/" target="_blank" class="animation-link">
-              <span class="emoji">🐉</span>
-              <span>DARGON Animation</span>
-            </a>
-
-          <a href="#" target="_blank" class="animation-link">
-              <span class="emoji">🌈</span>
-              <span>Coming</span>
-            </a>   
-
-            </a>
+            <a href="https://unnecessary-yellow-7jmltagrxr.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🌸</span><span>Flower Animation</span></a>
+            <a href="https://optimistic-cyan-tqiobg9qqd.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🐶</span><span>HUSKY Dog Animation</span></a>
+            <a href="https://involved-orange-llkveovsrr.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">💡</span><span>BULB Animation</span></a>
+            <a href="https://wasteful-salmon-xjxzwhonei.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🕷️</span><span>Spider Clock Animation </span></a>
+            <a href="https://noisy-jade-whcr3x5dpz.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">❤️</span><span>DO YOU LOVE ME Animation</span></a>
+            <a href="https://objective-lime-5nxm6egxqu.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">💕</span><span>I LOVE YOU Animation</span></a>
+            <a href="https://silly-bronze-y0s4gwncpq.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🪷</span><span>FLOWER Animation 2</span></a>
+            <a href="https://bare-lavender-tv85hqfv3z.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🐉</span><span>DARGON Animation</span></a>
+            <a href="#" target="_blank" class="animation-link"><span class="emoji">🌈</span><span>Coming</span></a>
           </div>
         </div>
-
-        <div class="saved-section" style="text-align:center; padding:60px;">
-          <i class="fas fa-bookmark text-5xl text-black/20 mb-4"></i>
-          <h3 class="text-xl text-black/50"></h3>
-          <p class="text-black/30">.</p>
-        </div>
+        <div class="saved-section" style="text-align:center; padding:60px;"><i class="fas fa-bookmark text-5xl text-black/20 mb-4"></i><h3 class="text-xl text-black/50"></h3><p class="text-black/30">.</p></div>
       </div>
 
-      <!-- SETTINGS PAGE -->
+      <!-- SETTINGS PAGE (unchanged) -->
       <div class="page" id="settings-page">
         <div class="settings-section">
           <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
@@ -868,7 +922,7 @@
         </div>
       </div>
 
-      <!-- Utility Modals unchanged but backgrounds white -->
+      <!-- Utility Modals unchanged -->
       <div class="pdf-modal" id="pdf-modal"><div class="pdf-modal-content"><button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button><h2>Image to PDF</h2><input type="file" id="imageInput" multiple accept="image/*" style="margin:20px0;width:100%;padding:10px;"><button id="generate-pdf-btn" style="background:#0a84ff;color:white;padding:12px;">Generate PDF</button><div id="pdf-status"></div><div id="previewContainer"></div></div></div>
       <div class="qr-modal" id="qr-modal"><div class="qr-modal-content"><button class="qr-close" id="qr-close"><i class="fas fa-times"></i></button><h2>QR Generator</h2><div class="qr-tabs"><div class="qr-tab active" data-type="TEXT">TEXT</div><div class="qr-tab" data-type="WEBSITE">URL</div><div class="qr-tab" data-type="WIFI">WIFI</div></div><div id="qr-input-area"><textarea id="text-content" placeholder="Enter text..." style="width:100%;padding:12px;"></textarea></div><button id="generate-qr-btn" style="background:#0a84ff;color:white;padding:12px;">Generate QR</button><canvas id="qr-canvas" style="margin:15px auto;background:white;padding:10px;display:block;"></canvas><button id="download-qr-btn" style="background:#34c759;color:white;padding:12px;">Download QR</button></div></div>
       <div class="text-encryptor-modal" id="text-encryptor-modal"><div class="text-encryptor-modal-content"><button class="text-encryptor-close" id="text-encryptor-close"><i class="fas fa-times"></i></button><h2>Text Encryptor</h2><textarea id="encryptor-input" placeholder="Enter message..." style="width:100%;height:100px;padding:12px;"></textarea><div style="display:flex;gap:10px;"><button id="encrypt-btn" style="background:#0a84ff;color:white;padding:10px;">Encrypt</button><button id="decrypt-btn" style="background:#ff9f0a;color:white;padding:10px;">Decrypt</button><button id="copy-encrypted-btn" style="background:#34c759;color:white;padding:10px;">Copy</button></div><div id="encryptor-output" style="background:#f2f2f7;padding:15px;"></div></div></div>
@@ -876,7 +930,7 @@
   </div> <!-- above-canvas -->
 
   <script>
-    // === REPTILE CURSOR BACKGROUND (unchanged, but now light) ===
+    // === REPTILE CURSOR BACKGROUND (unchanged) ===
     (function reptileBackground() {
       var Input = { keys: [], mouse: { left: false, right: false, middle: false, x: 0, y: 0 } };
       for (var i = 0; i < 230; i++) Input.keys.push(false);
