@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khushal's Dashboard · Chat Card (black title + IP 1234) · ClodifyHub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Khushal's Dashboard · Chat Card + New Webpage Card · ClodifyHub</title>
   <!-- Font Awesome 6 (free) for main dashboard, plus 5 for chat card (compatible) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
@@ -519,11 +519,11 @@
       width: 260px;
       height: 300px;
       border-radius: 20px;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.6);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(0, 0, 0, 0.2);
       text-align: center;
-      color: white;
+      color: rgb(0, 0, 0);
       text-decoration: none;
       padding: 30px;
       transition: 0.4s;
@@ -546,7 +546,7 @@
       font-size: 1.1rem;
       font-weight: 600;
       margin-top: 12px;
-      color: white;
+      color: rgb(0, 0, 0);
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -608,6 +608,54 @@
       header { flex-wrap: wrap; }
       .header-center { order: 3; width: 100%; max-width: 100%; margin-top: 10px; }
       .profile-name { display: none; }
+    }
+
+    /* NEW CARD STYLES (My New Webpage card) - integrated with home page */
+    .new-webpage-card {
+      width: 320px;
+      margin: 40px auto 30px auto;
+      padding: 25px;
+      text-align: center;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #ffffff, #ffffff);
+      color: rgb(0, 0, 0);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .new-webpage-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .new-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 15px;
+      fill: #00c9ff;
+      display: inline-block;
+    }
+    .new-webpage-card h2 {
+      margin: 10px 0;
+      font-size: 1.6rem;
+    }
+    .new-webpage-card p {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+    .new-card-btn {
+      display: inline-block;
+      padding: 12px 22px;
+      background: linear-gradient(90deg, #00c9ff, #92fe9d);
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .new-card-btn:hover {
+      opacity: 0.85;
+      transform: scale(0.98);
     }
   </style>
 </head>
@@ -688,6 +736,23 @@
               <div class="desc">Start chatting with friends instantly</div>
             </a>
           </div>
+          
+          <!-- ========= NEW CARD INSERTED HERE (BELOW CHAT CARD) ========= -->
+          <div class="home-searchable" style="display: flex; justify-content: center; margin: 20px auto 40px auto;">
+            <div class="new-webpage-card" onclick="window.open('https://cloudify.free.nf/?i=1#', '_blank')">
+              <svg class="new-icon" viewBox="0 0 24 24">
+                <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/>
+                <path d="M5 5h6v2H7v10h10v-4h2v6H5z"/>
+              </svg>
+              <h2> My New Website</h2>
+              <p>Click below to open my new website</p>
+              <a href="https://cloudify.free.nf/?i=1#" target="_blank" class="new-card-btn" onclick="event.stopPropagation();">
+                Open Website
+              </a>
+            </div>
+          </div>
+          <!-- ========= END OF NEW CARD ========= -->
+          
           <div class="glass-social-container home-searchable" id="social-card-container">
             <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank" data-text="Instagram" style="--r:-15;" class="glass">
               <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.9 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
@@ -703,7 +768,7 @@
         </div>
       </div>
 
-      <!-- EXPLORE PAGE -->
+      <!-- EXPLORE PAGE (unchanged) -->
       <div class="page" id="explore-page">
         <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="explore-grid">
@@ -718,7 +783,7 @@
         </div>
       </div>
 
-      <!-- SAVED PAGE -->
+      <!-- SAVED PAGE (unchanged) -->
       <div class="page" id="saved-page">
         <div class="animation-hub">
           <h3><i class="fas fa-star"></i> My Animation Collection <i class="fas fa-star"></i></h3>
@@ -740,7 +805,7 @@
         <div class="saved-section" style="text-align:center; padding:60px;"><i class="fas fa-bookmark text-5xl text-black/20 mb-4"></i><h3 class="text-xl text-black/50">Your saved items appear here</h3><p class="text-black/30">Bookmark your favorite tools and content</p></div>
       </div>
 
-      <!-- SETTINGS PAGE -->
+      <!-- SETTINGS PAGE (unchanged) -->
       <div class="page" id="settings-page">
         <div class="settings-section">
           <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
@@ -785,6 +850,7 @@
   </div>
 
   <script>
+    // (All original scripts remain unchanged)
     // Reptile Background (simplified)
     (function() {
       const canvas = document.getElementById('reptile-canvas');
@@ -811,7 +877,7 @@
       draw();
     })();
 
-    // Tools Hub Script
+    // Tools Hub Script (kept untouched)
     (function() {
       let favorites = JSON.parse(localStorage.getItem('nexus_favorites') || '[]');
       const toolsData = {
