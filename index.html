@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Khushal jangid </title>
+  <title>Khushal jangid</title>
   <!-- Font Awesome 6 (free) for main dashboard, plus 5 for chat card (compatible) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
@@ -459,16 +459,6 @@
     .qr-tab { background: #f0f0f5; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.9rem; color:#111; }
     .qr-tab.active { background: #0a84ff; color: white; }
     
-    .loader-overlay {
-      position: fixed; top:0; left:0; width:100%; height:100%; background: #f5f7fb; display: flex; justify-content: center; align-items: center; z-index:9999; transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-    .loader-overlay.hidden { opacity:0; visibility:hidden; }
-    .absolute { position: absolute; }
-    .loader { display: flex; margin:0.25em 0; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); }
-    .dash { animation: dashArray 2s ease-in-out infinite, dashOffset 2s linear infinite; }
-    @keyframes dashArray { 0% { stroke-dasharray:0 1 359 0; } 50% { stroke-dasharray:0 359 1 0; } 100% { stroke-dasharray:359 1 0 0; } }
-    @keyframes dashOffset { 0% { stroke-dashoffset:365; } 100% { stroke-dashoffset:5; } }
-    
     .animation-hub {
       background: white;
       border-radius: 28px;
@@ -662,13 +652,8 @@
 <body>
   <canvas id="reptile-canvas"></canvas>
   <div class="above-canvas">
-    <div id="loader-overlay" class="loader-overlay">
-      <div class="loader">
-        <svg height="0" width="0" viewBox="0 0 64 64" class="absolute"><defs><linearGradient gradientUnits="userSpaceOnUse" y2="2" x2="0" y1="62" x1="0" id="b"><stop stop-color="#2f5be7"></stop><stop stop-color="#0a84ff" offset="1"></stop></linearGradient></defs></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 64 64" height="128" width="128"><path stroke-linejoin="round" stroke-linecap="round" stroke-width="12" stroke="url(#b)" d="M 16,4 L 16,60 M 16,32 L 48,4 M 16,32 L 48,60" class="dash" id="k" pathLength="360"></path></svg>
-      </div>
-    </div>
-    <div id="dashboard-page" style="display: none;">
+    <!-- LOADER REMOVED — dashboard immediately visible -->
+    <div id="dashboard-page" style="display: block;">
       <header>
         <div class="header-left">
           <div class="hamburger" id="hamburgerBtn">
@@ -850,7 +835,6 @@
   </div>
 
   <script>
-    // (All original scripts remain unchanged)
     // Reptile Background (simplified)
     (function() {
       const canvas = document.getElementById('reptile-canvas');
@@ -979,11 +963,6 @@
     })();
 
     // Main Dashboard Script
-    window.addEventListener('load', function() {
-      const loader = document.getElementById('loader-overlay');
-      const dashboard = document.getElementById('dashboard-page');
-      setTimeout(() => { loader.classList.add('hidden'); dashboard.style.display = 'block'; setTimeout(() => loader.style.display = 'none', 600); }, 2000);
-    });
     document.addEventListener('DOMContentLoaded', function() {
       const hamburger = document.getElementById('menuCheckbox');
       const sidebar = document.getElementById('sidebar');
