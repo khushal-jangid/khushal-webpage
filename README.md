@@ -22,7 +22,7 @@
 |---|---|---|---|---|
 | **01** | **ApexMarket** | Marketplace / Web | `assets/apex-market.jpg` | [apexmarketstore.vercel.app](https://apexmarketstore.vercel.app/) |
 | **02** | **My Portfolio** | Portfolio / Web | `assets/my-portfolio.jpg` | [webkhushal-nu.vercel.app](https://webkhushal-nu.vercel.app) |
-| **03** | **Built-in Tools** | Tools | `assets/built-in-tools.jpg` | [webkhushal.vercel.app](https://webkhushal.vercel.app/) |
+| **03** | **Built-in Tools** | Tools / Dashboard | `assets/built-in-tools.jpg` | [Built-in Tools & Mini OS](tools.html) |
 | **04** | **Spydy Reminder** | Desktop / Productivity | `assets/spydy-reminder.jpg` | [khushal-jangid.github.io/spydy-electron](https://khushal-jangid.github.io/spydy-electron/) |
 | **05** | **Apex Studio** | Web Development | `assets/apex-studio.jpg` | [apex-studio-dev.surge.sh](https://apex-studio-dev.surge.sh/index.html#) |
 | **06** | **ToolBox Suite** (Featured) | Developer Tools | `assets/toolbox-suite.jpg` | [khushal-jangid.github.io/toolbox-suite](https://khushal-jangid.github.io/toolbox-suite/) |
