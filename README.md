@@ -1,94 +1,59 @@
-# 🌐 Personal Portfolio Dashboard
-
-A modern and interactive **web-based dashboard** that combines productivity tools, a clean UI, and real-time features — all inside your browser.
-
----
-
-## 🚀 Overview
-
-This project is designed to feel like a **mini operating system on the web**, where users can access useful tools, navigate seamlessly, and experience a smooth, responsive interface.
-
-It focuses on **UI/UX, performance, and real-world usability**.
+# 💎 KHUSHAL LABS — 3D Modern Interactive Project Hub (2026 Edition)
+> **“Everything I build. One place.”**  
+> Central Command Center for all projects built by Khushal Jangid.
 
 ---
 
-## ✨ Features
+## ⚡ 3D Modern Architecture & Design
 
-* 🎨 **Modern UI Design** (Glassmorphism style)
-* ⚡ **Fast & Lightweight Performance**
-* 📱 **Fully Responsive Layout**
-* 🔍 Smart Search Functionality
-* 📂 Sidebar Navigation System
-
-### 🛠️ Built-in Tools:
-
-* 🔳 QR Code Generator
-* 📄 PDF Generator
-* 🔐 Text Encryptor
-* 📊 Interactive Dashboard Elements
+**KHUSHAL LABS** has been upgraded to a **3D Modern Interactive Developer Hub**:
+- **Real UI Screenshots on Every Card**: Har project card ke upar ek sleek modern browser viewport frame hai jisme project ka actual andar ka UI screenshot live preview hota hai.
+- **Interactive 3D Parallax Tilt**: Cards mouse pointer ko track karti hain aur real 3D perspective (`perspective(1000px) rotateX(...) rotateY(...) scale3d(1.02, 1.02, 1.02)`) ke saath dynamically tilt hoti hain.
+- **Dynamic Specular Glare / Shine**: Mouse move hone par card par ek authentic light reflection glare smoothly traverse karta hai.
+- **3D Geometric Polyhedron Canvas**: Background mein high-performance rotating 3D geometric core scene jo mouse ke saath react karta hai.
+- **3D Radiant Mesh Orbs**: Subtle background ambient glows jo depth enhance karte hain.
+- **Sleek Glassmorphism**: Frost-glass navigation bar aur cards with thin specular borders.
 
 ---
 
-## 🧠 Tech Stack
+## 📦 Projects In The Command Center (All 11 Exact Projects)
 
-* **Frontend:** HTML, CSS (Tailwind CSS), JavaScript
-* **Design:** Responsive UI + Glassmorphism
-* **Functionality:** Vanilla JS for interactivity
+| # | Project | Category | Real UI Screenshot | Live URL |
+|---|---|---|---|---|
+| **01** | **ApexMarket** | Marketplace / Web | `assets/apex-market.jpg` | [apexmarketstore.vercel.app](https://apexmarketstore.vercel.app/) |
+| **02** | **My Portfolio** | Portfolio / Web | `assets/my-portfolio.jpg` | [webkhushal-nu.vercel.app](https://webkhushal-nu.vercel.app) |
+| **03** | **Built-in Tools** | Tools | `assets/built-in-tools.jpg` | [webkhushal.vercel.app](https://webkhushal.vercel.app/) |
+| **04** | **Spydy Reminder** | Desktop / Productivity | `assets/spydy-reminder.jpg` | [khushal-jangid.github.io/spydy-electron](https://khushal-jangid.github.io/spydy-electron/) |
+| **05** | **Apex Studio** | Web Development | `assets/apex-studio.jpg` | [apex-studio-dev.surge.sh](https://apex-studio-dev.surge.sh/index.html#) |
+| **06** | **ToolBox Suite** (Featured) | Developer Tools | `assets/toolbox-suite.jpg` | [khushal-jangid.github.io/toolbox-suite](https://khushal-jangid.github.io/toolbox-suite/) |
+| **07** | **PulseRemote PC** (Featured) | Systems / Remote Control | `assets/pulse-remote-pc.jpg` | [khushal-jangid.github.io/pulse-remote-pc](https://khushal-jangid.github.io/pulse-remote-pc/#) |
+| **08** | **Folio** | Productivity | `assets/folio-notes.jpg` | [folio-notes-tasks.surge.sh](https://folio-notes-tasks.surge.sh/download.html) |
+| **09** | **AURA OS** (Featured #1) | AI / Agent | `assets/aura-os.jpg` | [auraagentai.vercel.app](https://auraagentai.vercel.app/) |
+| **10** | **Private Chat** | Communication / Privacy | `assets/private-chat.jpg` | [privateschat.lovable.app](https://privateschat.lovable.app/) |
+| **11** | **IndianAgent** | AI / Chatbot | `assets/indian-agent.jpg` | [indianagent.lovable.app](https://indianagent.lovable.app/) |
 
 ---
 
-## 📸 Preview
+## 🎮 Key Features & Shortcuts
 
-*Add screenshots of your project here*
+1. **3D Card Hover Depth**: Mouse ghumaate hi card 3D me tilt hota hai aur andar ke elements multi-plane depth me pop hote hain.
+2. **Instant Search**: Search across project title, description, category, and technologies.
+3. **Category Tabs**: Filter easily between `All`, `AI`, `Web`, `Tools`, `Productivity`, `Systems`, and `Communication`.
+4. **Keyboard Shortcuts**:
+   - `/` → Focus project search
+   - `ESC` → Close modal or clear search
+5. **3D Zoom Modal**: Click on any card to open a full high-resolution interface view with live links.
 
 ---
 
-## ⚙️ Installation & Setup
+## 🚀 Open Website
 
-1. Clone the repository:
+Open `C:\Users\choya\nothing\lab\index.html` directly in browser:
 
-```bash
-git clone https://github.com/your-username/portfolio-dashboard.git
+```powershell
+Start-Process "C:\Users\choya\nothing\lab\index.html"
 ```
 
-2. Navigate to the project folder:
-
-```bash
-cd portfolio-dashboard
-```
-
-3. Open `index.html` in your browser
-
 ---
 
-## 📈 Learning Outcomes
-
-* Improved **frontend development skills**
-* Hands-on experience with **UI/UX design principles**
-* Built **real-world tools integration**
-* Learned to structure scalable web apps
-
----
-
-## 🚧 Future Improvements
-
-* Add backend integration
-* User authentication system
-* Save user data locally/cloud
-* More advanced tools
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to fork the repo and submit a pull request.
-
----
-
-## 📬 Contact
-
-If you have feedback or suggestions, feel free to connect with me!
-
----
-
-⭐ If you like this project, don’t forget to star the repo!
+© 2026 Khushal Jangid.
