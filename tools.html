@@ -2,878 +2,1353 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Khushal jangid</title>
-  <!-- Font Awesome 6 (free) for main dashboard, plus 5 for chat card (compatible) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Khushal Labs — Paper Tools & Utility Desk</title>
+  <meta name="description" content="A tactile paper-styled workspace with everyday utilities, quick launchers, study hubs, games, and animations by Khushal Jangid.">
+  <meta name="author" content="Khushal Jangid">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%231c1917'/><text x='50' y='67' font-size='48' font-weight='900' font-family='sans-serif' text-anchor='middle' fill='%23f2ede4'>KJ</text></svg>">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-  <!-- Tailwind + Phosphor icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-  <!-- Lucide Icons (for tools page integration) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
-    /* Modern white / light grey background, refined shadows, clean typography */
+    /* ── Paper Design System ── */
+    :root {
+      --board: #f4efe6;
+      --board-sheet: #fbf9f5;
+      --ink-1: #1c1917;
+      --ink-2: #44403c;
+      --ink-3: #78716c;
+      --ink-4: #a8a29e;
+      --border: rgba(28, 25, 23, 0.12);
+      --border-solid: #e2dacd;
+      --shadow-paper: 3px 4px 0 rgba(28, 25, 23, 0.08);
+      --shadow-paper-hover: 5px 8px 0 rgba(28, 25, 23, 0.12);
+      --tape-yellow: rgba(253, 224, 71, 0.45);
+      --tape-mint: rgba(110, 231, 183, 0.45);
+      --tape-lavender: rgba(196, 181, 253, 0.45);
+      --tape-peach: rgba(253, 186, 116, 0.45);
+      --tape-blue: rgba(147, 197, 253, 0.45);
+      --sans: 'Nunito', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --serif: 'Newsreader', serif;
+    }
+
+    [data-theme="dark"] {
+      --board: #191715;
+      --board-sheet: #221f1c;
+      --ink-1: #f3eee7;
+      --ink-2: #d6cfc5;
+      --ink-3: #9e968d;
+      --ink-4: #6b645b;
+      --border: rgba(255, 255, 255, 0.12);
+      --border-solid: #38332c;
+      --shadow-paper: 3px 4px 0 rgba(0, 0, 0, 0.45);
+      --shadow-paper-hover: 5px 8px 0 rgba(0, 0, 0, 0.65);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
-    
-    body {
-      background-color: #f5f7fb;
-      color: #1e1e2f;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    
-    /* reptile canvas transformed into very light, barely-there pattern, pointer-events: none */
-    #reptile-canvas {
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      background: transparent;
-      opacity: 0.15;
-    }
-    
-    /* all content above canvas */
-    .above-canvas {
-      position: relative;
-      z-index: 10;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: transparent;
-    }
-    
-    /* Header – clean white, slight shadow */
-    header {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      padding: 10px 25px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-    }
-    
-    .header-left { display: flex; align-items: center; }
-    .header-center { flex: 1; max-width: 600px; margin: 0 auto; }
-    .header-right { display: flex; align-items: center; }
-    
-    /* Hamburger – dark lines for white bg */
-    .hamburger {
-      height: 44px;
-      width: 44px;
-      position: relative;
-      cursor: pointer;
-      z-index: 200;
-    }
-    .hamburger .checkbox {
-      position: absolute;
-      opacity: 0;
-      height: 100%;
-      width: 100%;
-      cursor: pointer;
-      z-index: 10;
-    }
-    .line {
-      transition: 0.5s;
-      stroke-width: 6px;
-      stroke: #1e1e2f;
-    }
-    .hamburger svg path { stroke: #1e1e2f; }
-    .lineTop { stroke-dasharray: 40 40; stroke-dashoffset: 25; }
-    .lineBottom { stroke-dasharray: 40 40; stroke-dashoffset: 60; }
-    .lineMid { stroke-dasharray: 40 40; }
-    .hamburger .checkbox:checked + svg .line { stroke: #0a84ff; }
-    .hamburger .checkbox:checked + svg .lineTop { stroke-dashoffset: 0; transform-origin: left; transform: rotateZ(45deg) translate(-7px, -5px); }
-    .hamburger .checkbox:checked + svg .lineMid { stroke-dashoffset: 40; }
-    .hamburger .checkbox:checked + svg .lineBottom { stroke-dashoffset: 0; transform-origin: left; transform: rotateZ(-45deg) translate(-5px, 5px); }
-    
-    /* Search bar – light mode */
-    .header-search { width: 100%; position: relative; }
-    .header-search-bar {
-      width: 100%;
-      padding: 12px 45px 12px 20px;
-      border-radius: 40px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      background: white;
-      color: #1e1e2f;
-      font-size: 0.95rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    }
-    .header-search-bar:focus {
-      outline: none;
-      border-color: #0a84ff;
-      box-shadow: 0 0 0 4px rgba(10,132,255,0.15);
-    }
-    .header-search-icon {
-      position: absolute;
-      right: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #8e8e98;
-      font-size: 1rem;
-    }
-    
-    .profile-container {
-      display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 6px 18px;
-      border-radius: 40px;
-      background: white;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-    .profile-container:hover { background: #f0f2f5; transform: translateY(-1px); }
-    .profile-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(0,0,0,0.1); }
-    .profile-name { font-weight: 500; color: #1e1e2f; }
-    
-    /* Sidebar – clean white glass */
-    .sidebar {
-      position: fixed;
-      top: 70px;
-      left: 0;
-      width: 260px;
-      height: calc(100vh - 70px);
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(0, 0, 0, 0.06);
-      transform: translateX(-100%);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 150;
-      padding: 25px 0;
-      border-radius: 0 24px 24px 0;
-      box-shadow: 6px 0 30px rgba(0, 0, 0, 0.04);
-    }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 16px 28px;
-      color: #2c2c3a;
-      font-size: 1.2rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      border-left: 4px solid transparent;
-    }
-    .sidebar .nav-item:hover {
-      background: rgba(10, 132, 255, 0.06);
-      color: #0a84ff;
-      border-left-color: #0a84ff;
-    }
-    .sidebar .nav-item i { width: 28px; font-size: 1.4rem; color: #5f5f73; }
-    .sidebar .nav-item:hover i { color: #0a84ff; }
-    .sidebar .nav-item.active {
-      background: rgba(10, 132, 255, 0.1);
-      color: #0a84ff;
-      border-left-color: #0a84ff;
-    }
-    .sidebar .nav-item.active i { color: #0a84ff; }
-    
-    /* Main pages */
-    .page {
-      display: none;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 30px 80px;
-    }
-    .page.active { display: block; }
-    
-    /* modern white cards */
-    .glass-card {
-      background: white;
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0,0,0,0.02);
-      border: none;
-    }
-    .bento-card {
-      transform: translateY(0) scale(1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-      height: 20rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      border-radius: 2rem;
-      background: white;
-      position: relative;
-    }
-    .bento-card:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.02);
-    }
-    .drive-icon-large {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 4px 8px rgba(66, 133, 244, 0.2));
-    }
-    .hover-reveal { 
-      opacity: 1 !important; 
-      transform: translateY(0) !important; 
-    }
-    .hover-reveal h3 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #111;
-      margin-bottom: 0.25rem;
-    }
-    .open-link-icon {
-      position: absolute; top: 1rem; right: 1rem; z-index: 20; opacity: 0; transition: opacity 0.2s;
-      background: rgba(255,255,255,0.9); backdrop-filter: blur(4px); border-radius: 50%;
-      width: 2.2rem; height: 2.2rem; display: flex; align-items: center; justify-content: center;
-      border: 1px solid rgba(0,0,0,0.04);
-      color: #1e1e2f;
-    }
-    .group:hover .open-link-icon { opacity: 1; }
-    
-    .double-card-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      margin: 2rem auto;
-    }
-    .double-card-grid > * {
-      flex: 0 1 400px;
-      min-width: 300px;
-    }
-    
-    .rps-card {
-      background: white;
-      border-radius: 2rem;
-      padding: 2rem 1.5rem;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      height: 20rem;
-      justify-content: center;
-      position: relative;
-    }
-    .rps-card:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.12);
-    }
-    .rps-emblem { font-size: 4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 6px 8px #b0d4ff); }
-    .rps-card h3 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #111;
-      margin: 0.3rem 0;
-    }
-    .rps-sub {
-      background: #f0f4fe;
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      color: #1e4f8a;
-      font-size: 1rem;
-      margin: 0.8rem 0 0.5rem;
-    }
-    .rps-footer {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #f2f2f7;
-      padding: 0.3rem 1.2rem;
-      border-radius: 50px;
-      color: #3b3b4d;
-      font-size: 0.9rem;
-      margin-top: 0.8rem;
-    }
-    
-    .glass-social-container {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      padding: 2rem 1rem;
-      margin-top: 3rem;
-    }
-    .glass-social-container .glass {
-      position: relative;
-      width: 180px;
-      height: 200px;
-      background: white;
-      border: 1px solid rgba(0, 0, 0, 0.04);
-      box-shadow: 0 15px 30px -12px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.4s;
-      border-radius: 20px;
-      margin: 0 -45px;
-      backdrop-filter: blur(10px);
-      transform: rotate(calc(var(--r) * 1deg));
-      will-change: transform, margin;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-    }
-    .glass-social-container:hover .glass { transform: rotate(0deg); margin: 0 10px; }
-    .glass-social-container .glass::before {
-      content: attr(data-text);
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 40px;
-      background: #f5f7fb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #2a2a38;
-      font-weight: 400;
-      letter-spacing: 1px;
-      border-bottom-left-radius: 20px;
-      border-bottom-right-radius: 20px;
-      border-top: 1px solid rgba(0,0,0,0.04);
-      text-transform: uppercase;
-      font-size: 0.85rem;
-    }
-    .glass-social-container .glass svg {
-      height: 3.5em;
-      width: auto;
-      fill: #2c2c3a;
-      opacity: 0.8;
-      transition: transform 0.25s ease;
-    }
-    .glass-social-container .glass:hover svg { transform: scale(1.05); fill: #0a84ff; }
-    
-    .brand-title {
-      font-size: 2.8rem; font-weight: 700; margin-bottom: 0.5rem;
-      background: linear-gradient(145deg, #0a66c2, #0f9d58, #fbbc05);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-    }
-    
-    .tall-card {
-      background: white;
-      border-radius: 28px;
-      padding: 32px 24px;
-      box-shadow: 0 8px 28px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0,0,0,0.02);
-      min-height: 420px;
-    }
-    .tall-card.hidden-search { display: none; }
-    .tall-card h3 {
-      font-size:1.5rem; font-weight:600; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid rgba(0,0,0,0.05); display:flex; align-items:center; gap:14px; color:#111;
-    }
-    .tall-card h3 i {
-      color:#0a84ff; width:38px; height:38px; display:flex; align-items:center; justify-content:center; background:rgba(10,132,255,0.1); border-radius:12px; font-size:1.4rem;
-    }
-    .card-icon-group {
-      display:flex; flex-direction:column; align-items:center; cursor:pointer;
-    }
-    .card-icon-group img {
-      width:70px; height:70px; border-radius:20px; background:rgba(0,0,0,0.02); padding:14px;
-    }
-    .card-icon-group span { margin-top:12px; color:#2c2c3a; }
-    
-    .home-searchable { transition: all 0.2s ease; }
-    .home-searchable.hidden-search { display: none !important; }
-    
-    .explore-section, .saved-section, .settings-section {
-      background: white; border-radius: 28px; padding: 28px;
-      margin-bottom: 30px; box-shadow: 0 8px 26px -8px rgba(0,0,0,0.04);
-    }
-    
-    .back-to-top {
-      position: fixed; bottom: 80px; right: 30px; width: 50px; height: 50px; border-radius: 50%;
-      background: white; color: #1e1e2f;
-      display: flex; align-items: center; justify-content: center; cursor: pointer;
-      opacity: 0; transform: translateY(20px); transition: all 0.3s ease; z-index: 100;
-      border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 6px 16px rgba(0,0,0,0.04);
-    }
-    .back-to-top.show { opacity: 1; transform: translateY(0); }
-    
-    .notification {
-      position: fixed; top: 30px; right: 30px; background: white;
-      padding: 22px 26px; border-radius: 24px; box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
-      max-width: 380px; z-index: 1000;
-      opacity: 0; transform: translateY(-100px); transition: all 0.5s cubic-bezier(0.68,-0.55,0.27,1.55);
-      display: flex; align-items: flex-start; gap: 18px;
-      color:#1e1e2f;
-    }
-    .notification.show { opacity: 1; transform: translateY(0); }
-    .notification-close { background: transparent; border: none; color: #8e8e98; cursor: pointer; font-size: 1.2rem; }
-    
-    .profile-modal {
-      position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px);
-      display: flex; align-items: center; justify-content: center; z-index:2000; opacity:0; visibility:hidden; transition:0.3s;
-    }
-    .profile-modal.active { opacity:1; visibility:visible; }
-    .modal-content {
-      background: white; border-radius:28px; padding:40px;
-      max-width:480px; width:90%; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .close-modal {
-      position: absolute; top:20px; right:20px; background:#f0f0f0; border:none; color:#111;
-      width:44px; height:44px; border-radius:50%; cursor:pointer;
-    }
-    .profile-modal-img {
-      width:120px; height:120px; border-radius:50%; margin:0 auto 20px; object-fit:cover; border:2px solid rgba(0,0,0,0.05);
-    }
-    
-    .pdf-modal, .qr-modal, .text-encryptor-modal {
-      position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px);
-      display: flex; align-items: center; justify-content: center; z-index:3000; opacity:0; visibility:hidden; transition:0.3s;
-    }
-    .pdf-modal.active, .qr-modal.active, .text-encryptor-modal.active { opacity:1; visibility:visible; }
-    .pdf-modal-content, .qr-modal-content, .text-encryptor-modal-content {
-      background: white; border-radius:28px; padding:40px;
-      max-width:600px; width:90%; max-height:90vh; overflow-y:auto; box-shadow: 0 30px 60px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .pdf-close, .qr-close, .text-encryptor-close {
-      position: absolute; top:20px; right:20px; background:#f0f0f0; border:none; color:#111;
-      width:40px; height:40px; border-radius:50%; cursor:pointer;
-    }
-    
-    .qr-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
-    .qr-tab { background: #f0f0f5; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.9rem; color:#111; }
-    .qr-tab.active { background: #0a84ff; color: white; }
-    
-    .animation-hub {
-      background: white;
-      border-radius: 28px;
-      padding: 28px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 26px -8px rgba(0,0,0,0.04);
-      text-align: center;
-    }
-    .animation-hub h3 {
-      color: #1e1e2f;
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .animation-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: auto;
-    }
-    .animation-link {
-      text-decoration: none;
-      background: linear-gradient(145deg, #f8f9fa, #ffffff);
-      padding: 25px 20px;
-      border-radius: 20px;
-      font-weight: bold;
-      color: #333;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-    .animation-link:hover {
-      transform: translateY(-6px) scale(1.02);
-      background: linear-gradient(135deg, #0a84ff, #5e5ce6);
-      color: white;
-    }
-    .animation-link .emoji { font-size: 3rem; }
-    
-    .chat-card-new {
-      width: 260px;
-      height: 300px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      text-align: center;
-      color: rgb(0, 0, 0);
-      text-decoration: none;
-      padding: 30px;
-      transition: 0.4s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin: 0 auto;
-    }
-    .chat-card-new:hover { transform: scale(1.05); }
-    .chat-card-new .icon { font-size: 70px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
-    @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
-    .chat-card-new .title { font-size: 26px; font-weight: bold; margin-bottom: 6px; color: #000000; }
-    .ip-badge {
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      padding: 6px 18px;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-top: 12px;
-      color: rgb(0, 0, 0);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    /* Tools page integration styles */
-    .nexus-tools-wrapper {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(4px);
-      border-radius: 2rem;
-      padding: 1.8rem;
-      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
-    }
-    .nexus-tools-wrapper .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 28px;
-      padding: 30px 0;
-    }
-    .nexus-tools-wrapper .card {
-      background: white;
-      border-radius: 32px;
-      padding: 28px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.08);
-      position: relative;
-    }
-    .nexus-tools-wrapper .card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15); }
-    .nexus-tools-wrapper .card h3 { font-size: 1.3rem; margin: 12px 0 6px; color: #111; }
-    .nexus-tools-wrapper .card p { font-size: 0.8rem; opacity: 0.7; }
-    .nexus-tools-wrapper .fav-star {
-      position: absolute; top: 16px; right: 20px; font-size: 1.7rem; cursor: pointer; z-index: 12;
-    }
-    .nexus-tools-wrapper .tab {
-      background: rgba(0, 0, 0, 0.04);
-      padding: 10px 24px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-weight: 600;
-      color: #2c2c3a;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    .nexus-tools-wrapper .tab.active { background: #0a84ff; color: white; }
-    .nexus-tools-wrapper input {
-      background: white;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      padding: 12px 18px;
-      border-radius: 60px;
-      color: #1e1e2f;
-    }
-    .hidden { display: none !important; }
-    @media (max-width: 768px) {
-      header { flex-wrap: wrap; }
-      .header-center { order: 3; width: 100%; max-width: 100%; margin-top: 10px; }
-      .profile-name { display: none; }
+      font-family: var(--sans);
     }
 
-    /* NEW CARD STYLES (My New Webpage card) - integrated with home page */
-    .new-webpage-card {
-      width: 320px;
-      margin: 40px auto 30px auto;
-      padding: 25px;
-      text-align: center;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #ffffff, #ffffff);
-      color: rgb(0, 0, 0);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      transition: 0.3s;
-      cursor: pointer;
+    body {
+      background-color: var(--board);
+      background-image: radial-gradient(rgba(28, 25, 23, 0.09) 1px, transparent 1px);
+      background-size: 22px 22px;
+      color: var(--ink-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
     }
-    .new-webpage-card:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+
+    [data-theme="dark"] body {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
     }
-    .new-icon {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 15px;
-      fill: #00c9ff;
-      display: inline-block;
+
+    /* ── Reptile Canvas Background ── */
+    #reptile-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.28;
     }
-    .new-webpage-card h2 {
-      margin: 10px 0;
-      font-size: 1.6rem;
+
+    .main-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 16px 20px 80px;
     }
-    .new-webpage-card p {
-      font-size: 14px;
-      color: #ccc;
-      margin-bottom: 20px;
+
+    /* ── Paper Header Bar ── */
+    .paper-header {
+      background: var(--board-sheet);
+      border: 1.5px solid var(--border-solid);
+      border-radius: 18px;
+      box-shadow: var(--shadow-paper);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 14px;
+      z-index: 100;
+      backdrop-filter: blur(8px);
     }
-    .new-card-btn {
-      display: inline-block;
-      padding: 12px 22px;
-      background: linear-gradient(90deg, #00c9ff, #92fe9d);
-      color: rgb(0, 0, 0);
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       text-decoration: none;
+      color: var(--ink-1);
+    }
+
+    .brand-badge {
+      background: var(--ink-1);
+      color: var(--board);
+      font-family: var(--mono);
+      font-weight: 800;
+      font-size: 13px;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 2px 2px 0 rgba(28, 25, 23, 0.2);
+    }
+
+    .brand-title-wrap h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .brand-title-wrap span {
+      font-size: 0.72rem;
+      font-family: var(--mono);
+      color: var(--ink-3);
+      display: block;
+    }
+
+    /* Search Bar in Header */
+    .search-wrap {
+      flex: 1;
+      max-width: 440px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 9px 16px 9px 36px;
+      background: var(--board);
+      border: 1.5px solid var(--border-solid);
       border-radius: 12px;
-      font-weight: bold;
-      transition: 0.3s;
+      font-size: 0.85rem;
+      color: var(--ink-1);
+      outline: none;
+      transition: all 0.2s ease;
     }
-    .new-card-btn:hover {
-      opacity: 0.85;
-      transform: scale(0.98);
+
+    .search-input:focus {
+      border-color: var(--ink-1);
+      background: #fff;
+      box-shadow: 2px 2px 0 rgba(28, 25, 23, 0.15);
     }
-    .hub-back-btn {
+
+    [data-theme="dark"] .search-input:focus {
+      background: #191715;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-back-hub {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff !important;
+      background: #2563eb;
+      color: #ffffff;
       padding: 7px 15px;
-      border-radius: 9999px;
-      font-size: 13px;
-      font-weight: 600;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
       text-decoration: none;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
-      transition: all 0.2s ease;
+      box-shadow: 2px 3px 0 #1e40af;
+      transition: all 0.18s ease;
       white-space: nowrap;
     }
-    .hub-back-btn:hover {
+
+    .btn-back-hub:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 4px 0 #1e40af;
+    }
+
+    .btn-icon {
+      background: var(--board);
+      border: 1.5px solid var(--border-solid);
+      color: var(--ink-1);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      box-shadow: 2px 2px 0 var(--border-solid);
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:hover {
       transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    /* ── Washi Tape Decorator ── */
+    .washi-tape {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 90px;
+      height: 20px;
+      background: var(--tape-yellow);
+      border-left: 2px dashed rgba(0, 0, 0, 0.1);
+      border-right: 2px dashed rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .washi-tape.mint { background: var(--tape-mint); transform: translateX(-50%) rotate(1.5deg); }
+    .washi-tape.lavender { background: var(--tape-lavender); transform: translateX(-50%) rotate(-1.5deg); }
+    .washi-tape.peach { background: var(--tape-peach); transform: translateX(-50%) rotate(2deg); }
+    .washi-tape.blue { background: var(--tape-blue); transform: translateX(-50%) rotate(-0.5deg); }
+
+    /* ── Hero Bulletin Board ── */
+    .bulletin-hero {
+      margin: 28px 0 24px;
+      background: var(--board-sheet);
+      border: 2px dashed var(--border-solid);
+      border-radius: 20px;
+      padding: 24px 28px;
+      position: relative;
+      box-shadow: var(--shadow-paper);
+    }
+
+    .bulletin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .bulletin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #ea580c;
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .bulletin-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-top: 6px;
+      color: var(--ink-1);
+    }
+
+    .bulletin-subtitle {
+      font-size: 0.95rem;
+      color: var(--ink-3);
+      max-width: 680px;
+      margin-top: 4px;
+    }
+
+    .bulletin-stats {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: var(--board);
+      border: 1.5px solid var(--border-solid);
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      color: var(--ink-2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 1px 2px 0 var(--border-solid);
+    }
+
+    /* ── Filter Pills Bar ── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px 14px;
+      margin-bottom: 24px;
+      scrollbar-width: thin;
+    }
+
+    .filter-pill {
+      background: var(--board-sheet);
+      border: 1.5px solid var(--border-solid);
+      color: var(--ink-2);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      box-shadow: 1px 2px 0 var(--border-solid);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .filter-pill:hover,
+    .filter-pill.active {
+      background: var(--ink-1);
+      color: var(--board);
+      border-color: var(--ink-1);
+      box-shadow: 2px 3px 0 rgba(28, 25, 23, 0.25);
+    }
+
+    /* ── Section Titles ── */
+    .section-wrap {
+      margin-bottom: 36px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px dashed var(--border-solid);
+    }
+
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-3);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .section-heading {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--ink-1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Grid Layouts ── */
+    .cards-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .cards-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .cards-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── Paper Card Base ── */
+    .paper-card {
+      background: var(--board-sheet);
+      border: 1.5px solid var(--border-solid);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      box-shadow: var(--shadow-paper);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .paper-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-paper-hover);
+    }
+
+    /* Pastel variants */
+    .paper-card.yellow { background: #fefce8; border-color: #fef08a; }
+    .paper-card.mint   { background: #ecfdf5; border-color: #a7f3d0; }
+    .paper-card.lavender { background: #f5f3ff; border-color: #ddd6fe; }
+    .paper-card.peach  { background: #fff7ed; border-color: #fed7aa; }
+    .paper-card.blue   { background: #eff6ff; border-color: #bfdbfe; }
+    .paper-card.rose   { background: #fff1f2; border-color: #fecdd3; }
+
+    [data-theme="dark"] .paper-card.yellow { background: #26241a; border-color: #4d4624; }
+    [data-theme="dark"] .paper-card.mint   { background: #1a2621; border-color: #244d3e; }
+    [data-theme="dark"] .paper-card.lavender { background: #221e2e; border-color: #453863; }
+    [data-theme="dark"] .paper-card.peach  { background: #2b211a; border-color: #573e2d; }
+    [data-theme="dark"] .paper-card.blue   { background: #1b222f; border-color: #2b3e5c; }
+    [data-theme="dark"] .paper-card.rose   { background: #2b1d20; border-color: #5c2c36; }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .card-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: #ffffff;
+      border: 1.5px solid var(--border-solid);
+      box-shadow: 2px 2px 0 var(--border-solid);
+    }
+
+    [data-theme="dark"] .card-icon-box {
+      background: #2b2723;
+    }
+
+    .card-stamp {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(28, 25, 23, 0.05);
+      border: 1px dashed var(--border-solid);
+      color: var(--ink-3);
+    }
+
+    .card-title {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--ink-1);
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--ink-2);
+      margin-bottom: 14px;
+      flex-grow: 1;
+    }
+
+    .card-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      background: var(--ink-1);
+      color: var(--board);
+      border: 1.5px solid var(--ink-1);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 0.83rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 rgba(28, 25, 23, 0.2);
+      transition: all 0.15s ease;
+    }
+
+    .card-action-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 rgba(28, 25, 23, 0.3);
+    }
+
+    .card-action-btn.secondary {
+      background: var(--board);
+      color: var(--ink-1);
+      border-color: var(--border-solid);
+      box-shadow: 2px 2px 0 var(--border-solid);
+    }
+
+    /* ── Interactive Utility Inputs on Cards ── */
+    .paper-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-solid);
+      background: #ffffff;
+      font-size: 0.82rem;
+      color: var(--ink-1);
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    [data-theme="dark"] .paper-input {
+      background: #191715;
+    }
+
+    .paper-input:focus {
+      border-color: var(--ink-1);
+    }
+
+    .paper-textarea {
+      width: 100%;
+      height: 75px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-solid);
+      background: #ffffff;
+      font-size: 0.82rem;
+      color: var(--ink-1);
+      margin-bottom: 10px;
+      outline: none;
+      resize: vertical;
+      font-family: var(--mono);
+    }
+
+    [data-theme="dark"] .paper-textarea {
+      background: #191715;
+    }
+
+    /* ── Sticky Scratchpad ── */
+    .scratchpad-card {
+      background: #fefce8;
+      border: 2px dashed #facc15;
+      position: relative;
+    }
+
+    .scratchpad-textarea {
+      width: 100%;
+      height: 140px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #713f12;
+      resize: none;
+    }
+
+    /* ── Nexus Tabs ── */
+    .nexus-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .nexus-tab-btn {
+      background: var(--board);
+      border: 1.5px solid var(--border-solid);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--ink-2);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .nexus-tab-btn.active {
+      background: var(--ink-1);
+      color: var(--board);
+      border-color: var(--ink-1);
+      box-shadow: 2px 2px 0 rgba(28, 25, 23, 0.2);
+    }
+
+    .nexus-item-card {
+      background: var(--board-sheet);
+      border: 1.5px solid var(--border-solid);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--ink-1);
+      transition: all 0.15s ease;
+      box-shadow: 1px 2px 0 var(--border-solid);
+    }
+
+    .nexus-item-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 3px 4px 0 var(--border-solid);
+      background: #fff;
+    }
+
+    [data-theme="dark"] .nexus-item-card:hover {
+      background: #2b2723;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #eab308;
+      padding: 4px;
+    }
+
+    /* ── Animation Link Chips ── */
+    .anim-chip {
+      background: var(--board-sheet);
+      border: 1.5px solid var(--border-solid);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--ink-1);
+      font-weight: 700;
+      font-size: 0.85rem;
+      box-shadow: 2px 2px 0 var(--border-solid);
+      transition: all 0.15s ease;
+    }
+
+    .anim-chip:hover {
+      transform: translate(-1px, -2px);
+      box-shadow: 3px 4px 0 var(--border-solid);
+      border-color: var(--ink-1);
+    }
+
+    .anim-chip .emoji {
+      font-size: 22px;
+    }
+
+    /* ── Table of Contents Drawer (Hamburger) ── */
+    .toc-drawer {
+      position: fixed;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100vh;
+      background: var(--board-sheet);
+      border-right: 2px solid var(--border-solid);
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transition: left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    .toc-drawer.open {
+      left: 0;
+    }
+
+    .toc-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(2px);
+      z-index: 999;
+      display: none;
+    }
+
+    .toc-backdrop.active {
+      display: block;
+    }
+
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--ink-1);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: all 0.15s ease;
+    }
+
+    .toc-link:hover {
+      background: var(--board);
+      transform: translateX(4px);
+    }
+
+    /* ── Footer ── */
+    .paper-footer {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1.5px dashed var(--border-solid);
+      color: var(--ink-3);
+      font-size: 0.85rem;
+    }
+
+    .paper-footer a {
+      color: var(--ink-1);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .header-center { display: none; }
+      .bulletin-title { font-size: 1.4rem; }
+      .cards-grid-3, .cards-grid-2 { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Canvas for subtle background lines -->
   <canvas id="reptile-canvas"></canvas>
-  <div class="above-canvas">
-    <!-- LOADER REMOVED — dashboard immediately visible -->
-    <div id="dashboard-page" style="display: block;">
-      <header>
-        <div class="header-left">
-          <div class="hamburger" id="hamburgerBtn">
-            <input class="checkbox" type="checkbox" id="menuCheckbox" />
-            <svg fill="none" viewBox="0 0 50 50" height="44" width="44">
-              <path class="lineTop line" stroke-linecap="round" stroke-width="4" stroke="currentColor" d="M6 11L44 11"></path>
-              <path stroke-linecap="round" stroke-width="4" stroke="currentColor" d="M6 24H43" class="lineMid line"></path>
-              <path stroke-linecap="round" stroke-width="4" stroke="currentColor" d="M6 37H43" class="lineBottom line"></path>
-            </svg>
-          </div>
-        </div>
-        <div class="header-center">
-          <div class="header-search">
-            <input type="text" class="header-search-bar" placeholder="Search everything (e.g., 'drive', 'game', 'ai')..." id="search-bar">
-            <i class="fas fa-search header-search-icon"></i>
-          </div>
-        </div>
-        <div class="header-right" style="display:flex; align-items:center; gap:12px;">
-          <a href="index.html" class="hub-back-btn"><i class="fas fa-arrow-left"></i> Khushal Labs</a>
-          <div class="profile-container" id="profile-container">  
-            <img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" alt="Profile" class="profile-img">
-            <span class="profile-name">Khushal</span>
-          </div>
-        </div>
-      </header>
 
-      <div class="sidebar" id="sidebar">
-        <div style="padding: 12px 16px 8px 16px; border-bottom: 1px solid #edf2f7; margin-bottom: 8px;">
-          <a href="index.html" class="hub-back-btn" style="width: 100%; justify-content: center;"><i class="fas fa-arrow-left"></i> Back to Khushal Labs</a>
-        </div>
-        <div class="nav-item active" data-target="home"><i class="fas fa-home"></i> Home</div>
-        <div class="nav-item" data-target="explore"><i class="fas fa-compass"></i> Explore</div>
-        <div class="nav-item" data-target="saved"><i class="fas fa-bookmark"></i> Saved</div>
-        <div class="nav-item" data-target="settings"><i class="fas fa-cog"></i> Settings</div>
-        <div class="nav-item" data-target="more-tools"><i class="fas fa-tools"></i> More Tools</div>
+  <!-- Table of Contents Slide Drawer -->
+  <div class="toc-backdrop" id="toc-backdrop"></div>
+  <aside class="toc-drawer" id="toc-drawer">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; border-bottom:1.5px dashed var(--border-solid);">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:20px;">📋</span>
+        <strong style="font-size:1.05rem;">Quick Navigation</strong>
       </div>
-
-      <!-- HOME PAGE -->
-      <div class="page active" id="home-page">
-        <div class="home-saved-container">
-          <div class="brand-title home-searchable" id="home-brand">WELCOME</div>
-          <div class="double-card-grid home-searchable" id="double-card-row">
-            <div onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm', '_blank')" class="group relative overflow-hidden rounded-3xl p-6 glass-card bento-card" id="drive-card">
-              <div class="open-link-icon"><i class="ph-bold ph-arrow-square-out"></i></div>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" class="drive-icon-large">
-              <div class="relative z-10 w-full text-center">
-                <div class="hover-reveal" style="opacity:1; transform:none;">
-                  <h3 class="text-2xl font-semibold text-[#111] mb-1">Google Drive</h3>
-                  <p class="text-sm text-[#4b4b5c]"><i class="ph ph-lightning" style="color: #FBBC05;"></i> 15 GB free</p>
-                  <div class="mt-2 flex gap-1 justify-center"><span class="text-xs bg-black/5 px-2 py-0.5 rounded-full text-[#333]">docs</span><span class="text-xs bg-black/5 px-2 py-0.5 rounded-full text-[#333]">sheets</span></div>
-                </div>
-              </div>
-              <i class="ph-fill ph-google-drive-logo float-bg-icon text-8xl -bottom-6 -right-6 absolute rotate-12" style="color: #4285F4; opacity:0.1;"></i>
-            </div>
-            <div onclick="window.open('https://igu1.ucanapply.com/result-details', '_blank')" class="rps-card group" id="rps-card">
-              <div class="open-link-icon" style="position: absolute; top:1rem; right:1rem; opacity:0;"><i class="ph-bold ph-arrow-square-out"></i></div>
-              <div class="rps-emblem">🏛️</div>
-              <h3>RPS RESULT</h3>
-              <div class="rps-sub">Mahendragarh</div>
-              <div class="rps-footer"><span>🔗</span> click to check results</div>
-            </div>
-          </div>
-          <div class="home-searchable" style="display: flex; justify-content: center; margin: 2rem auto;">
-            <a href="https://ipchat.in/" class="chat-card-new" target="_blank">
-              <div class="glow"></div>
-              <div class="icon">📧</div>
-              <div class="title">Chat App online</div>
-              <div class="ip-badge"><i class="fas fa-network-wired"></i> ROOM CODE=2006</div>
-              <div class="desc">Start chatting with friends instantly</div>
-            </a>
-          </div>
-          
-          <!-- ========= NEW CARD INSERTED HERE (BELOW CHAT CARD) ========= -->
-          <div class="home-searchable" style="display: flex; justify-content: center; margin: 20px auto 40px auto;">
-            <div class="new-webpage-card" onclick="window.open('https://cloudify.free.nf/?i=1#', '_blank')">
-              <svg class="new-icon" viewBox="0 0 24 24">
-                <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/>
-                <path d="M5 5h6v2H7v10h10v-4h2v6H5z"/>
-              </svg>
-              <h2> My New Website</h2>
-              <p>Click below to open my new website</p>
-              <a href="https://codewithkj.vercel.app/" target="_blank" class="new-card-btn" onclick="event.stopPropagation();">
-                Open Website
-              </a>
-            </div>
-          </div>
-          <!-- ========= END OF NEW CARD ========= -->
-          
-          <div class="glass-social-container home-searchable" id="social-card-container">
-            <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank" data-text="Instagram" style="--r:-15;" class="glass">
-              <svg viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.9 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
-            </a>
-            <a href="https://github.com" target="_blank" data-text="Github" style="--r:5;" class="glass">
-              <svg viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
-            </a>
-            <a href="https://www.facebook.com" target="_blank" data-text="Facebook" style="--r:25;" class="glass">
-              <svg viewBox="0 0 512 512"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg>
-            </a>
-          </div>
-          <p class="mt-16 text-black/40 text-sm home-searchable" id="home-footer">✨ Hover over the cards to see them align</p>
-        </div>
-      </div>
-
-      <!-- EXPLORE PAGE (unchanged) -->
-      <div class="page" id="explore-page">
-        <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="explore-grid">
-            <div class="tall-card" data-search="contact instagram facebook github twitter"><h3><i class="fas fa-link"></i>Contact Me</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;"><div class="card-icon-group" onclick="window.open('https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu', '_blank')"><img src="https://img.icons8.com/fluency/100/instagram-new.png" alt="Instagram"><span>Instagram</span></div><div class="card-icon-group" onclick="window.open('https://facebook.com', '_blank')"><img src="https://img.icons8.com/color/100/facebook-new.png" alt="Facebook"><span>Facebook</span></div><div class="card-icon-group" onclick="window.open('https://github.com/', '_blank')"><img src="https://img.icons8.com/fluency/100/github.png" alt="GitHub"><span>GitHub</span></div><div class="card-icon-group" onclick="window.open('https://twitter.com', '_blank')"><img src="https://img.icons8.com/color/100/twitter.png" alt="Twitter"><span>Twitter</span></div></div></div>
-            <div class="tall-card" data-search="pc mod apps se7en creativeconor gamingbeasts itch.io"><h3><i class="fas fa-gamepad"></i>PC Mod Apps</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;"><div class="card-icon-group" onclick="window.open('https://se7en.ws/games/?lang=en', '_blank')"><img src="https://img.icons8.com/fluency/100/controller.png" alt="Se7en.ws"><span>Se7en.ws</span></div><div class="card-icon-group" onclick="window.open('https://creativeconor.com/', '_blank')"><img src="https://img.icons8.com/fluency/100/epic-games.png" alt="CreativeConor"><span>CreativeConor</span></div><div class="card-icon-group" onclick="window.open('https://gamingbeasts.com/', '_blank')"><img src="https://img.icons8.com/color/100/controller.png" alt="GamingBeasts"><span>GamingBeasts</span></div><div class="card-icon-group" onclick="window.open('https://itch.io', '_blank')"><img src="https://t3.ftcdn.net/jpg/03/52/55/32/360_F_352553275_SuyjdnVS1QfQUT3Udi4Bghxx9JW13mBM.jpg" alt="Itch.io"><span>Itch.io</span></div></div></div>
-            <div class="tall-card" data-search="online games deadshot slowroads armedforce miniclip"><h3><i class="fas fa-dice"></i>Online Games</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;"><div class="card-icon-group" onclick="window.open('https://deadshot.io/', '_blank')"><img src="https://image.pngaaa.com/885/1977885-middle.png" alt="DEADSHOT"><span>DEADSHOT</span></div><div class="card-icon-group" onclick="window.open('https://slowroads.io/', '_blank')"><img src="https://img.icons8.com/fluency/100/gaming.png" alt="Slow Road"><span>Slow Road</span></div><div class="card-icon-group" onclick="window.open('https://armedforces.io/', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/11252/11252507.png" alt="Armedforce"><span>Armedforce</span></div><div class="card-icon-group" onclick="window.open('https://www.miniclip.com', '_blank')"><img src="https://images.seeklogo.com/logo-png/9/1/miniclip-logo-png_seeklogo-93003.png" alt="Miniclip"><span>Miniclip</span></div></div></div>
-            <div class="tall-card" data-search="movie sites hdhub4u popcorn kat movies net mirror"><h3><i class="fas fa-film"></i>Movie Sites</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;"><div class="card-icon-group" onclick="window.open('https://hdhub4u.gd/', '_blank')"><img src="https://img.icons8.com/fluency/100/movie-projector.png" alt="HDHub4u"><span>HDHub4u</span></div><div class="card-icon-group" onclick="window.open('https://popcornmovies.org/', '_blank')"><img src="https://i.pinimg.com/1200x/b0/95/86/b0958635bf6b2a09553a7a438fe56259.jpg" alt="Popcorn"><span>pop corn</span></div><div class="card-icon-group" onclick="window.open('https://katworld.net/', '_blank')"><img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/81/9a/c1/819ac151-8f5c-2ce8-61c2-82422ee902f4/AppIcon-0-0-1x_U007epad-0-0-sRGB-85-220.jpeg/512x512bb.jpg" alt="KAT MOVIES"><span>KAT MOVIES</span></div><div class="card-icon-group" onclick="window.open('https://net20.cc/home', '_blank')"><img src="https://apktodo.io/uploads/2024/10/multimovies-icon-150.jpg" alt="NET MIRROR"><span>NET MIRROR</span></div></div></div>
-            <div class="tall-card" data-search="mod apps jarmod adescargar an1 jollymod"><h3><i class="fas fa-mobile-alt"></i>Mod Apps</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;"><div class="card-icon-group" onclick="window.open('https://jarmod.com/', '_blank')"><img src="https://icon-library.com/images/apk-icon/apk-icon-1.jpg" alt="Jarmod"><span>Jarmod</span></div><div class="card-icon-group" onclick="window.open('https://adescargar.online/', '_blank')"><img src="https://m.media-amazon.com/images/I/41S5XSWx+EL.jpg" alt="Adescargar"><span>Adescargar</span></div><div class="card-icon-group" onclick="window.open('https://an1.com/', '_blank')"><img src="https://cdn-bgp.bluestacks.com/BGP/us/gametiles_com.apkgw.mod.jpg" alt="AN1"><span>AN1</span></div><div class="card-icon-group" onclick="window.open('https://jollymod.com/', '_blank')"><img src="https://i.pinimg.com/736x/03/32/0d/03320d5d2bcc9a44c41e7cd04a94b006.jpg" alt="Jolly Mod"><span>Jolly Mod</span></div></div></div>
-            <div class="tall-card" data-search="study resources code with harry my great learning sathee drive"><h3><i class="fas fa-graduation-cap"></i>Study Resources</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;"><div class="card-icon-group" onclick="window.open('https://www.codewithharry.com/notes', '_blank')"><img src="https://image.pngaaa.com/764/3513764-middle.png" alt="Code With Harry"><span>Code With Harry</span></div><div class="card-icon-group" onclick="window.open('https://www.mygreatlearning.com/academy', '_blank')"><img src="https://d1vwxdpzbgdqj.cloudfront.net/s3-public-images/learning-partners/greatlearning-brand.svg" alt="My Great Learning"><span>My Great Learning</span></div><div class="card-icon-group" onclick="window.open('https://sathee.iitk.ac.in/', '_blank')"><img src="https://cuet.iitk.ac.in/images/Sathee-Logo.png" alt="SATHEE"><span>SATHEE</span></div><div class="card-icon-group" onclick="window.open('https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm?usp=drive_link', '_blank')"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive"><span>Drive</span></div></div></div>
-            <div class="tall-card" data-search="ai tools chatgpt gemini claude perplexity"><h3><i class="fas fa-robot"></i>AI Tools</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 16px; justify-items:center;"><div class="card-icon-group" onclick="window.open('https://chat.openai.com', '_blank')"><img src="https://img.icons8.com/color/100/chatgpt.png" alt="ChatGPT"><span>ChatGPT</span></div><div class="card-icon-group" onclick="window.open('https://gemini.google.com', '_blank')"><img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-gemini-icon.png" alt="Gemini"><span>Gemini</span></div><div class="card-icon-group" onclick="window.open('https://claude.ai', '_blank')"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZI3m6GFIElfR4o6DKm6bJhPQ88U8k2MkO2A&s" alt="Claude"><span>Claude</span></div><div class="card-icon-group" onclick="window.open('https://perplexity.ai', '_blank')"><img src="https://img.icons8.com/color/100/ask-question.png" alt="Perplexity"><span>Perplexity</span></div></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SAVED PAGE (unchanged) -->
-      <div class="page" id="saved-page">
-        <div class="animation-hub">
-          <h3><i class="fas fa-star"></i> My Animation Collection <i class="fas fa-star"></i></h3>
-          <div class="animation-grid">
-            <a href="https://unnecessary-yellow-7jmltagrxr.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🌸</span><span>Flower Animation</span></a>
-            <a href="https://optimistic-cyan-tqiobg9qqd.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🐶</span><span>HUSKY Dog Animation</span></a>
-            <a href="https://involved-orange-llkveovsrr.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">💡</span><span>BULB Animation</span></a>
-            <a href="https://wasteful-salmon-xjxzwhonei.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🕷️</span><span>Spider Clock Animation</span></a>
-            <a href="https://noisy-jade-whcr3x5dpz.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">❤️</span><span>DO YOU LOVE ME Animation</span></a>
-            <a href="https://objective-lime-5nxm6egxqu.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">💕</span><span>I LOVE YOU Animation</span></a>
-            <a href="https://silly-bronze-y0s4gwncpq.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🪷</span><span>FLOWER Animation 2</span></a>
-            <a href="https://bare-lavender-tv85hqfv3z.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🐉</span><span>DARGON Animation</span></a>
-            <a href="https://obvious-aquamarine-fady6oijle.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🐟</span><span>FISH SAVE Animation</span></a>
-            <a href="https://regulatory-indigo-mdwgoltjwm.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🐎</span><span>HORSE RUN Animation</span></a>
-            <a href="https://changing-purple-265j1dl99u.edgeone.app/" target="_blank" class="animation-link"><span class="emoji">🫀</span><span>HEART BEAT Animation</span></a>
-            <a href="#" class="animation-link coming-soon"><span class="emoji">🌈</span><span>Coming Soon</span></a>
-          </div>
-        </div>
-        <div class="saved-section" style="text-align:center; padding:60px;"><i class="fas fa-bookmark text-5xl text-black/20 mb-4"></i><h3 class="text-xl text-black/50">Your saved items appear here</h3><p class="text-black/30">Bookmark your favorite tools and content</p></div>
-      </div>
-
-      <!-- SETTINGS PAGE (unchanged) -->
-      <div class="page" id="settings-page">
-        <div class="settings-section">
-          <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
-          <div class="settings-option" style="padding:15px 0; border-bottom:1px solid rgba(0,0,0,0.05);"><div class="option-info" style="display:flex;gap:15px;"><div class="option-icon"><i class="fas fa-user"></i></div><div><h4>Profile Information</h4><p style="color:#5e5e70;">Change your name, email, and profile picture</p></div></div></div>
-          <div class="settings-option" style="padding:15px 0;"><div class="option-info" style="display:flex;gap:15px;"><div class="option-icon"><i class="fas fa-shield-alt"></i></div><div><h4>Security</h4><p style="color:#5e5e70;">Change password and enable two-factor authentication</p></div></div></div>
-        </div>
-      </div>
-
-      <!-- MORE TOOLS PAGE (Integrated) -->
-      <div class="page" id="more-tools-page">
-        <div class="nexus-tools-wrapper">
-          <h1 style="text-align: center; font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #1e1e2f, #0a84ff); background-clip: text; -webkit-background-clip: text; color: transparent;">✨ NEXUS TOOLS HUB</h1>
-          <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin: 20px 0;">
-            <div style="position: relative; flex: 1; min-width: 180px;">
-              <input type="text" id="toolsSearchInput" placeholder="🔍 Search any tool..." style="width: 100%; padding: 12px 18px; border-radius: 60px; border: 1px solid rgba(0,0,0,0.1); background: white;">
-            </div>
-            <button id="toolsDarkModeBtn" style="background: #0a84ff; padding: 0 22px; border-radius: 50px; color: white; border: none; cursor: pointer;">🌙 DARK</button>
-          </div>
-          <div class="tabs" id="toolsTabs" style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-            <div class="tab active" data-cat="pdf">📄 PDF Masters</div>
-            <div class="tab" data-cat="ai">🧠 AI & Creators</div>
-            <div class="tab" data-cat="dev">📚 book</div>
-            <div class="tab" data-cat="fav">⭐ Favorites</div>
-          </div>
-          <div id="pdfContainer" class="container"></div>
-          <div id="aiContainer" class="container hidden"></div>
-          <div id="devContainer" class="container hidden"></div>
-          <div id="favContainer" class="container hidden"></div>
-        </div>
-      </div>
-
-      <button class="back-to-top" id="back-to-top"><i class="fas fa-arrow-up"></i></button>
-      <div class="notification" id="notification"><div class="notification-icon"><i class="fas fa-bell"></i></div><div class="notification-content"><h4>Welcome!</h4><p>welcome</p></div><button class="notification-close" id="notification-close"><i class="fas fa-times"></i></button></div>
-
-      <div class="profile-modal" id="profile-modal">
-        <div class="modal-content"><button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button><img src="https://as2.ftcdn.net/v2/jpg/03/52/55/36/1000_F_352553623_XM3xC1aHAYoRRvI1ykXevOQWdW7hCU2a.webp" class="profile-modal-img"><h2>Khushal Jangra</h2><p>choyal034@gmail.com</p></div>
-      </div>
-      <div class="pdf-modal" id="pdf-modal"><div class="pdf-modal-content"><button class="pdf-close" id="pdf-close"><i class="fas fa-times"></i></button><h2>Image to PDF</h2><input type="file" id="imageInput" multiple accept="image/*"><button id="generate-pdf-btn" style="background:#0a84ff;color:white;padding:12px;">Generate PDF</button><div id="pdf-status"></div></div></div>
-      <div class="qr-modal" id="qr-modal"><div class="qr-modal-content"><button class="qr-close" id="qr-close"><i class="fas fa-times"></i></button><h2>QR Generator</h2><div class="qr-tabs"><div class="qr-tab active" data-type="TEXT">TEXT</div><div class="qr-tab" data-type="WEBSITE">URL</div><div class="qr-tab" data-type="WIFI">WIFI</div></div><div id="qr-input-area"><textarea id="text-content" placeholder="Enter text..." style="width:100%;padding:12px;"></textarea></div><button id="generate-qr-btn" style="background:#0a84ff;color:white;padding:12px;">Generate QR</button><canvas id="qr-canvas" style="margin:15px auto;display:block;"></canvas><button id="download-qr-btn" style="background:#34c759;color:white;padding:12px;">Download QR</button></div></div>
-      <div class="text-encryptor-modal" id="text-encryptor-modal"><div class="text-encryptor-modal-content"><button class="text-encryptor-close" id="text-encryptor-close"><i class="fas fa-times"></i></button><h2>Text Encryptor</h2><textarea id="encryptor-input" placeholder="Enter message..." style="width:100%;height:100px;padding:12px;"></textarea><div style="display:flex;gap:10px;"><button id="encrypt-btn" style="background:#0a84ff;color:white;padding:10px;">Encrypt</button><button id="decrypt-btn" style="background:#ff9f0a;color:white;padding:10px;">Decrypt</button><button id="copy-encrypted-btn" style="background:#34c759;color:white;padding:10px;">Copy</button></div><div id="encryptor-output" style="background:#f2f2f7;padding:15px;"></div></div></div>
+      <button class="btn-icon" id="close-toc-btn" style="width:30px; height:30px;"><i class="fas fa-times"></i></button>
     </div>
+
+    <div style="padding: 10px 0;">
+      <a href="index.html" class="btn-back-hub" style="width:100%; justify-content:center; padding:10px; margin-bottom:14px;">
+        <i class="fas fa-arrow-left"></i> Back to Khushal Labs Hub
+      </a>
+      <p style="font-family:var(--mono); font-size:0.7rem; color:var(--ink-3); text-transform:uppercase; margin-bottom:8px;">Table of Contents</p>
+      <nav style="display:flex; flex-direction:column; gap:4px;">
+        <a href="#interactive-tools" class="toc-link" onclick="closeToc()">🛠️ Built-in Utilities</a>
+        <a href="#fast-bento" class="toc-link" onclick="closeToc()">⚡ Quick Launch Bento</a>
+        <a href="#nexus-hub" class="toc-link" onclick="closeToc()">🧠 Nexus Tools Hub</a>
+        <a href="#games-media" class="toc-link" onclick="closeToc()">🎮 Games & Mods</a>
+        <a href="#study-ai" class="toc-link" onclick="closeToc()">📚 Study & AI Suite</a>
+        <a href="#animations" class="toc-link" onclick="closeToc()">🌸 Animation Studio</a>
+        <a href="#socials" class="toc-link" onclick="closeToc()">🌐 Connect & Links</a>
+      </nav>
+    </div>
+
+    <div style="margin-top:auto; padding-top:14px; border-top:1px dashed var(--border-solid); font-size:0.75rem; color:var(--ink-3);">
+      <span>Khushal Labs · Paper Edition 2026</span>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+
+    <!-- Paper Header -->
+    <header class="paper-header">
+      <div class="header-left">
+        <button class="btn-icon" id="open-toc-btn" title="Open Navigation Drawer">
+          <i class="fas fa-bars"></i>
+        </button>
+        <a href="#" class="brand-group">
+          <div class="brand-badge">KJ</div>
+          <div class="brand-title-wrap">
+            <h1>Khushal Labs</h1>
+            <span>PAPER TOOLS & UTILITIES</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="search-wrap header-center">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="global-search" class="search-input" placeholder="Search any tool, game, animation or link...">
+      </div>
+
+      <div class="header-actions">
+        <a href="index.html" class="btn-back-hub">
+          <i class="fas fa-arrow-left"></i> <span>Main Hub</span>
+        </a>
+        <button class="btn-icon" id="theme-toggle-btn" title="Switch Theme">
+          <span id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Bulletin Hero -->
+    <section class="bulletin-hero">
+      <div class="washi-tape yellow"></div>
+      <div class="bulletin-header">
+        <div>
+          <span class="bulletin-badge">📌 DESK COMMAND CENTER</span>
+          <h2 class="bulletin-title">Everything Arranged. In One Notebook.</h2>
+          <p class="bulletin-subtitle">Real in-browser utilities, fast drive links, mod stores, study resources, and interactive animations — all pinned cleanly on your paper desk.</p>
+        </div>
+        <div class="bulletin-stats">
+          <div class="stat-pill"><i class="fas fa-tools"></i> <strong>4</strong> In-Browser Tools</div>
+          <div class="stat-pill"><i class="fas fa-cubes"></i> <strong>25+</strong> Web Utilities</div>
+          <div class="stat-pill"><i class="fas fa-sparkles"></i> <strong>11</strong> Animations</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Pills -->
+    <div class="filter-bar">
+      <a href="javascript:void(0)" class="filter-pill active" data-filter="all">⭐ All Sections</a>
+      <a href="#interactive-tools" class="filter-pill" data-filter="tools">🛠️ Built-in Utilities</a>
+      <a href="#fast-bento" class="filter-pill" data-filter="bento">⚡ Quick Launch</a>
+      <a href="#nexus-hub" class="filter-pill" data-filter="nexus">🧠 Nexus Hub</a>
+      <a href="#games-media" class="filter-pill" data-filter="games">🎮 Games & Mods</a>
+      <a href="#study-ai" class="filter-pill" data-filter="study">📚 Study & AI</a>
+      <a href="#animations" class="filter-pill" data-filter="animations">🌸 Animations</a>
+      <a href="#socials" class="filter-pill" data-filter="social">🌐 Socials</a>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 1: BUILT-IN INTERACTIVE UTILITIES (REAL TOOLS)
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="section-wrap search-section" id="interactive-tools">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">01 · Direct In-Browser Tools</span>
+          <h3 class="section-heading"><i class="fas fa-toolbox" style="color:#059669;"></i> Real Working Utilities</h3>
+        </div>
+        <span style="font-size:0.8rem; font-family:var(--mono); color:var(--ink-3);">Zero installation needed</span>
+      </div>
+
+      <div class="cards-grid-4">
+        <!-- 1. QR Generator Card -->
+        <div class="paper-card yellow searchable-card" data-title="qr code generator download link url wifi">
+          <div class="washi-tape yellow"></div>
+          <div class="card-top">
+            <div class="card-icon-box">📱</div>
+            <span class="card-stamp">LIVE QR</span>
+          </div>
+          <h4 class="card-title">QR Generator</h4>
+          <p class="card-desc">Type any text, link, or phone number to instantly create a crisp downloadable QR code.</p>
+          <input type="text" id="qr-input" class="paper-input" placeholder="Enter text or URL..." value="https://github.com/khushal-jangid">
+          <div style="background:#fff; border-radius:10px; padding:10px; display:flex; justify-content:center; border:1px solid var(--border-solid); margin-bottom:10px;">
+            <canvas id="qr-canvas" style="max-width:140px; height:auto;"></canvas>
+          </div>
+          <button class="card-action-btn" id="qr-download-btn"><i class="fas fa-download"></i> Download QR PNG</button>
+        </div>
+
+        <!-- 2. Image to PDF Card -->
+        <div class="paper-card mint searchable-card" data-title="image to pdf converter tool documents">
+          <div class="washi-tape mint"></div>
+          <div class="card-top">
+            <div class="card-icon-box">📄</div>
+            <span class="card-stamp">JSPDF ENGINE</span>
+          </div>
+          <h4 class="card-title">Image to PDF</h4>
+          <p class="card-desc">Select one or more images from your device and compile them into a single PDF document.</p>
+          <label style="display:block; background:#fff; border:1.5px dashed var(--border-solid); border-radius:8px; padding:12px; text-align:center; cursor:pointer; font-size:0.8rem; font-weight:700; margin-bottom:10px; color:var(--ink-2);">
+            <i class="fas fa-cloud-upload-alt"></i> <span id="pdf-file-label">Choose image files...</span>
+            <input type="file" id="pdf-file-input" multiple accept="image/*" style="display:none;">
+          </label>
+          <div id="pdf-status-msg" style="font-size:0.75rem; color:var(--ink-3); font-family:var(--mono); margin-bottom:10px; min-height:18px;">Ready to convert</div>
+          <button class="card-action-btn" id="pdf-convert-btn"><i class="fas fa-file-pdf"></i> Generate PDF Document</button>
+        </div>
+
+        <!-- 3. Text Encryptor & Decryptor Card -->
+        <div class="paper-card lavender searchable-card" data-title="text encryptor decryptor secret message cipher">
+          <div class="washi-tape lavender"></div>
+          <div class="card-top">
+            <div class="card-icon-box">🔐</div>
+            <span class="card-stamp">CIPHER</span>
+          </div>
+          <h4 class="card-title">Text Encryptor</h4>
+          <p class="card-desc">Protect your sensitive notes or messages with one-click reversible encryption.</p>
+          <textarea id="cipher-input" class="paper-textarea" placeholder="Type secret message..."></textarea>
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <button class="card-action-btn secondary" id="btn-encrypt" style="padding:7px;"><i class="fas fa-lock"></i> Encrypt</button>
+            <button class="card-action-btn secondary" id="btn-decrypt" style="padding:7px;"><i class="fas fa-unlock"></i> Decrypt</button>
+            <button class="card-action-btn" id="btn-copy-cipher" style="padding:7px;"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+          <div id="cipher-feedback" style="font-size:0.72rem; font-family:var(--mono); color:var(--ink-3);">Ready</div>
+        </div>
+
+        <!-- 4. Persistent Paper Sticky Note -->
+        <div class="paper-card peach scratchpad-card searchable-card" data-title="sticky note scratchpad save notes ideas">
+          <div class="washi-tape peach"></div>
+          <div class="card-top">
+            <div class="card-icon-box">📝</div>
+            <span class="card-stamp">AUTO-SAVE</span>
+          </div>
+          <h4 class="card-title">Desk Scratchpad</h4>
+          <p class="card-desc">Jot down thoughts, links, or code snippets. Automatically saved to your browser!</p>
+          <textarea id="scratchpad-text" class="scratchpad-textarea" placeholder="Write anything here... it saves instantly!"></textarea>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+            <span id="scratchpad-status" style="font-size:0.72rem; font-family:var(--mono); color:#ea580c;">✓ Saved locally</span>
+            <button id="clear-scratchpad-btn" style="background:none; border:none; color:var(--ink-3); font-size:0.75rem; cursor:pointer; text-decoration:underline;">Clear note</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 2: FAST LAUNCH BENTO (FROM ORIGINAL HOME SCREEN)
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="section-wrap search-section" id="fast-bento">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">02 · Priority Launchers</span>
+          <h3 class="section-heading"><i class="fas fa-bolt" style="color:#eab308;"></i> Quick Access Bento</h3>
+        </div>
+        <span style="font-size:0.8rem; font-family:var(--mono); color:var(--ink-3);">Your frequent hubs</span>
+      </div>
+
+      <div class="cards-grid-4">
+        <!-- Google Drive Card -->
+        <div class="paper-card blue searchable-card" data-title="google drive docs sheets cloud files">
+          <div class="washi-tape blue"></div>
+          <div class="card-top">
+            <div class="card-icon-box" style="background:#4285f4; color:#fff;"><i class="fab fa-google-drive"></i></div>
+            <span class="card-stamp">15 GB CLOUD</span>
+          </div>
+          <h4 class="card-title">Google Drive Folder</h4>
+          <p class="card-desc">Direct access to your centralized cloud documents, spreadsheets, notes and study archives.</p>
+          <div style="display:flex; gap:6px; margin-bottom:12px;">
+            <span style="background:rgba(28,25,23,0.06); padding:2px 8px; border-radius:6px; font-size:0.75rem; font-family:var(--mono);">docs</span>
+            <span style="background:rgba(28,25,23,0.06); padding:2px 8px; border-radius:6px; font-size:0.75rem; font-family:var(--mono);">sheets</span>
+            <span style="background:rgba(28,25,23,0.06); padding:2px 8px; border-radius:6px; font-size:0.75rem; font-family:var(--mono);">shared</span>
+          </div>
+          <a href="https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm" target="_blank" rel="noopener" class="card-action-btn">
+            Open Drive Folder <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+
+        <!-- IP Chat App -->
+        <div class="paper-card rose searchable-card" data-title="chat app online instant ipchat room code 2006 friends">
+          <div class="washi-tape peach"></div>
+          <div class="card-top">
+            <div class="card-icon-box" style="background:#e11d48; color:#fff;"><i class="fas fa-comments"></i></div>
+            <span class="card-stamp">ROOM = 2006</span>
+          </div>
+          <h4 class="card-title">IP Chat Room</h4>
+          <p class="card-desc">Lightweight instant peer-to-peer web chat app. Start talking with friends directly.</p>
+          <div style="background:#fff; border:1px dashed #f43f5e; padding:6px 10px; border-radius:8px; margin-bottom:12px; font-family:var(--mono); font-size:0.75rem; color:#e11d48; display:flex; align-items:center; gap:6px;">
+            <i class="fas fa-key"></i> Passcode: <strong>2006</strong>
+          </div>
+          <a href="https://ipchat.in/" target="_blank" rel="noopener" class="card-action-btn" style="background:#e11d48; border-color:#e11d48;">
+            Launch Chat App <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+
+        <!-- RPS Result Portal -->
+        <div class="paper-card yellow searchable-card" data-title="rps result portal mahendragarh marks exam university">
+          <div class="washi-tape yellow"></div>
+          <div class="card-top">
+            <div class="card-icon-box">🏛️</div>
+            <span class="card-stamp">MAHENDRAGARH</span>
+          </div>
+          <h4 class="card-title">RPS Result Portal</h4>
+          <p class="card-desc">Official student portal link to easily check examination scores, grade sheets and updates.</p>
+          <div style="font-size:0.75rem; color:var(--ink-3); margin-bottom:16px;">
+            Direct student authentication login
+          </div>
+          <a href="https://igu1.ucanapply.com/result-details" target="_blank" rel="noopener" class="card-action-btn secondary">
+            Check Results <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+
+        <!-- My New Website -->
+        <div class="paper-card mint searchable-card" data-title="my new website codewithkj cloudify portfolio web">
+          <div class="washi-tape mint"></div>
+          <div class="card-top">
+            <div class="card-icon-box">🚀</div>
+            <span class="card-stamp">CODEWITHKJ</span>
+          </div>
+          <h4 class="card-title">CodeWithKJ Web</h4>
+          <p class="card-desc">Your dedicated web studio and project showcase built on Vercel & Cloudify.</p>
+          <div style="font-size:0.75rem; color:var(--ink-3); margin-bottom:16px;">
+            Online showcase & developer portal
+          </div>
+          <a href="https://codewithkj.vercel.app/" target="_blank" rel="noopener" class="card-action-btn">
+            Visit Website <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 3: NEXUS TOOLS HUB (FROM HAMBURGER MORE-TOOLS)
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="section-wrap search-section" id="nexus-hub">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">03 · Curated Online Resources</span>
+          <h3 class="section-heading"><i class="fas fa-cubes" style="color:#7c3aed;"></i> Nexus Tools & Reference Suite</h3>
+        </div>
+        <span style="font-size:0.8rem; font-family:var(--mono); color:var(--ink-3);">PDF · AI · Digital Libraries</span>
+      </div>
+
+      <!-- Nexus Tabs -->
+      <div class="nexus-tabs">
+        <button class="nexus-tab-btn active" data-nexus="pdf"><i class="fas fa-file-pdf"></i> PDF Masters</button>
+        <button class="nexus-tab-btn" data-nexus="ai"><i class="fas fa-brain"></i> AI & Creators</button>
+        <button class="nexus-tab-btn" data-nexus="dev"><i class="fas fa-book-open"></i> Digital Libraries</button>
+        <button class="nexus-tab-btn" data-nexus="fav"><i class="fas fa-star" style="color:#eab308;"></i> My Starred</button>
+      </div>
+
+      <!-- Container for dynamic items -->
+      <div id="nexus-items-container" class="cards-grid-3">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 4: GAMES, MODS & ENTERTAINMENT (FROM EXPLORE)
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="section-wrap search-section" id="games-media">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">04 · Entertainment & Mod Stores</span>
+          <h3 class="section-heading"><i class="fas fa-gamepad" style="color:#ea580c;"></i> Games, Mods & Media</h3>
+        </div>
+        <span style="font-size:0.8rem; font-family:var(--mono); color:var(--ink-3);">Play · Download · Stream</span>
+      </div>
+
+      <div class="cards-grid-3">
+        <!-- Online Games Card -->
+        <div class="paper-card peach searchable-card" data-title="online games deadshot slow roads armed forces miniclip play browser">
+          <div class="card-top">
+            <div class="card-icon-box">🕹️</div>
+            <span class="card-stamp">BROWSER GAMES</span>
+          </div>
+          <h4 class="card-title">Online Games</h4>
+          <p class="card-desc">Quick games to play directly in your browser without installs.</p>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="https://deadshot.io/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🎯 <strong>Deadshot.io</strong> (FPS Shooter)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://slowroads.io/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🚗 <strong>Slow Roads</strong> (Endless Drive)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://armedforces.io/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🪖 <strong>ArmedForce</strong> (Tactical Web)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://www.miniclip.com" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🎱 <strong>Miniclip</strong> (Classic Games)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- PC & Android Mods Card -->
+        <div class="paper-card yellow searchable-card" data-title="pc mod apps se7en creativeconor gamingbeasts itch io an1 jollymod apk">
+          <div class="card-top">
+            <div class="card-icon-box">💻</div>
+            <span class="card-stamp">MOD REPOSITORIES</span>
+          </div>
+          <h4 class="card-title">PC & Mobile Mod Apps</h4>
+          <p class="card-desc">Top repositories for developer mods, game assets, and mobile utilities.</p>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="https://se7en.ws/games/?lang=en" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>⚙️ <strong>Se7en.ws</strong> (PC Game Mods)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://itch.io" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>👾 <strong>Itch.io</strong> (Indie Games & Tools)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://an1.com/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>📱 <strong>AN1</strong> (Android Mod Hub)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://jollymod.com/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>📦 <strong>JollyMod</strong> (App Store)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Movie & Streaming Card -->
+        <div class="paper-card blue searchable-card" data-title="movie streaming hdhub4u popcorn kat movies net mirror film video">
+          <div class="card-top">
+            <div class="card-icon-box">🍿</div>
+            <span class="card-stamp">STREAMING & CINEMA</span>
+          </div>
+          <h4 class="card-title">Media & Movie Portals</h4>
+          <p class="card-desc">Quick shortcuts to popular film archives, cinema trackers, and media mirrors.</p>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="https://hdhub4u.gd/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🎬 <strong>HDHub4u</strong> (High-Def Cinema)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://popcornmovies.org/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🍿 <strong>Popcorn Movies</strong> (Online Cinema)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://katworld.net/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🐱 <strong>Kat Movies</strong> (Global Catalog)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="https://net20.cc/home" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🪞 <strong>Net Mirror</strong> (Mirror Server)</span> <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 5: STUDY & AI ASSISTANTS (FROM EXPLORE)
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="section-wrap search-section" id="study-ai">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">05 · Academic & Intelligence</span>
+          <h3 class="section-heading"><i class="fas fa-graduation-cap" style="color:#2563eb;"></i> Study Resources & AI Models</h3>
+        </div>
+        <span style="font-size:0.8rem; font-family:var(--mono); color:var(--ink-3);">Learning & Research</span>
+      </div>
+
+      <div class="cards-grid-2">
+        <!-- Study Resources Card -->
+        <div class="paper-card mint searchable-card" data-title="study resources code with harry notes great learning sathee iitk drive notes">
+          <div class="card-top">
+            <div class="card-icon-box">📚</div>
+            <span class="card-stamp">STUDY HUB</span>
+          </div>
+          <h4 class="card-title">Course Notes & Academic Portals</h4>
+          <p class="card-desc">Trusted portals for computer science notes, certification courses, and entrance study materials.</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <a href="https://www.codewithharry.com/notes" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>📝 CodeWithHarry</span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+            <a href="https://www.mygreatlearning.com/academy" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🎓 Great Learning</span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+            <a href="https://sathee.iitk.ac.in/" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🏛️ SATHEE (IITK)</span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+            <a href="https://drive.google.com/drive/folders/1v5CPN-V-TsVldWzNwWrHzbbN_74C2mtm" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>📁 Notes Archive</span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- AI Assistants Card -->
+        <div class="paper-card lavender searchable-card" data-title="ai tools chatgpt gemini claude perplexity llm artificial intelligence">
+          <div class="card-top">
+            <div class="card-icon-box">🧠</div>
+            <span class="card-stamp">TOP LLMS</span>
+          </div>
+          <h4 class="card-title">AI Chatbots & Intelligence Engines</h4>
+          <p class="card-desc">State-of-the-art language models for coding, debugging, content creation, and fast answers.</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <a href="https://chat.openai.com" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🤖 <strong>ChatGPT</strong></span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+            <a href="https://gemini.google.com" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>✨ <strong>Gemini</strong></span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+            <a href="https://claude.ai" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>⚡ <strong>Claude</strong></span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+            <a href="https://perplexity.ai" target="_blank" rel="noopener" class="nexus-item-card">
+              <span>🔍 <strong>Perplexity</strong></span> <i class="fas fa-external-link-alt" style="font-size:11px;"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 6: ANIMATION STUDIO (FROM SAVED)
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="section-wrap search-section" id="animations">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">06 · Creative Experiments</span>
+          <h3 class="section-heading"><i class="fas fa-magic" style="color:#e11d48;"></i> Interactive Animation Collection</h3>
+        </div>
+        <span style="font-size:0.8rem; font-family:var(--mono); color:var(--ink-3);">Play with live canvas & code art</span>
+      </div>
+
+      <div class="cards-grid-4">
+        <a href="https://unnecessary-yellow-7jmltagrxr.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="flower animation petals interactive art">
+          <span class="emoji">🌸</span>
+          <div><div>Flower Blossom</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">EdgeOne Live</span></div>
+        </a>
+        <a href="https://optimistic-cyan-tqiobg9qqd.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="husky dog animation pet cute interactive">
+          <span class="emoji">🐶</span>
+          <div><div>Husky Dog</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Cute Interactive</span></div>
+        </a>
+        <a href="https://involved-orange-llkveovsrr.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="bulb light toggle interactive glow">
+          <span class="emoji">💡</span>
+          <div><div>Glowing Bulb</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Physics Light</span></div>
+        </a>
+        <a href="https://wasteful-salmon-xjxzwhonei.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="spider clock animation time watch dark">
+          <span class="emoji">🕷️</span>
+          <div><div>Spider Clock</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Dynamic Time</span></div>
+        </a>
+        <a href="https://noisy-jade-whcr3x5dpz.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="do you love me interactive game yes no prank">
+          <span class="emoji">❤️</span>
+          <div><div>Do You Love Me?</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Fun Interactive</span></div>
+        </a>
+        <a href="https://objective-lime-5nxm6egxqu.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="i love you animation romantic heart glow">
+          <span class="emoji">💕</span>
+          <div><div>I Love You Art</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Floating Hearts</span></div>
+        </a>
+        <a href="https://silly-bronze-y0s4gwncpq.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="flower 2 lotus blossom zen">
+          <span class="emoji">🪷</span>
+          <div><div>Lotus Zen</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Flow Animation</span></div>
+        </a>
+        <a href="https://bare-lavender-tv85hqfv3z.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="dragon animation mythical creature flight">
+          <span class="emoji">🐉</span>
+          <div><div>Dragon Flight</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">WebGL Flight</span></div>
+        </a>
+        <a href="https://obvious-aquamarine-fady6oijle.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="fish save aquarium ocean water swim">
+          <span class="emoji">🐟</span>
+          <div><div>Fish Save</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Underwater Swim</span></div>
+        </a>
+        <a href="https://regulatory-indigo-mdwgoltjwm.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="horse run gallop athletic motion sprite">
+          <span class="emoji">🐎</span>
+          <div><div>Horse Run</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Motion Gallop</span></div>
+        </a>
+        <a href="https://changing-purple-265j1dl99u.edgeone.app/" target="_blank" rel="noopener" class="anim-chip searchable-card" data-title="heart beat pulse cardiogram pulse">
+          <span class="emoji">🫀</span>
+          <div><div>Heart Beat</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">Pulse Beat</span></div>
+        </a>
+        <div class="anim-chip" style="opacity:0.6; cursor:default;">
+          <span class="emoji">🌈</span>
+          <div><div>More Coming Soon</div><span style="font-size:0.7rem; color:var(--ink-3); font-family:var(--mono);">In development</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 7: CONNECT & SOCIALS
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="section-wrap search-section" id="socials">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">07 · Social & Contacts</span>
+          <h3 class="section-heading"><i class="fas fa-paper-plane" style="color:#0284c7;"></i> Get In Touch</h3>
+        </div>
+        <span style="font-size:0.8rem; font-family:var(--mono); color:var(--ink-3);">Let's collaborate</span>
+      </div>
+
+      <div class="cards-grid-4">
+        <a href="https://www.instagram.com/khushaljangid_8?igsh=aWJ3emc5eHo4b3hu" target="_blank" rel="noopener" class="nexus-item-card searchable-card" data-title="instagram social dm contact">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fab fa-instagram" style="font-size:24px; color:#e1306c;"></i>
+            <div><strong>Instagram</strong><div style="font-size:0.75rem; color:var(--ink-3);">@khushaljangid_8</div></div>
+          </div>
+          <i class="fas fa-external-link-alt" style="font-size:12px; color:var(--ink-3);"></i>
+        </a>
+
+        <a href="https://github.com/khushal-jangid" target="_blank" rel="noopener" class="nexus-item-card searchable-card" data-title="github code repositories open source profile">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fab fa-github" style="font-size:24px; color:var(--ink-1);"></i>
+            <div><strong>GitHub</strong><div style="font-size:0.75rem; color:var(--ink-3);">@khushal-jangid</div></div>
+          </div>
+          <i class="fas fa-external-link-alt" style="font-size:12px; color:var(--ink-3);"></i>
+        </a>
+
+        <a href="https://facebook.com" target="_blank" rel="noopener" class="nexus-item-card searchable-card" data-title="facebook social network">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fab fa-facebook" style="font-size:24px; color:#1877f2;"></i>
+            <div><strong>Facebook</strong><div style="font-size:0.75rem; color:var(--ink-3);">Social Profile</div></div>
+          </div>
+          <i class="fas fa-external-link-alt" style="font-size:12px; color:var(--ink-3);"></i>
+        </a>
+
+        <a href="mailto:choyal034@gmail.com" class="nexus-item-card searchable-card" data-title="email mail contact message choyal034">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <i class="fas fa-envelope" style="font-size:24px; color:#ea580c;"></i>
+            <div><strong>Direct Email</strong><div style="font-size:0.75rem; color:var(--ink-3);">choyal034@gmail.com</div></div>
+          </div>
+          <i class="fas fa-external-link-alt" style="font-size:12px; color:var(--ink-3);"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="paper-footer">
+      <p style="margin-bottom:6px;">Designed with ❤️ as part of <strong><a href="index.html">Khushal Labs</a></strong> — Central Project Command Center.</p>
+      <p style="font-family:var(--mono); font-size:0.78rem;">© 2026 Khushal Jangid · All rights reserved.</p>
+    </footer>
+
   </div>
 
+  <!-- JavaScript Logic -->
   <script>
-    // Reptile Background (simplified)
+    // 1. Reptile / Blueprint Background Canvas
     (function() {
       const canvas = document.getElementById('reptile-canvas');
+      if(!canvas) return;
       let ctx = canvas.getContext('2d');
-      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
       resize();
       window.addEventListener('resize', resize);
-      let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-      document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+      let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      document.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = "rgba(80, 80, 120, 0.12)";
+        ctx.strokeStyle = document.documentElement.getAttribute('data-theme') === 'dark' 
+          ? "rgba(240, 230, 210, 0.12)" 
+          : "rgba(60, 50, 40, 0.12)";
         ctx.lineWidth = 1;
-        for(let i = 0; i < 30; i++) {
-          let x = mouse.x + Math.sin(Date.now() * 0.002 + i) * 60;
-          let y = mouse.y + Math.cos(Date.now() * 0.003 + i) * 50;
+        for (let i = 0; i < 24; i++) {
+          let x = mouse.x + Math.sin(Date.now() * 0.0018 + i) * 65;
+          let y = mouse.y + Math.cos(Date.now() * 0.0025 + i) * 55;
           ctx.beginPath();
           ctx.moveTo(mouse.x, mouse.y);
           ctx.lineTo(x, y);
@@ -884,138 +1359,359 @@
       draw();
     })();
 
-    // Tools Hub Script (kept untouched)
-    (function() {
-      let favorites = JSON.parse(localStorage.getItem('nexus_favorites') || '[]');
-      const toolsData = {
-        pdf: [
-          { id: "ilovepdf", name: "iLovePDF", url: "https://www.ilovepdf.com/", icon: "file-text", desc: "Merge, split, compress" },
-          { id: "smallpdf", name: "SmallPDF", url: "https://smallpdf.com/", icon: "edit-3", desc: "Fast & elegant tools" },
-          { id: "pdf2go", name: "PDF2Go", url: "https://www.pdf2go.com/", icon: "file-output", desc: "Edit, convert, protect" },
-          { id: "sejda", name: "Sejda PDF", url: "https://www.sejda.com/", icon: "scissors", desc: "Online editor" },
-          { id: "sodapdf", name: "Soda PDF", url: "https://www.sodapdf.com/", icon: "layers", desc: "All-in-one suite" },
-          { id: "pdf24", name: "PDF24 Tools", url: "https://pdf24.org/", icon: "printer", desc: "Free & powerful" }
-        ],
-        ai: [
-          { id: "chatgpt", name: "ChatGPT", url: "https://flowgpt.com/", icon: "bot", desc: "OpenAI assistant" },
-          { id: "removebg", name: "Remove.bg", url: "https://remove.bg/", icon: "image", desc: "AI background erase" },
-          { id: "midjourney", name: "Midjourney", url: "https://www.midjourney.com/", icon: "sparkles", desc: "AI image gen" },
-          { id: "runway", name: "RunwayML", url: "https://runwayml.com/", icon: "video", desc: "AI video tools" }
-        ],
-        dev: [
-          { id: "book library", name: "Book Library", url: "https://welib.st/", icon: "book-open", desc: "Digital book library" },
-          { id: "info book", name: "info book", url: "https://infobooks.org/", icon: "book-open", desc: "many book collection" },
-          { id: "book room", name: "Book Room", url: "https://pdfroom.com/", icon: "book-open", desc: "many book room" },
-          { id: "open library", name: "Open Library", url: "https://openlibrary.org/", icon: "book-open", desc: "Free digital library" }
-        ]
-      };
-      function saveFavs() { localStorage.setItem('nexus_favorites', JSON.stringify(favorites)); }
-      function renderCategory(containerId, items) {
-        let container = document.getElementById(containerId);
-        if(!container) return;
-        container.innerHTML = '';
-        items.forEach(tool => {
-          let card = document.createElement('div');
-          card.className = 'card';
-          card.setAttribute('data-tool-id', tool.id);
-          card.onclick = (e) => { if(!e.target.classList || !e.target.classList.contains('fav-star')) window.open(tool.url, '_blank'); };
-          let icon = document.createElement('i'); icon.setAttribute('data-lucide', tool.icon);
-          let title = document.createElement('h3'); title.innerText = tool.name;
-          let desc = document.createElement('p'); desc.innerText = tool.desc;
-          let star = document.createElement('div'); star.className = 'fav-star'; star.innerHTML = favorites.some(f => f.id === tool.id) ? '★' : '☆';
-          star.style.color = favorites.some(f => f.id === tool.id) ? '#FFD966' : 'rgba(255,215,0,0.7)';
-          star.onclick = (e) => { e.stopPropagation(); let idx = favorites.findIndex(f => f.id === tool.id); idx === -1 ? favorites.push({ id: tool.id, name: tool.name, url: tool.url, icon: tool.icon }) : favorites.splice(idx, 1); saveFavs(); renderFavorites(); updateStars(); if(document.querySelector('#toolsTabs .tab.active')?.getAttribute('data-cat') === 'fav') renderFavorites(); };
-          card.appendChild(icon); card.appendChild(title); card.appendChild(desc); card.appendChild(star);
-          container.appendChild(card);
-        });
-        if(window.lucide) lucide.createIcons({ root: container });
-      }
-      function renderFavorites() {
-        let container = document.getElementById('favContainer');
-        if(!container) return;
-        container.innerHTML = '';
-        if(favorites.length === 0) {
-          let empty = document.createElement('div'); empty.innerText = '⭐ No favorites yet. Click the star on any tool to add! 🌟'; empty.style.gridColumn = '1/-1'; empty.style.textAlign = 'center'; empty.style.padding = '50px'; empty.style.background = 'rgba(0,0,0,0.02)'; empty.style.borderRadius = '48px';
-          container.appendChild(empty);
-        } else {
-          favorites.forEach(fav => {
-            let card = document.createElement('div'); card.className = 'card'; card.onclick = () => window.open(fav.url, '_blank');
-            let icon = document.createElement('i'); icon.setAttribute('data-lucide', fav.icon);
-            let title = document.createElement('h3'); title.innerText = fav.name;
-            let star = document.createElement('div'); star.className = 'fav-star'; star.innerHTML = '★'; star.style.color = '#FFD966';
-            star.onclick = (e) => { e.stopPropagation(); favorites = favorites.filter(f => f.id !== fav.id); saveFavs(); renderFavorites(); updateStars(); };
-            card.appendChild(icon); card.appendChild(title); card.appendChild(star);
-            container.appendChild(card);
-          });
-          if(window.lucide) lucide.createIcons({ root: container });
-        }
-      }
-      function updateStars() {
-        document.querySelectorAll('#pdfContainer .card, #aiContainer .card, #devContainer .card').forEach(card => {
-          let id = card.getAttribute('data-tool-id');
-          let star = card.querySelector('.fav-star');
-          if(star && id) { let isFav = favorites.some(f => f.id === id); star.innerHTML = isFav ? '★' : '☆'; star.style.color = isFav ? '#FFD966' : 'rgba(255,215,0,0.7)'; }
-        });
-      }
-      function showCategory(cat) {
-        document.querySelectorAll('#toolsTabs .tab').forEach(t => t.classList.remove('active'));
-        document.querySelector(`#toolsTabs .tab[data-cat="${cat}"]`).classList.add('active');
-        document.getElementById('pdfContainer').classList.add('hidden'); document.getElementById('aiContainer').classList.add('hidden'); document.getElementById('devContainer').classList.add('hidden'); document.getElementById('favContainer').classList.add('hidden');
-        if(cat === 'pdf') { document.getElementById('pdfContainer').classList.remove('hidden'); renderCategory('pdfContainer', toolsData.pdf); }
-        else if(cat === 'ai') { document.getElementById('aiContainer').classList.remove('hidden'); renderCategory('aiContainer', toolsData.ai); }
-        else if(cat === 'dev') { document.getElementById('devContainer').classList.remove('hidden'); renderCategory('devContainer', toolsData.dev); }
-        else if(cat === 'fav') { document.getElementById('favContainer').classList.remove('hidden'); renderFavorites(); }
-        updateStars();
-      }
-      function initTools() {
-        renderCategory('pdfContainer', toolsData.pdf);
-        renderCategory('aiContainer', toolsData.ai);
-        renderCategory('devContainer', toolsData.dev);
-        renderFavorites();
-        document.querySelectorAll('#toolsTabs .tab').forEach(tab => tab.addEventListener('click', () => showCategory(tab.getAttribute('data-cat'))));
-        document.getElementById('toolsSearchInput')?.addEventListener('input', (e) => {
-          let q = e.target.value.toLowerCase();
-          let active = document.querySelector('#toolsTabs .tab.active')?.getAttribute('data-cat');
-          let container = active === 'pdf' ? document.getElementById('pdfContainer') : (active === 'ai' ? document.getElementById('aiContainer') : (active === 'dev' ? document.getElementById('devContainer') : document.getElementById('favContainer')));
-          if(container) container.querySelectorAll('.card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(q) ? 'flex' : 'none');
-        });
-        document.getElementById('toolsDarkModeBtn')?.addEventListener('click', () => document.body.classList.toggle('dark'));
-        showCategory('pdf');
-      }
-      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTools); else initTools();
-    })();
+    // 2. Drawer Navigation Controls
+    const tocDrawer = document.getElementById('toc-drawer');
+    const tocBackdrop = document.getElementById('toc-backdrop');
+    function openToc() {
+      tocDrawer.classList.add('open');
+      tocBackdrop.classList.add('active');
+    }
+    function closeToc() {
+      tocDrawer.classList.remove('open');
+      tocBackdrop.classList.remove('active');
+    }
+    document.getElementById('open-toc-btn')?.addEventListener('click', openToc);
+    document.getElementById('close-toc-btn')?.addEventListener('click', closeToc);
+    tocBackdrop?.addEventListener('click', closeToc);
 
-    // Main Dashboard Script
-    document.addEventListener('DOMContentLoaded', function() {
-      const hamburger = document.getElementById('menuCheckbox');
-      const sidebar = document.getElementById('sidebar');
-      const navItems = document.querySelectorAll('.sidebar .nav-item');
-      const pages = document.querySelectorAll('.page');
-      hamburger.addEventListener('change', function() { this.checked ? sidebar.classList.add('open') : sidebar.classList.remove('open'); });
-      navItems.forEach(item => { item.addEventListener('click', function() { const target = this.dataset.target; navItems.forEach(n => n.classList.remove('active')); this.classList.add('active'); pages.forEach(p => p.classList.remove('active')); document.getElementById(`${target}-page`).classList.add('active'); sidebar.classList.remove('open'); hamburger.checked = false; window.scrollTo(0,0); }); });
-      document.addEventListener('click', function(e) { if(!sidebar.contains(e.target) && !hamburger.closest('.hamburger')?.contains(e.target) && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); hamburger.checked = false; } });
-      const backBtn = document.getElementById('back-to-top'); window.addEventListener('scroll', () => backBtn.classList.toggle('show', window.pageYOffset > 300)); backBtn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
-      const profileContainer = document.getElementById('profile-container'); const profileModal = document.getElementById('profile-modal'); const closeModal = document.getElementById('close-modal');
-      if(profileContainer) profileContainer.addEventListener('click', () => profileModal.classList.add('active'));
-      if(closeModal) closeModal.addEventListener('click', () => profileModal.classList.remove('active'));
-      if(profileModal) profileModal.addEventListener('click', (e) => { if(e.target === profileModal) profileModal.classList.remove('active'); });
-      const notification = document.getElementById('notification'); const notifClose = document.getElementById('notification-close');
-      setTimeout(() => notification.classList.add('show'), 1000);
-      if(notifClose) notifClose.addEventListener('click', () => notification.classList.remove('show'));
-      const searchBar = document.getElementById('search-bar');
-      const homeSearchables = document.querySelectorAll('.home-searchable');
-      const exploreCards = document.querySelectorAll('#explore-page .tall-card');
-      if(searchBar) {
-        searchBar.addEventListener('input', function() {
-          const term = this.value.toLowerCase();
-          if(term === '') { homeSearchables.forEach(el => el.classList.remove('hidden-search')); exploreCards.forEach(card => card.classList.remove('hidden-search')); return; }
-          homeSearchables.forEach(el => { el.textContent.toLowerCase().includes(term) ? el.classList.remove('hidden-search') : el.classList.add('hidden-search'); });
-          exploreCards.forEach(card => { (card.textContent.toLowerCase().includes(term) || (card.getAttribute('data-search') || '').toLowerCase().includes(term)) ? card.classList.remove('hidden-search') : card.classList.add('hidden-search'); });
+    // 3. Theme Toggle (Syncs with Khushal Labs)
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeIcon = document.getElementById('theme-icon');
+    const savedTheme = localStorage.getItem('khushal_theme') || 'light';
+    if(savedTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeIcon.textContent = '☀️';
+    }
+    themeToggleBtn?.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if(isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('khushal_theme', 'light');
+        themeIcon.textContent = '🌙';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('khushal_theme', 'dark');
+        themeIcon.textContent = '☀️';
+      }
+    });
+
+    // 4. In-Browser QR Code Generator
+    let qrInstance = null;
+    function initQR() {
+      const canvas = document.getElementById('qr-canvas');
+      const input = document.getElementById('qr-input');
+      const downloadBtn = document.getElementById('qr-download-btn');
+      if(!canvas || !input) return;
+
+      function renderQR() {
+        const val = input.value.trim() || 'https://github.com/khushal-jangid';
+        qrInstance = new QRious({
+          element: canvas,
+          value: val,
+          size: 160,
+          background: '#ffffff',
+          foreground: '#1c1917',
+          level: 'H'
         });
       }
-      document.getElementById('pdf-close')?.addEventListener('click', () => document.getElementById('pdf-modal')?.classList.remove('active'));
-      document.getElementById('qr-close')?.addEventListener('click', () => document.getElementById('qr-modal')?.classList.remove('active'));
-      document.getElementById('text-encryptor-close')?.addEventListener('click', () => document.getElementById('text-encryptor-modal')?.classList.remove('active'));
+      renderQR();
+      input.addEventListener('input', renderQR);
+
+      downloadBtn?.addEventListener('click', () => {
+        if(!qrInstance) return;
+        const link = document.createElement('a');
+        link.download = 'KhushalLabs-QR.png';
+        link.href = qrInstance.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // 5. In-Browser Image to PDF Converter (jsPDF)
+    function initPDF() {
+      const fileInput = document.getElementById('pdf-file-input');
+      const label = document.getElementById('pdf-file-label');
+      const convertBtn = document.getElementById('pdf-convert-btn');
+      const statusMsg = document.getElementById('pdf-status-msg');
+      if(!fileInput || !convertBtn) return;
+
+      fileInput.addEventListener('change', () => {
+        const count = fileInput.files.length;
+        if(count > 0) {
+          label.textContent = `${count} image${count > 1 ? 's' : ''} selected`;
+          statusMsg.textContent = `Ready to convert ${count} file${count > 1 ? 's' : ''}`;
+          statusMsg.style.color = '#059669';
+        } else {
+          label.textContent = 'Choose image files...';
+          statusMsg.textContent = 'Ready to convert';
+          statusMsg.style.color = 'var(--ink-3)';
+        }
+      });
+
+      convertBtn.addEventListener('click', async () => {
+        if(!fileInput.files || fileInput.files.length === 0) {
+          statusMsg.textContent = '⚠️ Please select at least one image!';
+          statusMsg.style.color = '#ea580c';
+          return;
+        }
+
+        statusMsg.textContent = '⏳ Processing images into PDF...';
+        statusMsg.style.color = '#2563eb';
+
+        try {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF();
+          const files = Array.from(fileInput.files);
+
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const dataUrl = await readFileAsDataURL(file);
+            if (i > 0) pdf.addPage();
+
+            // Calculate fit inside page
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            pdf.addImage(dataUrl, 'JPEG', 10, 10, pageWidth - 20, pageHeight - 20, undefined, 'FAST');
+          }
+
+          pdf.save('KhushalLabs-Document.pdf');
+          statusMsg.textContent = `✅ PDF downloaded successfully (${files.length} pages)!`;
+          statusMsg.style.color = '#059669';
+        } catch(err) {
+          console.error(err);
+          statusMsg.textContent = '❌ Failed to generate PDF: ' + err.message;
+          statusMsg.style.color = '#e11d48';
+        }
+      });
+
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    // 6. Text Encryptor & Decryptor
+    function initCipher() {
+      const input = document.getElementById('cipher-input');
+      const btnEncrypt = document.getElementById('btn-encrypt');
+      const btnDecrypt = document.getElementById('btn-decrypt');
+      const btnCopy = document.getElementById('btn-copy-cipher');
+      const feedback = document.getElementById('cipher-feedback');
+      if(!input) return;
+
+      btnEncrypt?.addEventListener('click', () => {
+        const text = input.value.trim();
+        if(!text) { feedback.textContent = '⚠️ Type text first!'; return; }
+        try {
+          // Reversible obfuscated cipher (Base64 UTF-8)
+          const encoded = btoa(encodeURIComponent(text));
+          input.value = `[ENC::${encoded}]`;
+          feedback.textContent = '🔒 Encrypted!';
+          feedback.style.color = '#059669';
+        } catch(e) {
+          feedback.textContent = 'Error encrypting';
+        }
+      });
+
+      btnDecrypt?.addEventListener('click', () => {
+        let text = input.value.trim();
+        if(!text) { feedback.textContent = '⚠️ Enter encrypted text!'; return; }
+        try {
+          if(text.startsWith('[ENC::') && text.endsWith(']')) {
+            text = text.substring(6, text.length - 1);
+          }
+          const decoded = decodeURIComponent(atob(text));
+          input.value = decoded;
+          feedback.textContent = '🔓 Decrypted!';
+          feedback.style.color = '#2563eb';
+        } catch(e) {
+          feedback.textContent = '❌ Invalid encrypted string';
+          feedback.style.color = '#e11d48';
+        }
+      });
+
+      btnCopy?.addEventListener('click', () => {
+        if(!input.value) return;
+        navigator.clipboard.writeText(input.value).then(() => {
+          feedback.textContent = '📋 Copied to clipboard!';
+          feedback.style.color = '#059669';
+          setTimeout(() => feedback.textContent = 'Ready', 2500);
+        });
+      });
+    }
+
+    // 7. Auto-Saving Paper Sticky Note
+    function initScratchpad() {
+      const text = document.getElementById('scratchpad-text');
+      const status = document.getElementById('scratchpad-status');
+      const clearBtn = document.getElementById('clear-scratchpad-btn');
+      if(!text) return;
+
+      const saved = localStorage.getItem('khushal_desk_scratchpad') || '';
+      text.value = saved;
+
+      text.addEventListener('input', () => {
+        localStorage.setItem('khushal_desk_scratchpad', text.value);
+        status.textContent = '✓ Saved locally';
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        if(confirm('Clear your note?')) {
+          text.value = '';
+          localStorage.removeItem('khushal_desk_scratchpad');
+          status.textContent = 'Cleared';
+        }
+      });
+    }
+
+    // 8. Nexus Tools Data & Favorites System
+    const NEXUS_DATA = {
+      pdf: [
+        { id: "ilovepdf", name: "iLovePDF", url: "https://www.ilovepdf.com/", icon: "file-text", desc: "Merge, split, compress & convert PDFs" },
+        { id: "smallpdf", name: "SmallPDF", url: "https://smallpdf.com/", icon: "edit-3", desc: "Fast & clean online document tools" },
+        { id: "pdf2go", name: "PDF2Go", url: "https://www.pdf2go.com/", icon: "file-output", desc: "Edit, protect, unlock & convert" },
+        { id: "sejda", name: "Sejda PDF", url: "https://www.sejda.com/", icon: "scissors", desc: "In-depth online editor & organizer" },
+        { id: "sodapdf", name: "Soda PDF", url: "https://www.sodapdf.com/", icon: "layers", desc: "All-in-one PDF document suite" },
+        { id: "pdf24", name: "PDF24 Tools", url: "https://pdf24.org/", icon: "printer", desc: "100% free unlimited tools" }
+      ],
+      ai: [
+        { id: "flowgpt", name: "FlowGPT", url: "https://flowgpt.com/", icon: "bot", desc: "Prompt library & AI character bots" },
+        { id: "removebg", name: "Remove.bg", url: "https://remove.bg/", icon: "image", desc: "Instant AI background eraser" },
+        { id: "midjourney", name: "Midjourney", url: "https://www.midjourney.com/", icon: "sparkles", desc: "World-class AI image generation" },
+        { id: "runway", name: "RunwayML", url: "https://runwayml.com/", icon: "video", desc: "Next-gen generative AI video studio" }
+      ],
+      dev: [
+        { id: "welib", name: "Book Library (WeLib)", url: "https://welib.st/", icon: "book-open", desc: "Digital open-access book library" },
+        { id: "infobooks", name: "InfoBooks", url: "https://infobooks.org/", icon: "book-open", desc: "Massive curated PDF book collection" },
+        { id: "pdfroom", name: "PDF Room", url: "https://pdfroom.com/", icon: "book-open", desc: "Search engine for PDF books" },
+        { id: "openlibrary", name: "Open Library", url: "https://openlibrary.org/", icon: "book-open", desc: "Internet Archive universal library" }
+      ]
+    };
+
+    let favorites = JSON.parse(localStorage.getItem('khushal_nexus_favs') || '[]');
+
+    function renderNexusCategory(cat) {
+      const container = document.getElementById('nexus-items-container');
+      if(!container) return;
+      container.innerHTML = '';
+
+      let items = [];
+      if(cat === 'fav') {
+        items = favorites;
+        if(items.length === 0) {
+          container.innerHTML = `
+            <div style="grid-column: 1/-1; text-align:center; padding:36px; background:var(--board-sheet); border:1.5px dashed var(--border-solid); border-radius:16px;">
+              <span style="font-size:32px;">⭐</span>
+              <p style="margin-top:8px; font-weight:700; color:var(--ink-2);">No favorites starred yet!</p>
+              <p style="font-size:0.8rem; color:var(--ink-3);">Click the star icon on any tool card to bookmark it here.</p>
+            </div>
+          `;
+          return;
+        }
+      } else {
+        items = NEXUS_DATA[cat] || [];
+      }
+
+      items.forEach(tool => {
+        const isFav = favorites.some(f => f.id === tool.id);
+        const card = document.createElement('div');
+        card.className = 'nexus-item-card searchable-card';
+        card.setAttribute('data-title', `${tool.name} ${tool.desc}`);
+
+        card.innerHTML = `
+          <div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0; cursor:pointer;" onclick="window.open('${tool.url}', '_blank')">
+            <div style="width:38px; height:38px; border-radius:10px; background:var(--board); display:flex; align-items:center; justify-content:center; border:1px solid var(--border-solid); flex-shrink:0;">
+              <i data-lucide="${tool.icon || 'link'}" style="width:20px; height:20px;"></i>
+            </div>
+            <div style="overflow:hidden;">
+              <strong style="display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${tool.name}</strong>
+              <span style="font-size:0.75rem; color:var(--ink-3); display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${tool.desc}</span>
+            </div>
+          </div>
+          <button class="star-btn" title="Star as favorite" onclick="toggleFavorite('${tool.id}', '${tool.name}', '${tool.url}', '${tool.icon}', '${tool.desc}')">
+            ${isFav ? '★' : '☆'}
+          </button>
+        `;
+        container.appendChild(card);
+      });
+
+      if(window.lucide) lucide.createIcons();
+    }
+
+    window.toggleFavorite = function(id, name, url, icon, desc) {
+      const idx = favorites.findIndex(f => f.id === id);
+      if(idx === -1) {
+        favorites.push({ id, name, url, icon, desc });
+      } else {
+        favorites.splice(idx, 1);
+      }
+      localStorage.setItem('khushal_nexus_favs', JSON.stringify(favorites));
+
+      const activeTab = document.querySelector('.nexus-tab-btn.active')?.dataset.nexus || 'pdf';
+      renderNexusCategory(activeTab);
+    };
+
+    function initNexusTabs() {
+      const tabs = document.querySelectorAll('.nexus-tab-btn');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          renderNexusCategory(tab.dataset.nexus);
+        });
+      });
+      renderNexusCategory('pdf');
+    }
+
+    // 9. Instant Global Search
+    function initSearch() {
+      const searchInput = document.getElementById('global-search');
+      if(!searchInput) return;
+
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.searchable-card');
+
+        if(!query) {
+          cards.forEach(c => c.style.display = '');
+          return;
+        }
+
+        cards.forEach(card => {
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const text = card.textContent.toLowerCase();
+          if(title.includes(query) || text.includes(query)) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    }
+
+    // 10. Filter Bar Pill Navigation
+    function initFilters() {
+      const pills = document.querySelectorAll('.filter-pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+        });
+      });
+    }
+
+    // Run when DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      initQR();
+      initPDF();
+      initCipher();
+      initScratchpad();
+      initNexusTabs();
+      initSearch();
+      initFilters();
     });
   </script>
 </body>
