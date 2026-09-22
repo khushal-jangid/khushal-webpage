@@ -272,6 +272,31 @@ const PROJECTS_DATA = [
     doodle: "🇮🇳",
     note: "Conversational intelligence agent",
     abstractType: "chatbot"
+  },
+  {
+    id: "filmhub",
+    number: "12",
+    name: "FilmHub",
+    subtitle: "93 Verified Streaming Platforms",
+    category: "Web",
+    categoryLabel: "Streaming / Media",
+    description: "A fast, clean and responsive streaming directory indexing 93 verified movie, anime, OTT, and sports platforms.",
+    technologies: ["JavaScript", "Streaming", "Directory", "Responsive UI"],
+    liveUrl: "filmhub/",
+    buttonText: "OPEN FILMHUB",
+    featured: true,
+    featuredRank: 5,
+    status: "ONLINE",
+    image: "assets/built-in-tools.jpg",
+    paperColor: "#fef2f2",
+    accentColor: "#dc2626",
+    borderAccent: "#ef4444",
+    tapeColor: "rgba(239, 68, 68, 0.4)",
+    tapeRotation: "-2deg",
+    cardRotation: "1deg",
+    doodle: "🎬",
+    note: "93 streaming platforms categorized & verified",
+    abstractType: "streaming"
   }
 ];
 

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>FilmHub — 93 Verified Streaming Platforms</title>
+  <meta name="description" content="Discover 93 verified movie, anime, sports, and entertainment platforms in a clean, smooth, easy-to-navigate directory." />
+
+  <!-- Google Fonts: Inter & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Clean Top Navigation -->
+  <header class="filmhub-header">
+    <div class="header-content">
+      <a href="#" class="brand-logo-btn">
+        <div class="brand-icon-box">▶</div>
+        <span class="brand-text">Film<span class="brand-accent">Hub</span></span>
+      </a>
+
+      <div class="header-status">
+        <span class="status-pulse"></span>
+        <span id="activeCounter">93 Sites Online</span>
+      </div>
+
+      <div class="header-actions">
+        <a href="../tools.html" class="btn-favs-view" style="text-decoration:none; color:inherit; margin-right:8px;" title="Back to Tools Dashboard"><span>⚡ Dashboard</span></a>
+        <button class="btn-favs-view" id="btnFavs" title="View Saved Favorites">
+          <span>❤️ Favorites</span>
+          <span class="fav-count" id="favBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Smooth Minimal Hero -->
+  <section class="hero-wrapper">
+    <h1 class="hero-heading">
+      Streaming Directory. <br/>
+      <span style="color: var(--accent-red);">Clean &amp; Fast.</span>
+    </h1>
+    <p class="hero-desc">
+      Explore 93 verified movie streaming sites, anime platforms, live sports networks, and tools.
+    </p>
+
+    <!-- Search Box -->
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input
+          type="search"
+          id="searchInput"
+          class="search-field"
+          placeholder="Search by name, category, or domain (e.g. Cinezo, Anime, Sports)..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span class="search-kbd">/</span>
+        <button id="searchClearBtn" class="search-clear" title="Clear">✕</button>
+      </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-chips-wrap">
+      <button class="filter-chip active" id="chipAll">All Sites (93)</button>
+      <button class="filter-chip" id="chipVerified">✔ Verified Only</button>
+      <button class="filter-chip" id="chipNew">★ New Additions</button>
+      <button class="filter-chip" id="chipIndia">🇮🇳 India Region</button>
+    </div>
+  </section>
+
+  <!-- Mobile & Tablet Sticky Category Navigation -->
+  <nav class="mobile-nav-bar" id="mobileNavBar">
+    <a href="#cat-movies" class="mobile-nav-pill"><span>🎬 Movies (33)</span></a>
+    <a href="#cat-anime" class="mobile-nav-pill"><span>⚡ Anime (18)</span></a>
+    <a href="#cat-paid" class="mobile-nav-pill"><span>💳 Paid OTT (12)</span></a>
+    <a href="#cat-sports" class="mobile-nav-pill"><span>📺 Live Sports (8)</span></a>
+    <a href="#cat-manga" class="mobile-nav-pill"><span>📖 Manga (7)</span></a>
+    <a href="#cat-apps" class="mobile-nav-pill"><span>📱 Apps (6)</span></a>
+    <a href="#cat-downloads" class="mobile-nav-pill"><span>📥 Downloads (3)</span></a>
+    <a href="#cat-kdrama" class="mobile-nav-pill"><span>🌸 K-Drama (3)</span></a>
+    <a href="#cat-games" class="mobile-nav-pill"><span>🎮 Games (2)</span></a>
+    <a href="#cat-adult" class="mobile-nav-pill"><span>🔞 Adult 18+ (1)</span></a>
+  </nav>
+
+  <!-- Main Content Layout -->
+  <div class="main-layout">
+
+    <!-- Desktop Sticky Sidebar (PC) -->
+    <aside class="desktop-sidebar">
+      <div class="sidebar-title">CATEGORIES</div>
+      <ul class="sidebar-list" id="sidebarList">
+        <li class="sidebar-item active" data-target="cat-movies">
+          <a href="#cat-movies" class="sidebar-link">
+            <span>🎬 Movies &amp; Shows</span>
+            <span class="sidebar-count">33</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-anime">
+          <a href="#cat-anime" class="sidebar-link">
+            <span>⚡ Anime</span>
+            <span class="sidebar-count">18</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-paid">
+          <a href="#cat-paid" class="sidebar-link">
+            <span>💳 Paid OTT</span>
+            <span class="sidebar-count">12</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-sports">
+          <a href="#cat-sports" class="sidebar-link">
+            <span>📺 Live TV &amp; Sports</span>
+            <span class="sidebar-count">8</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-manga">
+          <a href="#cat-manga" class="sidebar-link">
+            <span>📖 Manga</span>
+            <span class="sidebar-count">7</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-apps">
+          <a href="#cat-apps" class="sidebar-link">
+            <span>📱 Apps &amp; APKs</span>
+            <span class="sidebar-count">6</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-downloads">
+          <a href="#cat-downloads" class="sidebar-link">
+            <span>📥 Downloads</span>
+            <span class="sidebar-count">3</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-kdrama">
+          <a href="#cat-kdrama" class="sidebar-link">
+            <span>🌸 K-Drama</span>
+            <span class="sidebar-count">3</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-games">
+          <a href="#cat-games" class="sidebar-link">
+            <span>🎮 Games</span>
+            <span class="sidebar-count">2</span>
+          </a>
+        </li>
+        <li class="sidebar-item" data-target="cat-adult">
+          <a href="#cat-adult" class="sidebar-link">
+            <span>🔞 Adult (18+)</span>
+            <span class="sidebar-count">1</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Categorized Sections -->
+    <main class="sections-flow" id="sectionsContainer">
+      <!-- Injected dynamically via app.js -->
+    </main>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="floating-toast" id="toast">
+    <span>🔗 Link copied to clipboard</span>
+  </div>
+
+  <!-- Minimal Clean Footer (No clutter) -->
+  <footer class="minimal-footer">
+    <p>© 2026 FilmHub · 93 Verified Streaming Destinations</p>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
